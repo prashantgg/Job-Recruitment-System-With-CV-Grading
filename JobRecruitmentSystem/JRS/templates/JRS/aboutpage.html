@@ -1,0 +1,34 @@
+{% extends "JRS/base.html" %}
+{% load static %}
+{% block title %}
+About Page
+{% endblock title %}
+{% block inlinecss %}
+<link href="{% static 'JRS/css/aboutpage.css' %}" rel="stylesheet">
+{% endblock inlinecss %}
+{% block main %}
+  <!-- Color Theory Section -->
+  <section id="theory" class="color-theory-section section-container pattern-section">
+    <div class="container section-flex">
+      <div class="text-content">
+        <h2>About Future Fits</h2><br>
+        <p>Welcome to FutureFits, a cutting-edge recruitment platform dedicated to connecting top talent with forward-thinking organizations. Our mission is to revolutionize the hiring process by leveraging innovative technology and providing a seamless experience for recruiters and job seekers alike.<br><br>
+
+           <b> Our Mission</b><br>
+              
+We aim to bridge the gap between skilled professionals and companies that seek excellence by fostering meaningful connections that drive mutual growth and success. Our mission is to empower job seekers by offering opportunities that resonate with their skills, ambitions, and passions, ensuring that they find roles where they can thrive. Simultaneously, we provide recruiters with intuitive tools designed to streamline the evaluation and hiring process, enabling them to make informed decisions efficiently while identifying the best talent for their needs. This dual focus ensures a seamless and impactful experience for both candidates and employers. <br>
+            
+            
+            <br>
+           <b> Our Vision</b><br>
+            
+           We envision a world where recruitment is accessible, efficient, and equitable for everyone, creating opportunities that empower individuals and organizations alike. Companies will build stronger, more innovative teams that drive growth and success, while job seekers will thrive in careers that truly match their skills, ambitions, and full potential.<br><br>
+           <b> What Sets Us Apart?</b><br>
+           Our platform stands out through its user-centered design, prioritizing simplicity and usability to ensure a seamless and hassle-free experience for all users. We offer advanced tools that enable recruiters to post, update, and manage job listings efficiently while evaluating candidates with ease. For job seekers, our platform delivers tailored opportunities, simplifying the application process. Additionally, our commitment to excellence ensures that we uphold the highest standards in technology, design, and data security, fostering trust and reliability among our users.<br></p>
+      </div>
+      <div class="graphic-content">
+        <!-- Color Wheel Canvas -->
+      </div>
+    </div>
+  </section>
+{% endblock main %}

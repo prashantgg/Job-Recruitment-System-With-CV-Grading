@@ -1,0 +1,22 @@
+{% extends "JRS/base.html" %}
+{% load static %}
+{% block title %}
+Home Page
+{% endblock title %}
+{% block inlinecss %}
+<link href="{% static 'JRS/css/startpage.css' %}" rel="stylesheet">
+{% endblock inlinecss %}
+{% block main %}
+<main>
+<section id="" class="hero-section">
+  <div class="hero-image-wrapper">
+    <img src="{% static 'JRS/Images/bg.jpg' %}" alt="Background Image" class="hero-image">
+    <div class="hero-overlay"></div>
+    <div class="hero-content container">
+      <h1>WELCOME TO JOB RECRUITMENT SYSTEM WITH CV GRADING</h1>
+      <p class="subheading">Transforming the hiring process with intelligent CV grading, ensuring precision and efficiency in recruitment.</p>
+      <a href="{% url "JRS:featurepage" %}" class="btn">Learn More About Our Features</a>
+    </div>
+  </div>
+</section>
+{% endblock main %}

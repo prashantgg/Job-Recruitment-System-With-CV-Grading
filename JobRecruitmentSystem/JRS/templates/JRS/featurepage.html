@@ -1,0 +1,38 @@
+{% extends "JRS/base.html" %}
+{% load static %}
+{% block title %}
+Feature Page
+{% endblock title %}
+{% block inlinecss %}
+<link href="{% static 'JRS/css/featurepage.css' %}" rel="stylesheet">
+{% endblock inlinecss %}
+{% block main %}
+<section id="theory" class=" pattern-section color-theory-section section-container ">
+
+<h2>Our Features & Services</h2><br>
+
+    <div class="container">
+        <div class="feature-card">
+            <img src="{% static 'JRS/Images/curriculum-vitae.png' %}" alt="" style="width: 150px; height: auto;">
+            <h3 style="color: blue;">CV Grading</h3>
+            <p>CV Grading evaluates resumes based on skills, experience, and qualifications to assist recruiters.</p>
+        </div>
+
+        <div class="feature-card">
+            <img src="{% static 'JRS/Images/quality (2).png' %}" alt="" style="width: 150px; height: auto;">
+            <h3 style="color: green;">Recommendation Engine</h3>
+            <p>Recommendation Engine suggests personalized job matches based on user preferences and qualifications.</p>
+        </div>
+
+        <div class="feature-card">
+            <img src="{% static 'JRS/Images/feedback.png' %}" alt="" style="width: 150px; height: auto;">
+            <h3 style="color:red;">Feedback Integration</h3>
+            <p>Feedback Integration allows recruiters to provide feedback on candidate applications for improvement and decision-making.</p>
+        </div>
+    </div>
+</section>
+
+
+
+
+{% endblock main %}

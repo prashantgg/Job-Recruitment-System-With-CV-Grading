@@ -1,0 +1,90 @@
+{% extends "JRS/base.html" %}
+{% load static %}
+{% block title %}
+FAQ
+{% endblock title %}
+{% block inlinecss %}
+<link href="{% static 'JRS/css/faqpage.css' %}" rel="stylesheet">
+{% endblock inlinecss %}
+{% block main %}
+
+<h2> Frequently Asked Questions </h2>
+<section id="theory" class=" pattern-section color-theory-section section-container ">
+  <div class="faq">
+    <details>
+      <summary><b>Is my data secure?</summary>
+      <p> Ans: Yes, we use advanced encryption and security protocols to protect your data.</p>
+    </details>
+    <details>
+      <summary>What roles are available in the system?<br></summary>
+      <p>Ans: Candidates and recruiters.</p>
+    </details>
+    <details>
+      <summary>Can I reset my password if I forget it?<br></summary>
+      <p> Ans: Yes, use the "Forgot Password" option on the login page.</p>
+    </details>
+    <details>
+      <summary>Is there a fee to use the system?<br></summary>
+      <p>Ans: No, it’s free for both candidates and recruiters.</p>
+    </details>
+    <details>
+      <summary>How do I contact support?<br></summary>
+      <p>Ans: Use the "Contact Us" form or email us at future_fits@gmail.com.</p>
+    </details>
+    <details>
+      <summary>How do I post a job?<br></summary>
+      <p>Ans: Log in as a recruiter and use the "Post Job" option on your dashboard.
+      </p>
+    </details>
+    <details>
+      <summary>Can I edit a job posting?<br></summary>
+      <p>Ans: Yes, go to the "Manage Jobs" section, select the job, and click "Edit."
+      </p>
+    </details>
+    <details>
+      <summary>How do I view candidate applications?<br></summary>
+      <p>Ans: Under each job posting, you’ll find a list of applicants with their details.
+      </p>
+    </details>
+    <details>
+      <summary>How do I remove a job post?
+        <br></summary>
+      <p>Ans: Navigate to "Manage Jobs," select the job, and click "Delete."</p>
+    </details>
+    <details>
+      <summary>How do I register as a candidate?
+        <br></summary>
+      <p>Ans: Go to the "Register" page, fill in your details, select "Candidate" as your role, and submit the form.</p>
+    </details>
+    <details>
+      <summary>Can I track my job applications?
+        <br></summary>
+      <p>Ans: Yes, your dashboard displays all applications and their statuses (e.g., applied, shortlisted, rejected).</p>
+    </details>
+    <details>
+      <summary>How do I upload my CV?
+        <br></summary>
+      <p>Ans: Log in, go to your profile, and use the "Upload CV" option.</p>
+    </details>
+
+  </b>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const details = document.querySelectorAll(".faq details");
+
+    details.forEach((detail) => {
+      detail.addEventListener("click", function () {
+        details.forEach((otherDetail) => {
+          if (otherDetail !== detail) {
+            otherDetail.removeAttribute("open");
+          }
+        });
+      });
+    });
+  });
+</script>
+
+{% endblock main %}
