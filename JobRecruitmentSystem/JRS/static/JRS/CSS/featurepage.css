@@ -9,15 +9,10 @@
     --font-family: "Poppins", sans-serif;
   }
   
-  /* Reset and base styles */
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
-  
-  html {
-    overflow-x: hidden;
   }
   
   body {
@@ -34,23 +29,6 @@
     padding: 0; /* Reset padding */
   }
   
-  
-  /* Styled scrollbar */
-  body::-webkit-scrollbar {
-    width: 12px;
-  }
-  
-  body::-webkit-scrollbar-track {
-    background: var(--scrollbar-bg);
-  }
-  
-  body::-webkit-scrollbar-thumb {
-    background-color: var(--scrollbar-thumb);
-    border-radius: 6px;
-    border: 3px solid var(--scrollbar-bg);
-  }
-  
-  /* Navigation styles */
   header {
     position: fixed;
     top: 0;
@@ -90,7 +68,6 @@
     color: red;
   }
   
-  /* Navigation Links */
   .nav-links {
     list-style: none;
     display: flex;
@@ -115,7 +92,6 @@
     background: linear-gradient(to right, #8B0000, #B22222);
 }
   
-  /* Hamburger menu icon */
   .menu-icon {
     display: none;
     cursor: pointer;
@@ -201,31 +177,12 @@
     font-size: 1em;
   }
   
-  
-  
-  /* Container Styles */
-  .container {
+    .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 5%;
   }
-  
-  /* Section Containers */
-  .section-container {
-    padding: 60px 0;
-  }
 
-  /* Remove scrolling */
-html, body {
-    overflow: hidden; /* Disable page scroll */
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-  
-
-
-/* Body */
 body {
     font-family: 'Arial', sans-serif;
     color: #333;
@@ -236,9 +193,6 @@ body {
     margin: 0;
 }
 
-
-/* Section Titles */
-/* Section Title */
 section h2 {
     font-size: 2.5em;
     margin-bottom: 75px; /* Adjust this value to increase the gap */
@@ -248,7 +202,6 @@ section h2 {
     text-shadow: 2px 2px var(--accent-color);
 }
 
-/* Container */
 .container {
     display: flex;
     justify-content: space-between;
@@ -311,69 +264,7 @@ section h2 {
     transform: translateY(-10px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
-
-/* For smaller screens */
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-        align-items: center;
-    }
-    .feature-card {
-        width: 80%;
-        margin-bottom: 20px;
-    }
-}
-
   
-  /* Responsive Design */
-  
-  /* Mobile Styles */
-  @media screen and (max-width: 1100px) {
-    /* Adjust hero section */
-    .hero-content h1 {
-        font-size: 2.5em; /* Adjust font size for smaller screens */
-      }
-    
-      .hero-content .subheading {
-        font-size: 1rem;
-      }
-    
-      .hero-content .btn {
-        padding: 12px 20px;
-        font-size: 14px;
-      }
-  
-    .text-content,
-    .graphic-content {
-      flex: 1 1 100%;
-    }
-  
-    .graphic-content {
-      margin-top: 20px;
-    }
-  
-   menu styles */
-    
-  
-    /* Adjust navigation */
-    .nav-links {
-      position: fixed;
-      /* Other styles remain the same */
-    }
-  
-    .menu-icon {
-      display: block;
-      margin-left: auto;
-    }
-  
-
-  
-    .harmony-examples {
-      flex-direction: column;
-    }
-  }
-  
-  /* Adjustments for navigation */
   @media screen and (min-width: 1101px) {
     .nav-links {
       display: flex;
@@ -406,15 +297,4 @@ section h2 {
     }
   }
   
-  /* Tablet Styles */
-  @media screen and (min-width: 851px) and (max-width: 1100px) {
-    .text-content,
-    .graphic-content {
-      flex: 1 1 100%;
-    }
-  
-    .graphic-content {
-      margin-top: 20px;
-    }
-  }
-  
+ 

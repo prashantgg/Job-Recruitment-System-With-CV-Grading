@@ -9,6 +9,7 @@ urlpatterns = [
     path("about", views.aboutpage, name="aboutpage"),
     path("feature", views.featurepage, name="featurepage"),
     path("contact", views.contactpage, name="contactpage"),
+    path('contact/', views.contact_form, name='contact_form'),
     path("faq", views.faqpage, name="faqpage"),
     path("blog", views.blogpage, name="blogpage"),
     path("", lambda request: redirect("JRS:startpage")),  # Use the app namespace and correct name

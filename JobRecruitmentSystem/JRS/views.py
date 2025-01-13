@@ -1,5 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from .import models 
+
 
 # Create your views here.
 def startpage(request):
@@ -20,3 +22,19 @@ def faqpage(request):
 def blogpage(request):
     return render(request, "JRS/blogpage.html")
 
+def contact_form(request):
+    if request.method == "POST":
+        # Get form data from POST request
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        number = request.POST.get("phone")
+        message = request.POST.get("message")
+        print (name,email,number,message)
+        # Create and save the new contact entry
+        contact = models.ContactForm(name=name, email=email, number=number, message=message)
+        contact.save()   
+
+        return render(request, 'JRS/contactpage.html')
+
+
+        
