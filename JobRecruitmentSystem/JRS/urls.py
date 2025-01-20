@@ -12,5 +12,6 @@ urlpatterns = [
     path('contact/', views.contact_form, name='contact_form'),
     path("faq", views.faqpage, name="faqpage"),
     path("blog", views.blogpage, name="blogpage"),
+    path("hr-register", views.hr_register_page, name="hr_register_page"),
     path("", lambda request: redirect("JRS:startpage")),  # Use the app namespace and correct name
 ]

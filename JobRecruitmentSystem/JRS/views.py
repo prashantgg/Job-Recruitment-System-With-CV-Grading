@@ -22,6 +22,9 @@ def faqpage(request):
 def blogpage(request):
     return render(request, "JRS/blogpage.html")
 
+def hr_register_page(request):
+    return render(request, "JRS/hr_register_page.html")
+
 def contact_form(request):
     if request.method == "POST":
         # Get form data from POST request
