@@ -274,11 +274,12 @@
 }
 body {
     height: 100vh;
-    background-color: #201e1eeb;  /* Dark background color */
+    background-color: #040404eb;  /* Dark background color */
     display: flex;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);  /* Black shadow */
     margin: 0;  /* Remove default margin */
 }
+
 
 .container {
     width: 500px;
