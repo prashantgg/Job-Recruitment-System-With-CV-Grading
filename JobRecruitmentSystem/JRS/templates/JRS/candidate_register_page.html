@@ -1,0 +1,203 @@
+
+{% extends "JRS/base.html" %}
+{% load static %}
+{% block inlinecss %}
+<link href="{% static 'JRS/css/candidate_register_page.css' %}" rel="stylesheet">
+{% endblock inlinecss %}
+{% block title %}Job Seeker Register{% endblock title %}
+{% block main %}
+
+<img src="{% static 'JRS/Images/form.jpg' %}" alt="" style="position: absolute; top: 0; left: 0; width: 100%; height: 100vh; object-fit: cover; z-index: -1;">
+
+<form class="container">
+  
+    <h2 class="heading">Sign Up As Candidate</h2>
+    <div class="steps-container">
+        <hr>
+        <hr class="active">
+        <div class="steps"><i class="fa-solid fa-user"></i></div>
+        <div class="steps"><i class="fa-solid fa-envelope"></i></div>
+        <div class="steps"><i class="fa-solid fa-key"></i></div>
+        <div class="steps"><i class="fa-solid fa-code"></i></div>
+        <div class="steps"><i class="fa-solid fa-trophy"></i></div>
+    </div>
+    
+    <div class="input-slide-contianer">
+        <scroller>
+            <!-- Username Slide -->
+            <div class="input-slide">
+                <h3>User Name</h3>
+                <ul class="rules">
+                    <li>Your username should only contain letters, numbers, underscores, or hyphens.</li>
+                    <li>Your username should not be offensive or contain profanity.</li>
+                </ul>
+                <input type="text" placeholder="Type your username Here" name="username" class="username">
+                <div class="full-name">
+                    <input type="text" placeholder="First Name" name="firstname">
+                    <input type="text" name="lastname" class="lastname" placeholder="Last Name">
+                </div>
+                <button class="button-nex" onclick="NextSlide(1)">Next</button>
+            </div>
+            
+            <!-- Email Slide -->
+            <div class="input-slide">
+                <h3>Email</h3>
+                <ul class="rules">
+                    <li>Please enter valid email in the format "example@example.com".</li>
+                    <li>We value your privacy and will never use your email for any unauthorized purposes.</li>
+                    <li>Please don't use email that includes personal information.</li>
+                </ul>
+                <input type="email" name="email" class="email" placeholder="Email">
+                <button class="button-nex" onclick="NextSlide(2)">Next</button>
+            </div>
+            
+            <!-- Password Slide -->
+            <div class="input-slide password-slide">
+                <h3>Password</h3>
+                <ul class="rules">
+                    <li>Include a mix of uppercase and lowercase letters, numbers, and special characters.</li>
+                    <li>Avoid using common or easily guessable passwords.</li>
+                    <li>Do not use personal information.</li>
+                </ul>
+                <input type="password" name="password" class="password" placeholder="Password">
+                <input type="password" name="confirm-password" class="confirm-password" placeholder="Confirm Your Password">
+                <button class="button-nex" onclick="NextSlide(3)">Next</button>
+            </div>
+            
+            <!-- Skills Slide -->
+            <div class="input-slide">
+                <h3>Skills</h3>
+                <ul class="rules">
+                    <li>List skills relevant to your profession, such as programming languages, tools, or certifications.</li>
+                    <li>Separate multiple skills with commas (e.g., Python, JavaScript, Django).</li>
+                    <li>Ensure your skills are up-to-date and accurate.</li>
+                </ul>
+                <input type="text" name="skills" class="skills" placeholder="Enter your skills">
+                <button class="button-nex" onclick="NextSlide(4)">Next</button>
+            </div>
+            
+            <!-- Finish Slide -->
+            <div class="input-slide finish-slide">
+                <h3>Congratulations!</h3>
+                <ul class="rules">
+                    <li>Before submitting your information, please ensure that all the details provided are correct.</li>
+                    <li>We take the privacy and security of our users very seriously, and it is important that all the information provided is accurate and up-to-date.</li>
+                    <li>Once you have confirmed that everything is in order, simply click the 'Submit' button.</li>
+                </ul>
+                <button type="submit" class="button-nex" disabled>Submit</button>
+            </div>
+        </scroller> 
+    </div>
+    
+    <button class="GoBack" onclick="GoBack()"><i class="fa-solid fa-arrow-left"></i></button> 
+  </form>
+<script>
+
+var GlobalSlideNo;
+function NextSlide(SlideNo){
+GlobalSlideNo=SlideNo
+    event.preventDefault()
+    if(SlideNo==1){
+        document.querySelector(".GoBack").style.animation="GoBackBtnVisible 0.25s ease"
+        document.querySelector(".GoBack").onanimationend=function(){
+            this.style.animation=""
+            this.style.left="10px"
+        }
+    }
+    
+    console.log(parseInt(window.getComputedStyle(document.querySelector("scroller")).getPropertyValue("margin-left"))-478);
+    document.querySelector("scroller").style.marginLeft=parseInt(window.getComputedStyle(document.querySelector("scroller")).getPropertyValue("margin-left"))-478+"px";
+    MoveIndicationBar(SlideNo)
+    }
+IndicatorObj={
+    startVal:0,
+    EndVal:25,
+    currentWidth:0
+}
+function MoveIndicationBar(i){
+    
+    var step=document.querySelectorAll(".steps")[i-1]
+    IndicatorObj.StepNo=i
+    console.log(step)
+    IndicatorObj.EndVal=i*25
+    ZerotoHeroWidth()
+    
+    
+}
+function ZerotoHeroWidth(){
+    var bar=document.querySelector(".active")
+    var step=document.querySelectorAll(".steps")[IndicatorObj.StepNo-1]
+    barStyle=parseInt(window.getComputedStyle(bar).width)
+    if(IndicatorObj.currentWidth>IndicatorObj.EndVal/2){
+        step.classList.add("PassedStep")
+        
+    }
+    if(IndicatorObj.currentWidth<IndicatorObj.EndVal){
+        IndicatorObj.currentWidth+=1
+        bar.style.width=IndicatorObj.currentWidth+"%"
+        window.requestAnimationFrame(ZerotoHeroWidth)
+    }
+    
+}
+function GoBack(){
+    event.preventDefault()
+    console.log(GlobalSlideNo)
+    if(GlobalSlideNo<2){
+        document.querySelector(".GoBack").style.animation="GoBackBtnInvisible 0.25s ease"
+        document.querySelector(".GoBack").onanimationend=function(){
+            this.style.animation=""
+            this.style.left="-50px"
+        }
+    }
+    GlobalSlideNo-=1
+    console.log(parseInt(window.getComputedStyle(document.querySelector("scroller")).getPropertyValue("margin-left"))+478);
+    document.querySelector("scroller").style.marginLeft=parseInt(window.getComputedStyle(document.querySelector("scroller")).getPropertyValue("margin-left"))+478+"px";
+    document.querySelector(".GoBack").onclick=function(){
+        event.preventDefault()
+    }
+    setTimeout(function(){
+        document.querySelector(".GoBack").onclick=GoBack
+    },500)
+    MoveIndicationBarMinus(GlobalSlideNo)
+    
+    }
+    
+
+
+
+    IndicatorObj={
+        startVal:25,
+        EndVal:0,
+        currentWidth:0
+    }
+    function MoveIndicationBarMinus(i){
+
+        IndicatorObj.StepNo=i
+    
+        IndicatorObj.EndVal=i*25
+        HerotoZeroWidth()
+        console.log(IndicatorObj)
+        
+    }
+    function HerotoZeroWidth(){
+        var bar=document.querySelector(".active")
+        var step=document.querySelectorAll(".steps")[IndicatorObj.StepNo-1]
+        barStyle=parseInt(window.getComputedStyle(bar).width)
+        if(IndicatorObj.currentWidth>IndicatorObj.EndVal){
+            IndicatorObj.currentWidth-=1
+            bar.style.width=IndicatorObj.currentWidth+"%"
+            window.requestAnimationFrame(HerotoZeroWidth)
+        }
+        
+    }
+</script>
+{% endblock main %}
+
+
+
+
+
+
+
+
+

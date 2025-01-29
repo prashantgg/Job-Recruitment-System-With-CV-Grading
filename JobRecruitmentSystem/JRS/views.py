@@ -25,6 +25,12 @@ def blogpage(request):
 def hr_register_page(request):
     return render(request, "JRS/hr_register_page.html")
 
+def candidate_register_page(request):
+    return render(request, "JRS/candidate_register_page.html")
+
+def login_page(request):
+    return render(request, "JRS/login_page.html")
+
 def contact_form(request):
     if request.method == "POST":
         # Get form data from POST request
@@ -36,7 +42,6 @@ def contact_form(request):
         # Create and save the new contact entry
         contact = models.ContactForm(name=name, email=email, number=number, message=message)
         contact.save()   
-
         return render(request, 'JRS/contactpage.html')
 
 

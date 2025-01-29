@@ -140,7 +140,7 @@ html {
 }
 
 .nav-links .dropdown-content::before {
-  content: "";
+  content: "         ";
   position: absolute;
   top: -10px; /* Position spike above dropdown */
   left: 20px; /* Adjust to align with button */
@@ -500,7 +500,7 @@ textarea.input {
   opacity: 0;
   transition: 0.3s;
   height: 5px;
-  background-color: #095f4e;
+  background-color: #d0e9ce;
   top: 50%;
   transform: translateY(-50%);
 }
@@ -549,7 +549,7 @@ textarea.input {
 }
 
 .information i {
-  color: #095f4e;
+  color: #0c4a3e;
 }
 
 .icon {

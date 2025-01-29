@@ -13,5 +13,7 @@ urlpatterns = [
     path("faq", views.faqpage, name="faqpage"),
     path("blog", views.blogpage, name="blogpage"),
     path("hr-register", views.hr_register_page, name="hr_register_page"),
+    path("candidate-register", views.candidate_register_page, name="candidate_register_page"),
+    path("login-page", views.login_page, name="login_page"),
     path("", lambda request: redirect("JRS:startpage")),  # Use the app namespace and correct name
 ]
