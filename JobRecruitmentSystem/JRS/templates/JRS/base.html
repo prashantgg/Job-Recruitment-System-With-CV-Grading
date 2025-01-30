@@ -36,9 +36,13 @@
   <!-- Add this block for Login and Register -->
   <ul class="login-register">
     <li class="dropdown">
-      <a href="{% url "JRS:login_page" %}" class="dropbtn" style="background-color: #222; color: white; font-size: 14px; padding: 5px 10px; border: 1px solid #333; border-radius: 5px; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+      <a href="" class="dropbtn" style="background-color: #222; color: white; font-size: 14px; padding: 5px 10px; border: 1px solid #333; border-radius: 5px; text-decoration: none; display: flex; align-items: center; gap: 5px;">
         <i class="fa fa-sign-in" style="font-size: 12px;"></i> Login
       </a>
+      <div class="dropdown-content">
+        <a href="{% url "JRS:hr_login_page" %}">Login as HR</a>
+        <a href="{% url "JRS:candidate_login_page" %}">Login as Candidate</a>
+      </div>
     </li>
 
     <li class="dropdown">

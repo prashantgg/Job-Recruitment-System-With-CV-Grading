@@ -1,5 +1,4 @@
 
-
 /* CSS Variables for easy theming */
 :root {
     --primary-color: #ff5733;
@@ -284,7 +283,7 @@ body {
 
 .container {
     width: 500px;
-    height: 500px;
+    height: 480px;
     margin: 130px auto; /* Adds a gap of 20px at the top */
     border-radius: 5px;
     border: 1px solid #ced4da;
@@ -391,7 +390,6 @@ scroller{
 padding:5px 0;
 }
 
-
 .input-slide input{
     width:calc(100% - 20px);
     padding:10px;
@@ -416,44 +414,27 @@ font-size: 1.01em;
     border: 1px solid lime;
 }
 
-.message-container {
-  position: fixed;
-  top: 100px;
-  right: 20px;
-  z-index: 1000;
-}
-
-/* Green color for success messages */
-.success-message {
-  color: green;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-/* Red color for error messages */
-.error-message {
-  color: rgb(150, 56, 56);
-  font-weight: bold;
-  font-size: 16px;
-}
-
 .button-nex{
     padding:8px 20px;
     border-radius: 20px;
     color:white;
     font-weight: 800;
+    margin-bottom: 5%;
+    width: 96%;
     outline:none;
     border:none;
     margin:auto;
-    margin-right:10px;
     font-family:Exo;
     font-size: 1em;
+    margin-left: 2.5%;
     cursor:pointer;
-    background-color: #52b788;
+    background-color: #136b42;
 }
 .button-nex:hover{
     background-color: #40916c;
 }
+
+
 .full-name{
     display: flex;
 }
@@ -494,6 +475,27 @@ font-size: 1.01em;
     width:100% !important;
     transition: 1s;
 
+}
+
+.message-container {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  z-index: 1000;
+}
+
+/* Green color for success messages */
+.success-message {
+  color: green;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Red color for error messages */
+.error-message {
+  color: rgb(150, 56, 56);
+  font-weight: bold;
+  font-size: 16px;
 }
 
 .GoBack{

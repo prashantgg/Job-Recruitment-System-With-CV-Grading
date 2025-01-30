@@ -1,0 +1,12 @@
+<h1> HR </h1>
+
+    <!-- Messages Display -->
+    {% if messages %}
+        <div class="message-container">
+            {% for message in messages %}
+                <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}

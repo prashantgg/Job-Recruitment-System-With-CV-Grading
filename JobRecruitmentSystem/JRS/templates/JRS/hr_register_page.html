@@ -1,188 +1,269 @@
-
 {% extends "JRS/base.html" %}
 {% load static %}
 {% block inlinecss %}
 <link href="{% static 'JRS/css/hr_register_page.css' %}" rel="stylesheet">
+
 {% endblock inlinecss %}
 {% block title %}HR Register{% endblock title %}
 {% block main %}
 
 <img src="{% static 'JRS/Images/form.jpg' %}" alt="" style="position: absolute; top: 0; left: 0; width: 100%; height: 100vh; object-fit: cover; z-index: -1;">
+{% if error_message %}
+<script type="text/javascript">
+    alert("{{ error_message }}");
+</script>
+{% endif %}
 
-<form class="container">
+<form class="container" method="post" action="{% url "JRS:register_hr" %}">
+    {% csrf_token %}
   
-  <h2 class="heading">Sign Up As HR</h2>
-  <div class="steps-container">
-      <hr>
-      <hr class="active">
-      <div class="steps"><i class="fa-solid fa-user"></i></div>
-      <div class="steps"><i class="fa-solid fa-envelope"></i></div>
-      <div class="steps"><i class="fa-solid fa-key"></i></div>
-      <div class="steps"><i class="fa-solid fa-trophy"></i></div>
-  </div>
-  
-  <div class="input-slide-contianer">
-      <scroller>
-          <div class="input-slide">
-          <h3>User Name</h3>
-          <ul class="rules">
+    <h2 class="heading">Sign Up As HR</h2>
+    <div class="steps-container">
+        <hr>
+        <hr class="active">
+        <div class="steps"><i class="fa-solid fa-user"></i></div>
+        <div class="steps"><i class="fa-solid fa-envelope"></i></div>
+        <div class="steps"><i class="fa-solid fa-key"></i></div>
+        <div class="steps"><i class="fa-solid fa-trophy"></i></div>
+    </div>
+    
+    <div class="input-slide-contianer">
+        <scroller>
+            <div class="input-slide">
+                <h3>User Name</h3>
+                <ul class="rules">
+                    <li>Your username should only contain letters, numbers, underscores, or hyphens. </li>
+                    <li>First Name and Last Name must start with a capital letter and contain only alphabets. </li>
+                    <li>Your username should not be offensive or contain profanity.</li>
+                </ul>
+                <input type="text" placeholder="Type your username Here" name="username" class="username" autocomplete="off">
+                <div class="full-name">
+                    <input type="text" placeholder="First Name" name="first_name" class="first-name" autocomplete="off">
+                    <input type="text" name="last_name" class="last-name" placeholder="Last Name" autocomplete="off">
+                </div>
+                
+                <button class="button-nex" onclick="validateUserName(event)">Next</button>
+            </div>
 
-              <li>Your username should only contain letters, numbers, underscores or hyphens. </li>
-              <li>Your username should not be offensive or contain profanity.</li>
-          </ul>
-          <input type="text" placeholder="Type your username Here" name="username" class="username">
-          <div class="full-name"><input type="text" placeholder="First Name" name="firstname">
-              <input type="text" name="lastname" class="lastname" placeholder="Last Name"></div>
-              
+            <div class="input-slide">
+                <h3>Email</h3>
+                <ul class="rules">
+                    <li>Please enter a valid email in the format "example@example.com".</li>
+                    <li>We value your privacy and will never use your email for any unauthorized purposes.</li>
+                    <li>Please don't use email that includes personal information.</li>
+                </ul>
+                <input type="email" name="email" class="email" placeholder="Email" autocomplete="off">
 
-              
-                <button class="button-nex" onclick="NextSlide(1)">Next</button>
+                <button class="button-nex" onclick="validateEmail(event)">Next</button>
+            </div>
 
-      </div>
-      <div class="input-slide">
-          <h3>Email</h3>
-          <ul class="rules">
-              <li>Please enter valid email in the format "example@example.com".</li>
-              <li>We value your privacy and will never use your email for any unauthorized purposes.</li>
-              <li>Please don't use email that includes personal information.</li>
-          </ul>
-          <input type="email" name="email" class="email" placeholder="Email">
+            <div class="input-slide password-slide">
+                <h3>Password</h3>
+                <ul class="rules">
+                    <li>Include a mix of uppercase and lowercase letters, numbers, and special characters.</li>
+                    <li>Avoid using common or easily guessable passwords.</li>
+                    <li>Do not use personal information.</li>
+                    <li>Password should be at least 8 characters long.</li>
+                </ul>
+                <div style="position: relative; display: inline-block;">
+                    <input type="password" name="password" class="password" placeholder="Password" autocomplete="off" id="password" 
+                        style="padding-right: 30px;">
+                    <span onclick="togglePassword('password', 'eyeIcon1')" 
+                        style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 22px;">
+                        &#x1F441;
+                    </span>
+                </div>
+                
+                <div style="position: relative; display: inline-block; margin-top: 10px;">
+                    <input type="password" name="confirm_password" class="confirm-password" placeholder="Confirm Your Password" autocomplete="off" id="confirm_password" 
+                        style="padding-right: 30px;">
+                    <span onclick="togglePassword('confirm_password', 'eyeIcon2')" 
+                        style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 22px;">
+                        &#x1F441;
+                    </span>
+                </div>
+                
+                <button class="button-nex" onclick="validatePasswords(event)">Next</button>
+            </div>
 
-          
-          <button class="button-nex" onclick="NextSlide(2)">Next</button>
-      </div>
-      <div class="input-slide password-slide">
-          <h3>Password</h3>
-          <ul class="rules">
-              <li>Include a mix of uppercase and lowercase letters, numbers, and special characters.</li>
-              <li>Avoid using common or easily guessable passwords.</li>
-              <li>Do not use personal information.</li>
-          </ul>
-          <input type="password" name="password" class="password" placeholder="Password">
-          <input type="password" name="confirm-password" class="confirm-password" placeholder="Confirm Your Password">
-          <button class="button-nex" onclick="NextSlide(3)">Next</button>
-      </div>
-      <div class="input-slide finish-slide">
-          <h3>Congratulations!</h3>
-          <ul class="rules">
-          <li>Before submitting your information, please take a moment to ensure that all the details provided are correct. </li>
-          <li> We take the privacy and security of our users very seriously, and it is important that all the information provided is accurate and up-to-date.</li> 
-          <li>Once you have confirmed that everything is in order, simply click the 'Submit' button.</li>
-          </ul> 
-        
-          <button type="submit" class="button-nex" disabled>Sumbit</button>
-      </div>
-  </scroller> 
-  </div>
-<button class="GoBack" onclick="GoBack()"><i class="fa-solid fa-arrow-left"></i></button> 
+            <div class="input-slide finish-slide">
+                <h3>Congratulations!</h3>
+                <ul class="rules">
+                    <li>Before submitting your information, please take a moment to ensure that all the details provided are correct.</li>
+                    <li>We take the privacy and security of our users very seriously, and it is important that all the information provided is accurate and up-to-date.</li> 
+                    <li>Once you have confirmed that everything is in order, simply click the 'Submit' button.</li>
+                </ul> 
+                <button type="submit" class="button-nex" onclick="confirmSubmission(event)">Submit</button>
+            </div>
+        </scroller> 
+    </div>
+    
+
+    <button class="GoBack" onclick="GoBack()"><i class="fa-solid fa-arrow-left"></i></button> 
 </form>
-<script>
 
+    <!-- Messages Display -->
+    {% if messages %}
+        <div class="message-container">
+            {% for message in messages %}
+                <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}" id="message-{{ forloop.counter }}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+<script>
+    function togglePassword(inputId) {
+        var passwordField = document.getElementById(inputId);
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+        } else {
+            passwordField.type = "password";
+        }
+    }
 var GlobalSlideNo;
 function NextSlide(SlideNo){
-GlobalSlideNo=SlideNo
-    event.preventDefault()
-    if(SlideNo==1){
-        document.querySelector(".GoBack").style.animation="GoBackBtnVisible 0.25s ease"
-        document.querySelector(".GoBack").onanimationend=function(){
-            this.style.animation=""
-            this.style.left="10px"
-        }
+    GlobalSlideNo = SlideNo;
+    event.preventDefault();
+    if (SlideNo == 1) {
+        document.querySelector(".GoBack").style.animation = "GoBackBtnVisible 0.25s ease";
+        document.querySelector(".GoBack").onanimationend = function(){
+            this.style.animation = "";
+            this.style.left = "10px";
+        };
     }
-    
-    console.log(parseInt(window.getComputedStyle(document.querySelector("scroller")).getPropertyValue("margin-left"))-478);
-    document.querySelector("scroller").style.marginLeft=parseInt(window.getComputedStyle(document.querySelector("scroller")).getPropertyValue("margin-left"))-478+"px";
-    MoveIndicationBar(SlideNo)
-    }
-IndicatorObj={
-    startVal:0,
-    EndVal:25,
-    currentWidth:0
+    document.querySelector("scroller").style.marginLeft = parseInt(window.getComputedStyle(document.querySelector("scroller")).getPropertyValue("margin-left")) - 478 + "px";
+    MoveIndicationBar(SlideNo);
 }
-function MoveIndicationBar(i){
-    
-    var step=document.querySelectorAll(".steps")[i-1]
-    IndicatorObj.StepNo=i
-    console.log(step)
-    IndicatorObj.EndVal=i*25
-    ZerotoHeroWidth()
-    
-    
-}
-function ZerotoHeroWidth(){
-    var bar=document.querySelector(".active")
-    var step=document.querySelectorAll(".steps")[IndicatorObj.StepNo-1]
-    barStyle=parseInt(window.getComputedStyle(bar).width)
-    if(IndicatorObj.currentWidth>IndicatorObj.EndVal/2){
-        step.classList.add("PassedStep")
-        
+
+function validateUserName(event) {
+    const username = document.querySelector('.username').value;
+    const firstName = document.querySelector('.first-name').value;
+    const lastName = document.querySelector('.last-name').value;
+
+    // Check if the username is empty
+    if (username.trim() === "") {
+        alert("Username cannot be empty.");
+        event.preventDefault();  // Prevent moving to the next slide
+        return false;
     }
-    if(IndicatorObj.currentWidth<IndicatorObj.EndVal){
-        IndicatorObj.currentWidth+=1
-        bar.style.width=IndicatorObj.currentWidth+"%"
-        window.requestAnimationFrame(ZerotoHeroWidth)
+
+        // Check if the username is at least 6 characters long
+    if (username.length < 6) {
+        alert("Username must be at least 6 characters long.");
+        event.preventDefault();  // Prevent moving to the next slide
+        return false;
     }
-    
+
+    // Check if first name starts with a capital letter and contains only alphabets
+    if (!firstName.match(/^[A-Z][a-zA-Z]*$/)) {
+        alert("First Name must start with a capital letter and contain only alphabets.");
+        event.preventDefault();  // Prevent moving to the next slide
+        return false;
+    }
+
+    // Check if last name starts with a capital letter and contains only alphabets
+    if (!lastName.match(/^[A-Z][a-zA-Z]*$/)) {
+        alert("Last Name must start with a capital letter and contain only alphabets.");
+        event.preventDefault();  // Prevent moving to the next slide
+        return false;
+    }
+
+    // If everything is correct, move to the next slide
+    NextSlide(1);
 }
+
+function validateEmail(event) {
+    const email = document.querySelector('.email').value;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email.match(emailPattern)) {
+        alert("Please enter a valid email address.");
+        event.preventDefault();  // Prevent moving to the next slide
+    } else {
+        NextSlide(2);
+    }
+}
+
+function validatePasswords(event) {
+    const password = document.querySelector('.password').value;
+    const confirmPassword = document.querySelector('.confirm-password').value;
+    
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    
+    if (!password.match(passwordPattern)) {
+        alert("Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.");
+        event.preventDefault();  // Prevent moving to the next slide
+    } else if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        event.preventDefault();  // Prevent moving to the next slide
+    } else {
+        NextSlide(3);
+    }
+}
+
+function confirmSubmission(event) {
+    event.preventDefault();
+    const confirmation = confirm("Are you sure you want to register as an HR?");
+    if (confirmation) {
+        document.querySelector('form').submit();
+    }
+}
+
 function GoBack(){
-    event.preventDefault()
-    console.log(GlobalSlideNo)
-    if(GlobalSlideNo<2){
-        document.querySelector(".GoBack").style.animation="GoBackBtnInvisible 0.25s ease"
-        document.querySelector(".GoBack").onanimationend=function(){
-            this.style.animation=""
-            this.style.left="-50px"
-        }
+    event.preventDefault();
+    if (GlobalSlideNo < 2) {
+        document.querySelector(".GoBack").style.animation = "GoBackBtnInvisible 0.25s ease";
+        document.querySelector(".GoBack").onanimationend = function(){
+            this.style.animation = "";
+            this.style.left = "-50px";
+        };
     }
-    GlobalSlideNo-=1
-    console.log(parseInt(window.getComputedStyle(document.querySelector("scroller")).getPropertyValue("margin-left"))+478);
-    document.querySelector("scroller").style.marginLeft=parseInt(window.getComputedStyle(document.querySelector("scroller")).getPropertyValue("margin-left"))+478+"px";
-    document.querySelector(".GoBack").onclick=function(){
-        event.preventDefault()
-    }
+    GlobalSlideNo -= 1;
+    document.querySelector("scroller").style.marginLeft = parseInt(window.getComputedStyle(document.querySelector("scroller")).getPropertyValue("margin-left")) + 478 + "px";
+    document.querySelector(".GoBack").onclick = function(){
+        event.preventDefault();
+    };
     setTimeout(function(){
-        document.querySelector(".GoBack").onclick=GoBack
-    },500)
-    MoveIndicationBarMinus(GlobalSlideNo)
-    
-    }
-    
+        document.querySelector(".GoBack").onclick = GoBack;
+    },500);
+    MoveIndicationBarMinus(GlobalSlideNo);
+}
 
+IndicatorObj = { startVal: 25, EndVal: 0, currentWidth: 0 };
+function MoveIndicationBarMinus(i) {
+    IndicatorObj.StepNo = i;
+    IndicatorObj.EndVal = i * 25;
+    HerotoZeroWidth();
+}
 
-
-    IndicatorObj={
-        startVal:25,
-        EndVal:0,
-        currentWidth:0
+function HerotoZeroWidth() {
+    var bar = document.querySelector(".active");
+    var step = document.querySelectorAll(".steps")[IndicatorObj.StepNo-1];
+    if (IndicatorObj.currentWidth > IndicatorObj.EndVal) {
+        IndicatorObj.currentWidth -= 1;
+        bar.style.width = IndicatorObj.currentWidth + "%";
+        window.requestAnimationFrame(HerotoZeroWidth);
     }
-    function MoveIndicationBarMinus(i){
-
-        IndicatorObj.StepNo=i
-    
-        IndicatorObj.EndVal=i*25
-        HerotoZeroWidth()
-        console.log(IndicatorObj)
-        
+}
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Tab") {
+        event.preventDefault(); // Prevent the tab key from switching slides
     }
-    function HerotoZeroWidth(){
-        var bar=document.querySelector(".active")
-        var step=document.querySelectorAll(".steps")[IndicatorObj.StepNo-1]
-        barStyle=parseInt(window.getComputedStyle(bar).width)
-        if(IndicatorObj.currentWidth>IndicatorObj.EndVal){
-            IndicatorObj.currentWidth-=1
-            bar.style.width=IndicatorObj.currentWidth+"%"
-            window.requestAnimationFrame(HerotoZeroWidth)
-        }
-        
-    }
+});
+// Hide messages after 4 seconds
+window.onload = function() {
+    {% if messages %}
+        {% for message in messages %}
+            setTimeout(function() {
+                var messageElement = document.getElementById('message-{{ forloop.counter }}');
+                if (messageElement) {
+                    messageElement.style.display = 'none';
+                }
+            }, 4000);  // 4000ms = 4 seconds
+        {% endfor %}
+    {% endif %}
+}
 </script>
 {% endblock main %}
-
-
-
-
-
-
-
-
-

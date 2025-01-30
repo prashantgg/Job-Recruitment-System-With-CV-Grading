@@ -489,6 +489,27 @@ font-size: 1.01em;
 .GoBack:hover{
     background-color: #40916c;
 }
+
+.message-container {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  z-index: 1000;
+}
+
+/* Green color for success messages */
+.success-message {
+  color: green;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Red color for error messages */
+.error-message {
+  color: rgb(150, 56, 56);
+  font-weight: bold;
+  font-size: 16px;
+}
 @keyframes ZerotoHeroWidth{
     0%{
         width:0%;
