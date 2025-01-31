@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User  # Importing the built-in User model
 
 
-
 class ContactForm(models.Model):
     name = models.CharField(max_length=50, default=0)
     email = models.EmailField(default=0)

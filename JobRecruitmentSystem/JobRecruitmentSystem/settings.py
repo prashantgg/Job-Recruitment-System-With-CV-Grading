@@ -48,7 +48,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'JRS.middleware.SuperuserAdminMiddleware',
 ]
 
 ROOT_URLCONF = 'JobRecruitmentSystem.urls'
