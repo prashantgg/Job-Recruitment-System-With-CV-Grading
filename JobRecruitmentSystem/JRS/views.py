@@ -7,6 +7,8 @@ from django.contrib.auth import login
 from django.contrib.auth.hashers import make_password
 from .models import User, HR, Candidate, Skill
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
 
 
 
@@ -152,16 +154,39 @@ def candidate_registration(request):
 
     return render(request, "JRS/candidate_register_page.html")
 
+def submit_feedback(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        contact = request.POST['contact']
+        feedback = request.POST['feedback']
+        
+        # Save feedback to database
+        models.Feedback.objects.create(name=name, email=email, contact=contact, feedback=feedback)
+        
+        # Show a success message
+        messages.success(request, "Your feedback has been submitted successfully!")
+        return redirect('JRS:feedback_page')  # Redirect back to the feedback page
+    return render(request, 'JRS/feedback.html')
+
+
+
 
 # Create your views here.
 def startpage(request):
     return render(request, "JRS/startpage.html")
+
+def edit_profile_hr(request):
+    return render(request, "JRS/edit_profile_hr.html")
 
 def aboutpage(request):
     return render(request, "JRS/aboutpage.html")
 
 def featurepage(request):
     return render(request, "JRS/featurepage.html")
+
+def feedback(request):
+    return render(request, "JRS/feedback.html")
 
 def contactpage(request):
     return render(request, "JRS/contactpage.html")

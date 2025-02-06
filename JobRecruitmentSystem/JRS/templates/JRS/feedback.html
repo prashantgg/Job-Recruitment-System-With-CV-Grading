@@ -1,0 +1,88 @@
+{% extends "JRS/base2.html" %}
+{% load static %}
+{% block title %}
+Feedback Page
+{% endblock title %}
+{% block inlinecss %}<link href="{% static 'JRS/css/feedback.css' %}" rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+{% endblock inlinecss %}
+{% block main %}
+<a href="{% url 'JRS:hr_dashboard' %}" class="back-icon">
+    <i class="fa-solid fa-arrow-left"></i> 
+</a>
+<h2>We Value Your Feedback</h2><br>
+
+<div class="container">
+    <div class="row justify-content-center my-5">
+        <div class="col-md-8">
+            <div class="card shadow-lg p-4">
+                <b><p class="text-center text-muted">Your feedback helps us improve our services.</p></b>
+                <form id="feedbackForm" method="POST" action="{% url 'JRS:feedback_page' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Your Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contact" class="form-label">Your Contact Number</label>
+                        <input type="text" class="form-control" id="contact" name="contact" placeholder="Enter your Contact Number" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Your Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="feedback" class="form-label">Your Feedback</label>
+                        <textarea class="form-control" id="feedback" name="feedback" rows="4" placeholder="Enter your feedback here" required></textarea>
+                    </div>
+                    
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Submit Feedback</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}" id="message-{{ forloop.counter }}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<script>
+    window.onload = function() {
+        {% if messages %}
+            {% for message in messages %}
+                var messageElement = document.getElementById('message-{{ forloop.counter }}');
+                if (messageElement) {
+                    setTimeout(function() {
+                        messageElement.style.display = 'none';
+                    }, 4000);  // 4000ms = 4 seconds
+                }
+            {% endfor %}
+        {% endif %}
+    }
+    
+    // Add confirmation before form submission
+    document.getElementById("feedbackForm").onsubmit = function(event) {
+        var confirmation = confirm("Are you sure you want to submit your feedback?");
+        if (!confirmation) {
+            event.preventDefault();  // Prevent the form submission if the user clicks "Cancel"
+        }
+    }
+    </script>
+    
+{% endblock main %}
+
+

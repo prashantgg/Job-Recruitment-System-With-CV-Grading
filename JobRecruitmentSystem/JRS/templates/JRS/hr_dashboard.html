@@ -1,12 +1,173 @@
-<h1> HR </h1>
+{% extends "JRS/base2.html" %}
+{% load static %}
+{% block title %}
+HR Dashboard Page
+{% endblock title %}
+{% block inlinecss %}
+<link href="{% static 'JRS/css/hr_dashboard.css' %}" rel="stylesheet">
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
-    <!-- Messages Display -->
-    {% if messages %}
-        <div class="message-container">
-            {% for message in messages %}
-                <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}">
-                    {{ message }}
-                </p>
-            {% endfor %}
+
+{% endblock inlinecss %}
+{% block main %}
+
+<h2>HR Management Panel</h2><br>
+
+<div class="container mt-4">
+
+    <div class="row">
+
+        <!-- Total Job Posts -->
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
+                <div class="card-info">
+                    <h3 id="total-jobs">25</h3>
+                    <p>Total Job Posts</p>
+                </div>
+            </div>
         </div>
-    {% endif %}
+
+        <!-- Total Applicants -->
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div class="card-info">
+                    <h3 id="total-applicants">120</h3>
+                    <p>Total Applicants</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shortlisted Candidates -->
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+                <div class="card-info">
+                    <h3 id="shortlisted">45</h3>
+                    <p>Shortlisted Candidates</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Applications -->
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="card-info">
+                    <h3 id="pending-applications">30</h3>
+                    <p>Pending Applications</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="job-container">
+        <!-- First Job Box -->
+        <div class="job-box">
+            <img src="{% static 'JRS/Images/post.jpg' %}" alt="Post a Job" style="width: 100%; height: 200px; object-fit: contain; border-radius: 8px;">
+            <h3>Post a Job</h3>
+            <p>Quickly post a job and find the best candidates for your company.</p>
+            <a href="#" class="btn">Post a Job</a>
+        </div>
+
+        <!-- Second Job Box -->
+        <div class="job-box">
+            <img src="{% static 'JRS/Images/manage.jpg' %}" alt="Post a Job" style="width: 100%;width:100px height: 200px;object-fit: contain;   border-radius: 8px;">
+            <h3>Manage Job Posting</h3>
+            <p>Manage job postings with options to update, delete, and view job listings.</p>
+            <a href="#" class="btn">Manage Post</a>
+        </div>
+
+        <div class="job-box">
+            <img src="{% static 'JRS/Images/view.jpg' %}" alt="Post a Job" style="width: 100%; height: 200px; object-fit: contain; border-radius: 8px;">
+            <h3>View Candidates</h3>
+            <p>Review and manage the list of candidates who have applied for your job.</p>
+            <a href="#" class="btn">View Candidates</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Messages Display -->
+{% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}" id="message-{{ forloop.counter }}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#jobTableBody tr');
+        rows.forEach(row => {
+            let jobTitle = row.cells[0].textContent.toLowerCase();
+            row.style.display = jobTitle.includes(filter) ? '' : 'none';
+        });
+    });
+    
+    document.getElementById('statusFilter').addEventListener('change', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#jobTableBody tr');
+        rows.forEach(row => {
+            let status = row.cells[2].textContent.toLowerCase();
+            row.style.display = filter === '' || status.includes(filter) ? '' : 'none';
+        });
+    });
+    
+    function sortTable(columnIndex) {
+        let table = document.querySelector("table tbody");
+        let rows = Array.from(table.rows);
+        let isAscending = table.getAttribute("data-order") === "asc";
+        
+        rows.sort((rowA, rowB) => {
+            let cellA = rowA.cells[columnIndex].textContent.trim().toLowerCase();
+            let cellB = rowB.cells[columnIndex].textContent.trim().toLowerCase();
+            return isAscending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+        });
+    
+        table.setAttribute("data-order", isAscending ? "desc" : "asc");
+        rows.forEach(row => table.appendChild(row));
+    }
+
+    window.onload = function() {
+        {% if messages %}
+            {% for message in messages %}
+                var messageElement = document.getElementById('message-{{ forloop.counter }}');
+                if (messageElement) {
+                    setTimeout(function() {
+                        messageElement.style.display = 'none';
+                    }, 4000);  // 4000ms = 4 seconds
+                }
+            {% endfor %}
+        {% endif %}
+    }
+    
+    </script>
+
+{% endblock main %}
+
+

@@ -12,15 +12,19 @@ class ContactForm(models.Model):
     def __str__(self):
         return f"Message by {self.name}"
 
+
+
 class HR(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=100, default='Default User Name')
     first_name = models.CharField(max_length=100, default='Default HR First Name')
     last_name = models.CharField(max_length=100, default='Default HR Last Name')
     email = models.EmailField(unique=True, default='default@email.com')
+    profile_picture = models.ImageField(upload_to='profile_pics/', default='default_profile.png')
 
     def __str__(self):
         return self.first_name + " " + self.last_name
+
 
 class Skill(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -38,3 +42,12 @@ class Candidate(models.Model):
 
     def __str__(self):
         return self.first_name + " " + self.last_name
+    
+class Feedback(models.Model):
+    name = models.CharField(max_length=255)
+    contact = models.CharField(max_length=255)
+    email = models.EmailField()
+    feedback = models.TextField()
+
+    def __str__(self):
+        return f"Feedback from {self.name}"

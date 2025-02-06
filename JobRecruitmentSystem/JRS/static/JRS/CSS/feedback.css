@@ -1,0 +1,349 @@
+/* CSS Variables for easy theming */
+:root {
+    --primary-color: #ff5733;
+    --secondary-color: #8e44ad;
+    --accent-color: #f1c40f;
+    --text-color: #333;
+    --background-color: rgba(255, 255, 255, 0.85);
+    --scrollbar-bg: rgba(0, 0, 0, 0.1);
+    --font-family: "Poppins", sans-serif;
+  }
+  
+  /* Reset and base styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    overflow-x: hidden;
+  }
+  
+  body {
+    font-family: var(--font-family);
+    background: #fff;
+    color: var(--text-color);
+  }
+
+  /* Back Icon Style */
+  .back-icon {
+    position: absolute;
+    top: 90px;
+    left: 20px;
+    font-size: 1.5rem;
+    color: #000;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    z-index: 9999;  /* Add a high z-index */
+}
+
+
+.back-icon:hover {
+    color: #0a0a0a;
+}
+
+.back-icon i {
+    margin-right: 8px;
+}
+  
+  /* Navigation styles */
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.9);
+    border-bottom: 2px solid transparent;
+  }
+  
+  nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 10px 5%;
+  }
+  
+  /* Logo Styling */
+  .logo {
+    color: red;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 1100;
+    margin-right: 5%;
+  }
+  
+  .logo span {
+    color: #fff;
+  }
+  
+  .logo:hover {
+    color: #fff;
+  }
+  
+  .logo:hover span {
+    color: red;
+  }
+  
+  /* Navigation Links */
+  .nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    flex-grow: 3; /* Allow other items to grow */
+  }
+  
+/* Wrapper for user name and profile circle */
+.user-profile-wrapper {
+  display: flex;
+  align-items: center;  /* Keep items vertically centered */
+  gap: 20px; /* Space between user name and profile icon */
+  position: relative; /* Allow positioning adjustments */
+  top: 10px;  /* Adjust this value to move them down */
+}
+
+  
+  /* User Name */
+  .user-name {
+    color: #d8d1d1; /* White text */
+    font-size: 16px; /* Adjust font size */
+    gap: 4;
+    position: relative; /* Allow positioning adjustments */
+    top: 10px;  /* Adjust this value to move them down */
+  }
+  
+  /* Profile Circle */
+  .profile-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid #333;
+    position: relative;
+    font-size: 18px; /* Adjust arrow size */
+    font-weight: bold;
+  }
+  
+  /* Add down arrow */
+  .profile-circle::after {
+    font-size: 12px; /* Adjust arrow size */
+    color: #bca7a7; /* Arrow color */
+    position: absolute;
+    bottom: -12px; /* Adjust spacing below the profile */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  /* Dropdown Menu */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333333; /* Black background */
+    min-width: 180px; /* Slightly wider */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 5; /* Align to the right of the profile icon */
+    top: calc(100% + 10px); /* Position below the profile icon with a small gap */
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px 0; /* Add padding for spacing */
+  }
+
+  
+
+  /* Page Background with Pattern */
+body {
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.02),
+      rgba(0, 0, 0, 0.02) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background-color: rgba(255, 255, 255, 0.85); /* Adjust for transparency if needed */
+}
+
+  
+  /* Dropdown Menu Links */
+  .dropdown-content a {
+    color: #fff; /* White text */
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Space between icon and text */
+    font-size: 16px; /* Larger font size */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+  }
+  
+  .dropdown-content a:hover {
+    background-color: #444; /* Darker background on hover */
+  }
+  
+  /* Show dropdown when active */
+  .dropdown.active .dropdown-content {
+    display: block;
+  }
+
+  /* feedback.css */
+
+/* Page Styling */
+body {
+    background-color: #f4f7fa;
+    font-family: Arial, sans-serif;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    
+    top: 5%;
+    height: 10%;
+
+}
+
+
+
+h3 {
+    font-size: 2rem;
+    color: #343a40;
+    margin-bottom: 1rem;
+}
+
+.message-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 1000;
+  }
+  
+  /* Green color for success messages */
+  .success-message {
+    color: green;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  /* Red color for error messages */
+  .error-message {
+    color: rgb(150, 56, 56);
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+
+h2 {
+    font-size: 2.5em !important;
+    text-shadow: 2px 2px var(--accent-color);
+    text-align: center;
+    white-space: nowrap;
+    position: relative;
+    top: 90px; /* Adjust the value to move it further down */
+}
+
+.text-muted {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #495057;
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    font-size: 1rem;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(38, 143, 255, 0.5);
+}
+
+
+
+
+
+/* Feedback Button Styles */
+.btn-primary {
+    background-color: #000000 !important; /* Set the background color to black */
+    border-color: #000000 !important; /* Set the border color to black */
+    font-size: 0.9rem; /* Slightly smaller font size */
+    padding: 8px 12px !important; /* Reduced padding for a smaller button */
+    border-radius: 8px;
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition */
+}
+
+.btn-primary:hover {
+    background-color: #000000 !important; /* Keep background black on hover */
+    border-color: #000000 !important; /* Keep border black on hover */
+}
+
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card {
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    .form-control {
+        font-size: 0.95rem;
+    }
+
+    .rating label {
+        font-size: 1.3rem;
+    }
+}
+
+  
+  /* Responsive Design */
+  @media screen and (min-width: 1101px) {
+    .nav-links {
+      display: flex;
+      position: relative;
+      height: auto;
+      width: auto;
+      flex-direction: row;
+      background: transparent;
+      justify-content: flex-end;
+      align-items: center;
+      top: 0;
+      transform: none;
+      opacity: 1;
+      pointer-events: auto;
+      transition: none;
+    }
+  
+    .menu-icon {
+      display: none;
+    }
+  
+    /* Adjust spacing to prevent squishing */
+    .nav-links li {
+      margin-left: 15px;
+    }
+  
+    .nav-links a {
+      padding: 8px 12px;
+      font-size: 0.9em;
+    }
+  }
