@@ -1,0 +1,159 @@
+.message-container {
+    position: fixed;
+    top: 120px;
+    right: 70px;
+    z-index: 1000;
+}
+
+/* Green color for success messages */
+.success-message {
+    color: green;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Red color for error messages */
+.error-message {
+    color: rgb(150, 56, 56);
+    font-weight: bold;
+    font-size: 16px;
+}
+
+
+
+body, html {
+    overflow: hidden;
+}
+
+    /* Main container styling */
+    .job-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 6% auto;
+        margin-top: 8%;
+        background: repeating-linear-gradient(
+            45deg,
+            rgba(223, 6, 6, 0.02),
+            rgba(94, 19, 19, 0.02) 10px,
+            transparent 10px,
+            transparent 20px
+        );     
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid #948e8e;  /* Optional: Add border to the form container */
+
+    }
+
+    h2 {
+        color: #343a40;
+        margin-bottom: 30px;
+        font-size: 2rem;
+    }
+
+    /* Table Styling */
+    .table-container {
+        margin-top: 20px;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #292727;
+        color: white;
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    td {
+        color: #060606;
+        font-weight: 500;
+        font-size: 16px;
+    }
+
+    /* Button Styling */
+    .btn-update, .btn-delete {
+        padding: 8px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        transition: 0.3s;
+    }
+
+    .btn-update {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-update:hover {
+        background-color: #218838;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        table {
+            font-size: 14px;
+        }
+        
+        .btn-update, .btn-delete {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+    }
+
+@media screen and (min-width: 1101px) {
+    .nav-links {
+        display: flex;
+        position: relative;
+        height: auto;
+        width: auto;
+        flex-direction: row;
+        background: transparent;
+        justify-content: flex-end;
+        align-items: center;
+        top: 0;
+        transform: none;
+        opacity: 1;
+        pointer-events: auto;
+        transition: none;
+    }
+
+    .menu-icon {
+        display: none;
+    }
+
+    /* Adjust spacing to prevent squishing */
+    .nav-links li {
+        margin-left: 15px;
+    }
+
+    .nav-links a {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+}

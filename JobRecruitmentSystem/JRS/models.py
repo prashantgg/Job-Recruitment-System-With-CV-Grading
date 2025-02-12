@@ -51,3 +51,30 @@ class Feedback(models.Model):
 
     def __str__(self):
         return f"Feedback from {self.name}"
+    
+
+class Job(models.Model):
+    JOB_TYPES = (
+        ('Full-time', 'Full-time'),
+        ('Part-time', 'Part-time'),
+        ('Internship', 'Internship'),
+        ('Contract', 'Contract'),
+        ('Freelance', 'Freelance'),
+    )
+
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    company = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
+    job_type = models.CharField(max_length=50, choices=JOB_TYPES)
+    salary = models.CharField(max_length=255)
+    experience = models.CharField(max_length=255)
+    skills = models.CharField(max_length=255)
+    education = models.CharField(max_length=255)
+    deadline = models.DateField()
+    posted_by = models.ForeignKey('HR', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title

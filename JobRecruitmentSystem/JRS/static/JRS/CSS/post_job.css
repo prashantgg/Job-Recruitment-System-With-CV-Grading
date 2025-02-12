@@ -1,0 +1,172 @@
+.container {
+    max-width: 750px;  /* Slightly increased width */
+    margin: auto;
+    padding: 15px;
+    margin-top: 5%;
+}
+
+.post-job-container {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(223, 6, 6, 0.02),
+        rgba(94, 19, 19, 0.02) 10px,
+        transparent 10px,
+        transparent 20px
+    );  
+    padding: 30px;  /* Increased padding for better spacing */
+    border-radius: 8px;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+    max-height: 623px;  /* Set a maximum height for the container */
+    overflow-y: auto;  /* Add vertical scrolling */
+    border: 1px solid #948e8e;  /* Optional: Add border to the form container */
+}
+
+/* Styling for the scrollbar */
+.post-job-container::-webkit-scrollbar {
+    width: 12px;  /* Width of the scrollbar */
+}
+
+.post-job-container::-webkit-scrollbar-track {
+    background-color: #f1f1f1;  /* Light background for the scrollbar track */
+    border-radius: 10px;
+}
+
+.message-container {
+    position: fixed;
+    top: 120px;
+    right: 70px;
+    z-index: 1000;
+}
+
+/* Green color for success messages */
+.success-message {
+    color: green;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Red color for error messages */
+.error-message {
+    color: rgb(150, 56, 56);
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.post-job-container::-webkit-scrollbar-thumb {
+    background-color: #9c9797;  /* Darker thumb color */
+    border-radius: 10px;
+    border: 3px solid #f1f1f1;  /* Adding a border to make the thumb stand out */
+}
+
+.post-job-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555;  /* Darker thumb color on hover */
+}
+
+body, html {
+    overflow: hidden;
+}
+
+h2 {
+    text-align: center;
+    font-size: 24px;  /* Increased font size */
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;  /* Increased gap for more space */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    font-size: 14px;  /* Increased font size */
+    color: #333;
+    margin-bottom: 10px;  /* Increased space between label and input */
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 14px;  /* Increased padding for larger inputs */
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;  /* Larger font for inputs */
+    background-color: #f9f9f9;  /* Light background for input fields */
+    transition: border 0.3s ease;  /* Smooth border transition on focus */
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #111111;  /* Blue border on focus */
+    outline: none;
+}
+
+.description {
+    margin-top: 15px;
+}
+
+.submit-btn {
+    display: block;
+    width: 100%;
+    background: black;
+    color: white;
+    padding: 16px;  /* Slightly larger padding for buttons */
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;  /* Increased font size */
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 18px;
+    text-align: center;
+}
+
+.submit-btn:hover {
+    background: #333;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (min-width: 1101px) {
+    .nav-links {
+        display: flex;
+        position: relative;
+        height: auto;
+        width: auto;
+        flex-direction: row;
+        background: transparent;
+        justify-content: flex-end;
+        align-items: center;
+        top: 0;
+        transform: none;
+        opacity: 1;
+        pointer-events: auto;
+        transition: none;
+    }
+
+    .menu-icon {
+        display: none;
+    }
+
+    /* Adjust spacing to prevent squishing */
+    .nav-links li {
+        margin-left: 15px;
+    }
+
+    .nav-links a {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+}

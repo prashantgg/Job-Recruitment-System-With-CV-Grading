@@ -1,17 +1,25 @@
 from django.shortcuts import redirect
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 app_name = "JRS"
 
 urlpatterns = [
     path("home", views.startpage, name="startpage"),  # No space in the name
     path("about", views.aboutpage, name="aboutpage"),
+    path('view-jobs/', views.view_jobs, name='view_jobs'),
     path("feedback", views.feedback, name="feedback"),
     path("feature", views.featurepage, name="featurepage"),
     path("contact", views.contactpage, name="contactpage"),
     path('contact/', views.contact_form, name='contact_form'),
     path("faq", views.faqpage, name="faqpage"),
+    path('delete_job/<int:job_id>/', views.delete_job, name='delete_job'),
+
+    path("post-job", views.post_job, name="post_job"),
+    path("post-jobs", views.post_jobs, name="post_jobs"),
     path("blog", views.blogpage, name="blogpage"),
     path("blog", views.blogpage, name="blogpage"),
     path('feedback-page', views.submit_feedback, name='feedback_page'),
@@ -27,5 +35,5 @@ urlpatterns = [
     path("", lambda request: redirect("JRS:startpage")),  # Use the app namespace and correct name
     path('register/hr/', views.hr_registration, name='register_hr'),
     path('register/candidate/', views.candidate_registration, name='register_candidate'),
-    
-]
+    path("accounts/logout/", views.logout_user, name = "logout_user"),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

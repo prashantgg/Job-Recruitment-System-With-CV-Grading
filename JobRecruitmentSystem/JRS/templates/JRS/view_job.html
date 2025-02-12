@@ -1,0 +1,57 @@
+{% extends "JRS/base2.html" %}
+{% load static %}
+
+{% block title %}
+View Jobs
+{% endblock title %}
+
+{% block inlinecss %}
+<link href="{% static 'JRS/css/base2.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/view_job.css' %}" rel="stylesheet">
+
+{% endblock inlinecss %}
+
+{% block main %}
+<div class="job-container">
+    <h1 class="text-center fw-bold mb-3" style="color: #343a40;">View Jobs</h1>
+    <b><p class="text-center text-muted" style="margin-bottom: 40px;">Here you can manage and view the jobs you’ve posted.</p></b>
+    
+
+
+    {% if jobs %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th>Job Type</th>
+                    <th>Deadline</th>
+                    <th>Posted By</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td>{{ job.title }}</td>
+                    <td>{{ job.company }}</td>
+                    <td>{{ job.location }}</td>
+                    <td>{{ job.job_type|capfirst }}</td>
+                    <td>{{ job.deadline }}</td>
+                    <td>{{ job.posted_by.username }}</td>
+                    <td>
+                        <a href="" class="btn-update">Update</a>
+                        <a href="{% url 'JRS:delete_job' job.id %}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this job?');">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-center text-muted">No job postings available at the moment.</p>
+    {% endif %}
+</div>
+{% endblock main %}

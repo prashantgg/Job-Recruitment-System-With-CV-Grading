@@ -1,13 +1,15 @@
 import re
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout
 from django.db import IntegrityError
 from .import models 
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.hashers import make_password
-from .models import User, HR, Candidate, Skill
+from .models import Job, User, HR, Candidate, Skill
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+
 
 
 
@@ -67,18 +69,19 @@ def hr_login(request):
                 if hr_user.user.email == email:  # Validate email
                     login(request, user)
                     messages.success(request, "HR Logged In Successfully")
-                    return redirect("JRS:hr_dashboard", permanent=True)
+                    return redirect("JRS:hr_dashboard")
                 else:
                     messages.error(request, "Invalid email address.")
-                    return redirect("JRS:hr_login_page", permanent=True)
+                    return redirect("JRS:hr_login_page")
             except HR.DoesNotExist:
                 messages.error(request, "Access Denied: You are not an HR user.")
-                return redirect("JRS:hr_login_page", permanent=True)
+                return redirect("JRS:hr_login_page")
         else:
             messages.error(request, "Invalid username or password")
-            return redirect("JRS:hr_login_page", permanent=True)
+            return redirect("JRS:hr_login_page")
 
-    return render(request, "JRS/hr_dashboard.html")
+    return render(request, "JRS/hr_login_page.html")
+
 def candidate_login(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -89,24 +92,24 @@ def candidate_login(request):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            # Check if the user exists in the HR model and email matches
+            # Check if the user exists in the Candidate model and email matches
             try:
                 candidate_user = Candidate.objects.get(user=user)
                 if candidate_user.user.email == email:  # Validate email
                     login(request, user)
                     messages.success(request, "Candidate Logged In Successfully")
-                    return redirect("JRS:candidate_dashboard", permanent=True)
+                    return redirect("JRS:candidate_dashboard")
                 else:
                     messages.error(request, "Invalid email address.")
-                    return redirect("JRS:candidate_login_page", permanent=True)
+                    return redirect("JRS:candidate_login_page")
             except Candidate.DoesNotExist:
-                messages.error(request, "Access Denied: You are not an Candidate user.")
-                return redirect("JRS:candidate_login_page", permanent=True)
+                messages.error(request, "Access Denied: You are not a Candidate user.")
+                return redirect("JRS:candidate_login_page")
         else:
             messages.error(request, "Invalid username or password")
-            return redirect("JRS:candidate_login_page", permanent=True)
+            return redirect("JRS:candidate_login_page")
 
-    return render(request, "JRS/candidate_dashboard.html")
+    return render(request, "JRS/candidate_login_page.html")
 
 # Candidate Registration View
 def candidate_registration(request):
@@ -154,6 +157,12 @@ def candidate_registration(request):
 
     return render(request, "JRS/candidate_register_page.html")
 
+
+def logout_user(request):
+    logout(request)
+    messages.error(request, "Logged Out Successfully")
+    return redirect("JRS:hr_login_page", permanent=True)
+
 def submit_feedback(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -172,9 +181,13 @@ def submit_feedback(request):
 
 
 
+
 # Create your views here.
 def startpage(request):
     return render(request, "JRS/startpage.html")
+
+def post_job(request):
+    return render(request, "JRS/post_job.html")
 
 def edit_profile_hr(request):
     return render(request, "JRS/edit_profile_hr.html")
@@ -199,6 +212,8 @@ def candidate_dashboard(request):
 
 def faqpage(request):
     return render(request, "JRS/faqpage.html")
+
+
 
 def blogpage(request):
     return render(request, "JRS/blogpage.html")
@@ -227,6 +242,67 @@ def contact_form(request):
         contact = models.ContactForm(name=name, email=email, number=number, message=message)
         contact.save()   
         return render(request, 'JRS/contactpage.html')
+    
 
+# This view is for HR to see only the jobs they posted
+@login_required
+def view_jobs(request):
+    if hasattr(request.user, 'hr'):  # Check if the user is an HR
+        hr = request.user.hr  # Get the HR instance linked to this user
+        jobs = Job.objects.filter(posted_by=hr)  # Filter jobs posted by this HR
+        return render(request, 'JRS/view_job.html', {'jobs': jobs})
+    else:
+        return render(request, 'error.html')  # Show an error or redirect if the user is not HR
 
+def post_jobs(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        company = request.POST.get('company')
+        location = request.POST.get('location')
+        job_type = request.POST.get('job_type')
+        salary = request.POST.get('salary')
+        experience = request.POST.get('experience')
+        skills = request.POST.get('skills')
+        education = request.POST.get('education')
+        description = request.POST.get('description')
+        deadline = request.POST.get('deadline')
+        posted_by = request.user.hr  # Assuming HR model is linked to User via OneToOne
+
+        # Validation checks
+        if not title or not company or not location or not job_type or not salary or not experience or not skills or not education or not description or not deadline:
+            messages.error(request, "All fields are required.")
+            return redirect('JRS:post_job')
+
+        # Save the job posting to the database
+        job = models.Job(
+            title=title,
+            company=company,
+            location=location,
+            job_type=job_type,
+            salary=salary,
+            experience=experience,
+            skills=skills,
+            education=education,
+            description=description,
+            deadline=deadline,
+            posted_by=posted_by
+        )
+        job.save()
+
+        messages.success(request, "Job posted successfully!")
+        return redirect('JRS:post_job')  # Redirect to HR dashboard after posting the job
+
+    return render(request, 'JRS/post_job.html')  # Render the post job page
+
+def delete_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    
+    # Ensure that the logged-in user is the one who posted the job
+    if hasattr(request.user, 'hr') and request.user.hr == job.posted_by:
+        job.delete()
+        messages.success(request, "Job post deleted successfully!")
+    else:
+        messages.error(request, "You are not authorized to delete this job post.")
+    
+    return redirect('JRS:view_jobs')  # Redirect to the list of jobs the HR posted
         

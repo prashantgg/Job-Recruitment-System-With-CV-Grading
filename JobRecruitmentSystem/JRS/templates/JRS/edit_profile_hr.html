@@ -4,31 +4,38 @@
 Edit HR Profile
 {% endblock title %}
 {% block inlinecss %}
+<link href="{% static 'JRS/css/base2.css' %}" rel="stylesheet">
+
 <link href="{% static 'JRS/css/edit_profile_hr.css' %}" rel="stylesheet">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        corePlugins: {
+            preflight: false  // Ensures Bootstrap styles are not overridden
+        }
+    };
+</script>
+
 {% endblock inlinecss %}
 
 
 {% block main %}
-<a href="{% url 'JRS:hr_dashboard' %}" class="back-icon">
-    <i class="fa-solid fa-arrow-left"></i> 
-</a>
-<br>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="w-full max-w-5xl bg-white p-8 rounded-xl shadow-lg mt-16">
-        <h2 class="text-3xl font-semibold text-center text-gray-800 mb-6">Edit Profile</h2>
-    
+    <div class="w-full max-w-5xl bg-white p-8 rounded-xl min-h-[500px] shadow-lg mt-20">
+        <h1 class="text-center fw-bold mb-3" style="color: #343a40;">Edit Profile</h1>
+        <b><p class="text-center text-muted">Take a moment to update your profile information.</p></b>
+
+        
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Profile Picture Upload -->
             <div class="text-center bg-gray-50 p-6 rounded-lg shadow-sm border">
-                <img src="{% static 'JRS/Images/profile.jpg' %}" class="w-32 h-32 rounded-full mx-auto border-4 border-gray-300 shadow-lg">
+                <img src="{% static 'JRS/Images/profile.jpg' %}" class="w-32 h-36.1 rounded-full mx-auto border-4 border-gray-300 shadow-lg">
                 <form method="POST" enctype="multipart/form-data" class="mt-4">
                     {% csrf_token %}
                     <input type="file" name="profile_picture" class="w-full border p-2 rounded-lg text-gray-700 text-sm">
+                    <br>
                     <div class="user-namea">
                         {% if request.user.first_name and request.user.last_name %}
                         {{ request.user.first_name }} {{ request.user.last_name }}
@@ -40,7 +47,7 @@ Edit HR Profile
                     
                     
                  
-                    <button type="submit" class="w-full py-2 text-center border-2 border-transparent bg-black text-white hover:border-black mt-1">Upload</button>
+                    <button type="submit" class="w-full py-2 text-center border-2 border-transparent bg-black text-white hover:border-black mt-4">Upload</button>
                 </form>
             </div>
     
