@@ -9,9 +9,8 @@ from .models import Job, User, HR, Candidate, Skill
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
-
-
-
+from django.contrib.auth.models import User, Group
+from JRS.decorators import hr_required, candidate_required
 
 
 # HR Registration View
@@ -37,6 +36,10 @@ def hr_registration(request):
             # Create a new user (Even if the username exists in User model, it's fine)
             user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
             user.save()
+
+            # ✅ Add user to Candidate group (Fixing previous mistake)
+            hr_group, created = Group.objects.get_or_create(name="HR")
+            user.groups.add(hr_group)
 
             # Create the HR profile
             hr = HR.objects.create(user=user, username=username, first_name=first_name, last_name=last_name, email=email)
@@ -111,7 +114,7 @@ def candidate_login(request):
 
     return render(request, "JRS/candidate_login_page.html")
 
-# Candidate Registration View
+
 def candidate_registration(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -119,9 +122,8 @@ def candidate_registration(request):
         last_name = request.POST.get("last_name")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        skills = request.POST.get("skills", "").split(",")  # Get skills as a list
+        skills = request.POST.get("skills", "").split(",")
 
-        # ✅ Check if username or email already exists in Candidate
         if Candidate.objects.filter(username=username).exists():
             messages.error(request, "Username already exists for a Candidate profile.")
             return redirect("JRS:candidate_register_page")
@@ -131,11 +133,18 @@ def candidate_registration(request):
             return redirect("JRS:candidate_register_page")
 
         try:
-            # ✅ Create User first
+            # ✅ Create User
             user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
             user.save()
 
-            # ✅ Create Candidate and link it to User
+            # ✅ Assign to Candidate Group
+            candidate_group, created = Group.objects.get_or_create(name="Candidate")
+            user.groups.add(candidate_group)
+
+            # Debugging: Print group info
+            print(f"✅ User {user.username} added to groups: {user.groups.all()}")  
+
+            # ✅ Create Candidate Profile
             candidate = Candidate.objects.create(
                 user=user, 
                 username=username, 
@@ -144,9 +153,15 @@ def candidate_registration(request):
                 email=email
             )
 
-            # ✅ Process skills
-            skill_objects = [Skill.objects.get_or_create(name=skill.strip())[0] for skill in skills if skill.strip()]
-            candidate.skills.set(skill_objects)  # Use .set() for ManyToManyField
+            # ✅ Process skills safely
+            skill_objects = []
+            for skill in skills:
+                skill = skill.strip()
+                if skill:  
+                    skill_obj, created = Skill.objects.get_or_create(name=skill)
+                    skill_objects.append(skill_obj)
+
+            candidate.skills.set(skill_objects)  
 
             messages.success(request, "Candidate Account Created Successfully!")
             return redirect("JRS:candidate_register_page")
@@ -158,11 +173,14 @@ def candidate_registration(request):
     return render(request, "JRS/candidate_register_page.html")
 
 
+
+@login_required
 def logout_user(request):
     logout(request)
     messages.error(request, "Logged Out Successfully")
     return redirect("JRS:hr_login_page", permanent=True)
 
+@login_required
 def submit_feedback(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -179,16 +197,16 @@ def submit_feedback(request):
     return render(request, 'JRS/feedback.html')
 
 
-
-
-
-# Create your views here.
 def startpage(request):
     return render(request, "JRS/startpage.html")
 
+@login_required
+@hr_required
 def post_job(request):
     return render(request, "JRS/post_job.html")
 
+@login_required
+@hr_required
 def edit_profile_hr(request):
     return render(request, "JRS/edit_profile_hr.html")
 
@@ -198,14 +216,18 @@ def aboutpage(request):
 def featurepage(request):
     return render(request, "JRS/featurepage.html")
 
+@login_required
 def feedback(request):
     return render(request, "JRS/feedback.html")
 
 def contactpage(request):
     return render(request, "JRS/contactpage.html")
 
+@login_required
+@hr_required
 def hr_dashboard(request):
     return render(request, "JRS/hr_dashboard.html")
+
 
 def candidate_dashboard(request):
     return render(request, "JRS/candidate_dashboard.html")
@@ -230,6 +252,11 @@ def hr_login_page(request):
 def candidate_login_page(request):
     return render(request, "JRS/candidate_login_page.html")
 
+@login_required
+@hr_required
+def job_update_page(request):
+    return render(request, "JRS/update_job.html")
+
 def contact_form(request):
     if request.method == "POST":
         # Get form data from POST request
@@ -246,6 +273,7 @@ def contact_form(request):
 
 # This view is for HR to see only the jobs they posted
 @login_required
+@hr_required
 def view_jobs(request):
     if hasattr(request.user, 'hr'):  # Check if the user is an HR
         hr = request.user.hr  # Get the HR instance linked to this user
@@ -254,6 +282,8 @@ def view_jobs(request):
     else:
         return render(request, 'error.html')  # Show an error or redirect if the user is not HR
 
+@login_required
+@hr_required
 def post_jobs(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -294,6 +324,8 @@ def post_jobs(request):
 
     return render(request, 'JRS/post_job.html')  # Render the post job page
 
+@login_required
+@hr_required
 def delete_job(request, job_id):
     job = get_object_or_404(Job, id=job_id)
     
@@ -305,4 +337,31 @@ def delete_job(request, job_id):
         messages.error(request, "You are not authorized to delete this job post.")
     
     return redirect('JRS:view_jobs')  # Redirect to the list of jobs the HR posted
+
+
+@login_required
+@hr_required
+def update_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    if request.method == 'POST':
+        job.title = request.POST.get('title')
+        job.company = request.POST.get('company')
+        job.location = request.POST.get('location')
+        job.job_type = request.POST.get('job_type')
+        job.salary = request.POST.get('salary')
+        job.experience = request.POST.get('experience')
+        job.skills = request.POST.get('skills')
+        job.education = request.POST.get('education')
+        job.deadline = request.POST.get('deadline')
+        job.description = request.POST.get('description')
+        job.save()
+        
+        # Optionally, add a success message
+        messages.success(request, 'Job updated successfully!')
+        return redirect('JRS:view_jobs')  # Redirect to job list after update
+
+    return render(request, 'JRS/update_job.html', {'job': job})
+
+
         

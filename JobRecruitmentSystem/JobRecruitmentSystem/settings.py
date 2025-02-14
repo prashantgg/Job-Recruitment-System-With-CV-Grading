@@ -89,6 +89,7 @@ DATABASES = {
     }
 }
 
+
 # settings.py
 
 MEDIA_URL = '/media/'

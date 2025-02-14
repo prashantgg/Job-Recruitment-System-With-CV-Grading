@@ -7,8 +7,9 @@
     transparent 10px,
     transparent 20px
   ); 
-  border-radius: 35px; /* More rounded corners */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* More prominent shadow for depth */
+  border-radius: 8px;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #948e8e;  /* Optional: Add border to the form container */
   padding: 30px; /* Space inside the card */
   height: auto; /* Allow dynamic height based on content */
   width: 100%; /* Full width */

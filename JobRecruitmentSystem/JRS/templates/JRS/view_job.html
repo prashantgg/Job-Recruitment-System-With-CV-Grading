@@ -42,7 +42,7 @@ View Jobs
                     <td>{{ job.deadline }}</td>
                     <td>{{ job.posted_by.username }}</td>
                     <td>
-                        <a href="" class="btn-update">Update</a>
+                        <a href="{% url 'JRS:update_job' job.id %}" class="btn-update">Update</a> 
                         <a href="{% url 'JRS:delete_job' job.id %}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this job?');">Delete</a>
                     </td>
                 </tr>
@@ -54,4 +54,28 @@ View Jobs
         <p class="text-center text-muted">No job postings available at the moment.</p>
     {% endif %}
 </div>
+
+{% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}" id="message-{{ forloop.counter }}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    </div>
+{% endif %}
+<script>
+    window.onload = function() {
+        {% if messages %}
+            {% for message in messages %}
+                var messageElement = document.getElementById('message-{{ forloop.counter }}');
+                if (messageElement) {
+                    setTimeout(function() {
+                        messageElement.style.display = 'none';
+                    }, 4000);  // 4000ms = 4 seconds
+                }
+            {% endfor %}
+        {% endif %}
+    }
+</script>
 {% endblock main %}

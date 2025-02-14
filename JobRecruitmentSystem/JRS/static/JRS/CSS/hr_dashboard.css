@@ -19,3 +19,36 @@
   font-weight: bold;
   font-size: 16px;
 }
+@media screen and (min-width: 1101px) {
+  .nav-links {
+    display: flex;
+    position: relative;
+    height: auto;
+    width: auto;
+    flex-direction: row;
+    background: transparent;
+    justify-content: flex-end;
+    align-items: center;
+    top: 0;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  .menu-icon {
+    display: none;
+  }
+
+  /* Adjust spacing to prevent squishing */
+  .nav-links li {
+    margin-left: 15px;
+  }
+
+  .nav-links a {
+    padding: 8px 12px;
+    font-size: 0.9em;
+  }
+}
+
+

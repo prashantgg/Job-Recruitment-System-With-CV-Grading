@@ -11,13 +11,16 @@ urlpatterns = [
     path("home", views.startpage, name="startpage"),  # No space in the name
     path("about", views.aboutpage, name="aboutpage"),
     path('view-jobs/', views.view_jobs, name='view_jobs'),
+    path('job/<int:job_id>/', views.view_jobs, name='job_detail'),  # New path for job detail
+    path('job/update/<int:job_id>/', views.update_job, name='update_job'),
     path("feedback", views.feedback, name="feedback"),
     path("feature", views.featurepage, name="featurepage"),
     path("contact", views.contactpage, name="contactpage"),
     path('contact/', views.contact_form, name='contact_form'),
     path("faq", views.faqpage, name="faqpage"),
+    path("job-update-page", views.job_update_page, name="job_update_page"),
     path('delete_job/<int:job_id>/', views.delete_job, name='delete_job'),
-
+    path('job/update/<int:job_id>/', views.update_job, name='update_job'),
     path("post-job", views.post_job, name="post_job"),
     path("post-jobs", views.post_jobs, name="post_jobs"),
     path("blog", views.blogpage, name="blogpage"),
