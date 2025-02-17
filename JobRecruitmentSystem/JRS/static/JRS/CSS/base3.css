@@ -1,0 +1,242 @@
+/* CSS Variables for easy theming */
+:root {
+    --primary-color: #ff5733;
+    --secondary-color: #8e44ad;
+    --accent-color: #f1c40f;
+    --text-color: #333;
+    --background-color: rgba(255, 255, 255, 0.85);
+    --scrollbar-bg: rgba(0, 0, 0, 0.1);
+    --font-family: "Poppins", sans-serif;
+  }
+  
+  /* Reset and base styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    overflow-x: hidden;
+  }
+
+  
+  body {
+    font-family: var(--font-family);
+    background: #fff;
+    color: var(--text-color);
+  }
+  
+  /* Back Icon Style */
+  .back-icon {
+    position: absolute;
+    top: 90px;
+    left: 20px;
+    font-size: 1.5rem;
+    color: #000;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    z-index: 9999;  /* Add a high z-index */
+  }
+  
+  
+  .back-icon:hover {
+    color: #0a0a0a;
+  }
+  
+  .back-icon i {
+    margin-right: 8px;
+  }
+  
+  /* Navigation styles */
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.9);
+    border-bottom: 2px solid transparent;
+  }
+  
+/* Logo Styling */
+.logo {
+    color: red;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 1100;
+    margin-right: 0;  /* Remove margin-right */
+    flex-grow: 0;  /* Prevent the logo from growing */
+}
+
+/* Update Navigation to align items */
+nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 10px 5%;
+    justify-content: flex-start; /* Align items to the left */
+}
+
+  
+  .logo span {
+    color: #fff;
+  }
+  
+  .logo:hover {
+    color: #fff;
+  }
+  
+  .logo:hover span {
+    color: red;
+  }
+  
+  /* Navigation Links */
+  .nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    flex-grow: 3; /* Allow other items to grow */
+  }
+  
+  /* Wrapper for user name and profile circle */
+  .user-profile-wrapper {
+  display: flex;
+  align-items: center;  /* Keep items vertically centered */
+  gap: 15px; /* Space between user name and profile icon */
+  position: relative; /* Allow positioning adjustments */
+  top: 10px;  /* Adjust this value to move them down */
+  }
+  
+  
+  /* User Name */
+  .user-name {
+    color: #d8d1d1; /* White text */
+    font-size: 16px; /* Adjust font size */
+    position: relative; /* Allow positioning adjustments */
+    top: 10px;  /* Adjust this value to move them down */
+  }
+  
+  /* Profile Circle */
+  .profile-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid #333;
+    position: relative;
+    font-size: 18px; /* Adjust arrow size */
+    font-weight: bold;
+  }
+  
+ 
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    height: 89.5vh;
+    background: #ffffff; /* White background */
+    color: rgb(5, 5, 5);
+    position: absolute;
+    top: 77px;
+    left: 0;
+    padding-top: 10px;
+    transition: 0.3s;
+    border-radius: 8px;  /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.05); /* Soft shadow for 3D effect */
+    border: 3px solid #e2e2e2; /* Subtle border to separate from background */
+    background: linear-gradient(145deg, #ffffff, #f1f1f1); /* Gradient effect for depth */
+}
+
+/* Sidebar List Styles */
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.3s ease, transform 0.3s ease;
+    border-radius: 8px; /* Rounded corners for items */
+}
+
+/* Sidebar Item Links */
+.sidebar ul li a {
+    color: rgb(8, 8, 8);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+}
+
+.sidebar ul li a i {
+    margin-right: 10px;
+}
+
+/* Hover Effect for Sidebar Items */
+.sidebar ul li:hover {
+    background: rgba(105, 103, 103, 0.3); /* Lighter hover effect */
+    transform: translateX(2px); /* Slight movement for 3D feel */
+}
+
+
+
+/* Main content adjustment */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+/* Responsive Sidebar */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        width: 60px;
+        overflow: hidden;
+    }
+
+    .sidebar ul li {
+        text-align: center;
+        padding: 15px;
+    }
+
+    .sidebar ul li a {
+        justify-content: center;
+        font-size: 14px;
+    }
+
+    .sidebar ul li a i {
+        margin-right: 0;
+    }
+
+    .main-content {
+        margin-left: 60px;
+    }
+}
+
+/* Sidebar Toggle */
+.sidebar.open {
+    width: 250px;
+}
+
+.sidebar.open ul li a {
+    justify-content: flex-start;
+}
+
+.sidebar.open ul li a i {
+    margin-right: 10px;
+}
+
+
+
+
+
+

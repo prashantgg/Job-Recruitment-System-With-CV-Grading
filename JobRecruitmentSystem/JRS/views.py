@@ -228,7 +228,7 @@ def contactpage(request):
 def hr_dashboard(request):
     return render(request, "JRS/hr_dashboard.html")
 
-
+@login_required
 def candidate_dashboard(request):
     return render(request, "JRS/candidate_dashboard.html")
 
