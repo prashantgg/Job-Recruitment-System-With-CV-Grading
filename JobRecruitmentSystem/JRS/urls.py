@@ -29,6 +29,7 @@ urlpatterns = [
     path('edit-profile-hr', views.edit_profile_hr, name='edit_profile_hr'),
     path("hr-dashboard", views.hr_dashboard, name="hr_dashboard"),
     path("candidate-dashboard", views.candidate_dashboard, name="candidate_dashboard"),
+    path("available-jobs", views.available_jobs, name="available_jobs"),
     path("hr-register", views.hr_register_page, name="hr_register_page"),
     path("candidate-register", views.candidate_register_page, name="candidate_register_page"),
     path("hr-login-page", views.hr_login_page, name="hr_login_page"),
@@ -39,4 +40,7 @@ urlpatterns = [
     path('register/hr/', views.hr_registration, name='register_hr'),
     path('register/candidate/', views.candidate_registration, name='register_candidate'),
     path("accounts/logout/", views.logout_user, name = "logout_user"),
+    path("accounts/logouts/", views.logout_users, name = "logout_users"),
+
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

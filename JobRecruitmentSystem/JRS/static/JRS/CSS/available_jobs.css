@@ -1,0 +1,191 @@
+/* General Styling */
+body {
+  background-color: white;
+  color: rgb(251, 247, 247);
+  font-family: "Arial", sans-serif;
+}
+
+/* Job Listings Container */
+.job-list-container {
+  max-width: 1200px;
+  height: 600px; /* Fixed height to enable scrollbar */
+  overflow-y: scroll; /* Enables vertical scrolling */
+  margin: 40px auto;
+  padding: 20px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.02),
+    rgba(0, 0, 0, 0.02) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+   border-radius: 10px;
+  margin-top: 7%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: 2px solid black;
+}
+
+/* Disable page scrollbar */
+html, body {
+  overflow: hidden;
+}
+
+/* Custom Scrollbar */
+.job-list-container::-webkit-scrollbar {
+  width: 8px;
+  background: transparent; /* Make scrollbar background transparent */
+}
+
+.job-list-container::-webkit-scrollbar-track {
+  background: transparent; /* Make track invisible */
+}
+
+.job-list-container::-webkit-scrollbar-thumb {
+  background: transparent; /* Make thumb invisible */
+  border-radius: 5px;
+}
+
+.job-list-container::-webkit-scrollbar-thumb:hover {
+  background: transparent; /* Still transparent on hover */
+}
+
+.page-title {
+  text-align: center;
+  color: black;
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+/* Job Cards */
+.job-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.job-card {
+  padding: 20px;
+  border-radius: 8px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.02),
+    rgba(0, 0, 0, 0.02) 10px,
+    transparent 10px,
+    transparent 20px
+  );  border-left: 5px solid rgb(135, 134, 134);
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.job-card:hover {
+  transform: scale(1.01);
+}
+
+.job-title {
+  font-size: 22px;
+  color: black;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+/* Job Details */
+.company-name, .job-location, .job-type, .salary, .experience, .education, .deadline {
+  font-size: 14px;
+  color: black;
+  margin: 5px 0;
+}
+
+/* Skills Section */
+.skills {
+  font-size: 14px;
+  color: black;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin-top: 5px;
+}
+
+.skill-list li {
+  background: transparent; /* Transparent background */
+  color: black;
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+/* Apply Button */
+.apply-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 15px;
+  background: rgb(17, 17, 17);
+  color: rgb(241, 240, 240);
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+/* No Jobs Available Message */
+.no-jobs {
+  text-align: center;
+  font-size: 18px;
+  color: black;
+  margin-top: 20px;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+  .job-list-container {
+      padding: 15px;
+  }
+  
+  .job-card {
+      padding: 15px;
+  }
+  
+  .apply-btn {
+      width: 100%;
+      text-align: center;
+  }
+}
+
+/* Navigation Bar Styles */
+@media screen and (min-width: 1101px) {
+  .nav-links {
+    display: flex;
+    position: relative;
+    height: auto;
+    width: auto;
+    flex-direction: row;
+    background: transparent;
+    justify-content: flex-end;
+    align-items: center;
+    top: 0;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  .menu-icon {
+    display: none;
+  }
+
+  /* Adjust spacing to prevent squishing */
+  .nav-links li {
+    margin-left: 15px;
+  }
+
+  .nav-links a {
+    padding: 8px 12px;
+    font-size: 0.9em;
+  }
+}

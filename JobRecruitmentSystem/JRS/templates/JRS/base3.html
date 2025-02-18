@@ -51,14 +51,14 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <ul>
-            <li><a href="{% url "JRS:hr_dashboard" %}"><i class="fas fa-tachometer-alt"></i>Candidate Dashboard</a></li>
-            <li><a href="{% url "JRS:post_job" %}"><i class="fas fa-plus-circle"></i> Post Job</a></li>
+            <li><a href="{% url "JRS:candidate_dashboard" %}"><i class="fas fa-tachometer-alt"></i>Candidate Dashboard</a></li>
+            <li><a href="{% url "JRS:available_jobs" %}"><i class="fas fa-plus-circle"></i>Available Jobs</a></li>
             <li><a href="{% url "JRS:view_jobs" %}"><i class="fas fa-tasks"></i> Manage Job Posts</a></li>
             <li><a href="#"><i class="fas fa-users"></i> View Applicants</a></li>
             <li><a href="#"><i class="fas fa-calendar-alt"></i> Schedule Interview</a></li>
             <li><a href="{% url "JRS:feedback" %}"><i class="fas fa-comment"></i> Give Feedback</a></li>
             <li><a href="{% url "JRS:edit_profile_hr" %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
-            <li><a href="{% url "JRS:logout_user" %}" onclick="return confirm('Are you sure you want to log out?');"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="{% url "JRS:logout_users" %}" onclick="return confirm('Are you sure you want to log out?');"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>
 

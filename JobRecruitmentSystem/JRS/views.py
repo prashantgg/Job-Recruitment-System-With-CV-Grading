@@ -181,6 +181,12 @@ def logout_user(request):
     return redirect("JRS:hr_login_page", permanent=True)
 
 @login_required
+def logout_users(request):
+    logout(request)
+    messages.error(request, "Logged Out Successfully")
+    return redirect("JRS:candidate_login_page", permanent=True)
+
+@login_required
 def submit_feedback(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -231,6 +237,17 @@ def hr_dashboard(request):
 @login_required
 def candidate_dashboard(request):
     return render(request, "JRS/candidate_dashboard.html")
+
+@login_required
+# JRS/views.py
+def available_jobs(request):
+    jobs = Job.objects.all()
+    # Preprocess job skills
+    for job in jobs:
+        job.skill_list = [skill.strip() for skill in job.skills.split(",")]  # Split skills and trim spaces
+
+    return render(request, "JRS/available_jobs.html", {"jobs": jobs})
+
 
 def faqpage(request):
     return render(request, "JRS/faqpage.html")
@@ -362,6 +379,12 @@ def update_job(request, job_id):
         return redirect('JRS:view_jobs')  # Redirect to job list after update
 
     return render(request, 'JRS/update_job.html', {'job': job})
+
+
+
+
+
+
 
 
         
