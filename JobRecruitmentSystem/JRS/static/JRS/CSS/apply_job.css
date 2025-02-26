@@ -1,0 +1,168 @@
+
+
+body, html {
+ 
+    overflow: hidden; /* Disable scrolling */
+}
+.back-arrow {
+    position: absolute; /* Position it in the top left corner */
+    top: 80px; /* Adjust the distance from the top */
+    left: 300px; /* Adjust the distance from the left */
+    color: #000000; /* Black color for the arrow */
+    font-size: 30px; /* Size of the arrow */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.back-arrow:hover {
+    color: #333333; /* Change color on hover */
+}
+
+.message-container {
+    position: fixed;
+    top: 120px;
+    right: 70px;
+    z-index: 1000;
+}
+
+/* Green color for success messages */
+.success-message {
+    color: green;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Red color for error messages */
+.error-message {
+    color: rgb(150, 56, 56);
+    font-weight: bold;
+    font-size: 16px;
+}
+
+
+/* Apply Job Form Styling */
+.apply-job-container {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0.02),
+        rgba(0, 0, 0, 0.02) 10px,
+        transparent 10px,
+        transparent 20px
+    );  
+    color: #000000;
+    max-width: 850px;
+    margin: 75px auto 40px; /* Increased top margin */
+    padding: 50px;
+    border: 2px solid #000000; /* Black border */
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.job-info {
+    background: #f8f9fa; /* Light background for job info */
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #000000; /* Black border */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.job-title {
+    margin-bottom: 10px;
+}
+
+.job-title h4 {
+    margin: 0;
+}
+
+.posted-by p {
+    margin: 0;
+}
+
+.apply-job-container h2 {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.apply-job-container p {
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group textarea,
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.apply-btn {
+    width: 100%;
+    background: #000000;
+    color: #ffffff;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.apply-btn:hover {
+    background: #333333;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (min-width: 1101px) {
+    .nav-links {
+        display: flex;
+        position: relative;
+        height: auto;
+        width: auto;
+        flex-direction: row;
+        background: transparent;
+        justify-content: flex-end;
+        align-items: center;
+        top: 0;
+        transform: none;
+        opacity: 1;
+        pointer-events: auto;
+        transition: none;
+    }
+
+    .menu-icon {
+        display: none;
+    }
+
+    /* Adjust spacing to prevent squishing */
+    .nav-links li {
+        margin-left: 15px;
+    }
+
+    .nav-links a {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+}

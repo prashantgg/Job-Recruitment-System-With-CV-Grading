@@ -5,12 +5,14 @@ from .import models
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.hashers import make_password
-from .models import Job, User, HR, Candidate, Skill
+from .models import Job, JobApplication, User, HR, Candidate, Skill
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User, Group
 from JRS.decorators import hr_required, candidate_required
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 # HR Registration View
@@ -239,14 +241,41 @@ def candidate_dashboard(request):
     return render(request, "JRS/candidate_dashboard.html")
 
 @login_required
-# JRS/views.py
 def available_jobs(request):
-    jobs = Job.objects.all()
-    # Preprocess job skills
-    for job in jobs:
-        job.skill_list = [skill.strip() for skill in job.skills.split(",")]  # Split skills and trim spaces
+    user = request.user
+    try:
+        candidate = Candidate.objects.get(user=user)
+        candidate_skills = ", ".join([skill.name for skill in candidate.skills.all()])
+    except Candidate.DoesNotExist:
+        candidate_skills = ""
 
-    return render(request, "JRS/available_jobs.html", {"jobs": jobs})
+    jobs = Job.objects.all()
+
+    job_skills_list = [job.skills for job in jobs]
+    job_skills_list.append(candidate_skills)  # Append candidate skills for similarity calculation
+
+    # Vectorize skills using TF-IDF
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform(job_skills_list)
+
+    # Compute cosine similarity between candidate skills and job skills
+    candidate_vector = tfidf_matrix[-1]  # Last vector is the candidate's skills
+    job_vectors = tfidf_matrix[:-1]  # All other vectors are job skills
+
+    similarity_scores = cosine_similarity(candidate_vector, job_vectors).flatten()
+
+    # Attach similarity scores to jobs and sort in descending order
+    job_with_scores = list(zip(jobs, similarity_scores))
+    job_with_scores.sort(key=lambda x: x[1], reverse=True)
+
+    sorted_jobs = [job for job, score in job_with_scores]
+
+    # ✅ Ensure skills are processed for display
+    for job in sorted_jobs:
+        job.skill_list = job.skills.split(",")  # Convert comma-separated skills into a list
+
+    return render(request, "JRS/available_jobs.html", {"jobs": sorted_jobs})
+
 
 
 def faqpage(request):
@@ -268,6 +297,8 @@ def hr_login_page(request):
 
 def candidate_login_page(request):
     return render(request, "JRS/candidate_login_page.html")
+
+
 
 @login_required
 @hr_required
@@ -380,6 +411,43 @@ def update_job(request, job_id):
 
     return render(request, 'JRS/update_job.html', {'job': job})
 
+@login_required
+def apply_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    # Ensure the logged-in user is a Candidate
+    if not hasattr(request.user, 'candidate'):
+        messages.error(request, "Only candidates can apply for jobs.")
+        return redirect('JRS:available_jobs')
+
+    candidate = request.user.candidate
+
+    # Prevent duplicate applications
+    if JobApplication.objects.filter(candidate=candidate, job=job).exists():
+        messages.error(request, 'You Have Already Applied for this Job')
+        return redirect('JRS:available_jobs')
+
+    if request.method == 'POST':
+        cover_letter = request.POST.get('cover_letter')
+        resume = request.FILES.get('resume')
+
+        if not cover_letter or not resume:
+            messages.error(request, "Both cover letter and resume are required.")
+            return redirect('JRS:apply_job', job_id=job.id)
+
+        # Save the application
+        job_application = JobApplication(
+            candidate=candidate,
+            job=job,
+            cover_letter=cover_letter,
+            resume=resume
+        )
+        job_application.save()
+
+        messages.success(request, f"You have successfully applied for the job '{job.title}'!")
+        return redirect('JRS:available_jobs')
+
+    return render(request, 'JRS/apply_job.html', {'job': job})
 
 
 

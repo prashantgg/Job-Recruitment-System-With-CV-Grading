@@ -41,6 +41,8 @@ urlpatterns = [
     path('register/candidate/', views.candidate_registration, name='register_candidate'),
     path("accounts/logout/", views.logout_user, name = "logout_user"),
     path("accounts/logouts/", views.logout_users, name = "logout_users"),
+    path('apply-job/<int:job_id>/', views.apply_job, name='apply_job'),
+
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,61 @@
+{% extends "JRS/base3.html" %}
+{% load static %}
+{% block title %}
+Apply Job
+{% endblock title %}
+{% block inlinecss %}
+<link href="{% static 'JRS/css/apply_job.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/base3.css' %}" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock inlinecss %}
+
+{% block main %}
+<a href="javascript:history.back()" class="back-arrow" title="Go Back">
+    <i class="fas fa-arrow-left"></i>
+</a>
+
+<div class="container">
+    <div class="apply-job-container">
+        <h2 class="text-center fw-bold mb-3" style="color: #343a40;">Apply for Job</h2>
+        <b><p class="text-center text-muted">Your dream job is just one step away. Apply now with your resume!</p></b>
+
+        <!-- Display Job Post Name and Posted By -->
+        <div class="job-info text-center mb-4">
+            <div class="job-title">
+                <h4 class="text" style="color:rgb(11, 11, 11);">Job Title: <span style="color: #333;">{{ job.title }}</span></h4>
+            </div>
+            <div class="posted-by">
+                <p style="font-size: 16px;">Posted By: <strong>{{ job.posted_by.username }}</strong></p>
+            </div>
+        </div>
+
+        <form method="POST" class="apply-form" action="" enctype="multipart/form-data" onsubmit="return confirmApplyJob()">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="cover_letter"><i class="fas fa-file-alt"></i> Cover Letter</label>
+                <textarea id="cover_letter" name="cover_letter" placeholder="Write a short cover letter..." rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="resume"><i class="fas fa-file-upload"></i> Upload Resume (PDF/DOC)</label>
+                <input type="file" id="resume" name="resume" accept=".pdf, .doc, .docx" required>
+            </div>
+
+            <button type="submit" class="apply-btn"><i class="fas fa-paper-plane"></i> Apply Now</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function confirmApplyJob() {
+        return confirm("Are you sure you want to apply for this job?");
+    }
+</script>
+
+<script>
+    document.body.style.overflow = 'hidden'; // Disable scrolling
+</script>
+
+{% endblock main %}

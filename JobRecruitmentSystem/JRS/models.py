@@ -78,3 +78,16 @@ class Job(models.Model):
 
     def __str__(self):
         return self.title
+    
+class JobApplication(models.Model):
+    candidate = models.ForeignKey('Candidate', on_delete=models.CASCADE)
+    job = models.ForeignKey('Job', on_delete=models.CASCADE)
+    cover_letter = models.TextField()
+    resume = models.FileField(upload_to='resumes/')  # Resume upload feature
+    applied_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('candidate', 'job')  # Prevent duplicate applications
+
+    def __str__(self):
+        return f"{self.candidate.first_name} applied for {self.job.title}"

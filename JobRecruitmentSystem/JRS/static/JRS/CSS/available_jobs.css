@@ -5,6 +5,27 @@ body {
   font-family: "Arial", sans-serif;
 }
 
+.message-container {
+  position: fixed;
+  top: 120px;
+  right: 70px;
+  z-index: 1000;
+}
+
+/* Green color for success messages */
+.success-message {
+  color: green;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Red color for error messages */
+.error-message {
+  color: rgb(150, 56, 56);
+  font-weight: bold;
+  font-size: 16px;
+}
+
 /* Job Listings Container */
 .job-list-container {
   max-width: 1200px;
@@ -127,7 +148,7 @@ html, body {
   display: inline-block;
   margin-top: 10px;
   padding: 8px 15px;
-  background: rgb(17, 17, 17);
+  background: rgb(86, 85, 85);
   color: rgb(241, 240, 240);
   border-radius: 5px;
   text-decoration: none;

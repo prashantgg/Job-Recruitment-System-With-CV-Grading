@@ -30,14 +30,20 @@
                 <div class="skills">
                     <i class="fa-solid fa-code"></i> Required Skills:
                     <ul class="skill-list">
-                        {% for skill in job.skill_list %}  {# Use preprocessed skill_list from views.py #}
+                        {% for skill in job.skill_list %}
                             <li>{{ skill }}</li>
+                        {% empty %}
+                            <li>No skills listed</li>
                         {% endfor %}
                     </ul>
                 </div>
                 
+                
 
-                <a href="#" class="apply-btn">View Details</a>
+                <a href="#" class="apply-btn me-3">View Details</a> <!-- Adds right margin -->
+                <a href="{% url 'JRS:apply_job' job.id %}" class="apply-btn">Apply Jobs</a>
+                
+
             </div>
         {% endfor %}
     </div>
