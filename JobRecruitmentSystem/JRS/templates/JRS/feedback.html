@@ -21,7 +21,7 @@ Feedback Page
                 <h1 class="text-center fw-bold mb-3" style="color: #343a40;">Give Feedback</h1>
 
                 <b><p class="text-center text-muted">Your feedback helps us improve our services.</p></b>
-                <form id="feedbackForm" method="POST" action="{% url 'JRS:feedback_page' %}">
+                <form id="feedbackForm" method="POST" action="{% url 'JRS:feedback_hr_page' %}">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="name" class="form-label">Your Name</label>

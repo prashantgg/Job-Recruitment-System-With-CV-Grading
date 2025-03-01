@@ -14,7 +14,6 @@ urlpatterns = [
     path('view-applications/', views.view_applications, name='view_applications'),
     path('job/<int:job_id>/', views.view_jobs, name='job_detail'),  # New path for job detail
     path('application/update/<int:application_id>/', views.update_application, name='update_application'),
-    path("feedback", views.feedback, name="feedback"),
     path("feature", views.featurepage, name="featurepage"),
     path("contact", views.contactpage, name="contactpage"),
     path('contact/', views.contact_form, name='contact_form'),
@@ -30,7 +29,8 @@ urlpatterns = [
 
     path("blog", views.blogpage, name="blogpage"),
     path("blog", views.blogpage, name="blogpage"),
-    path('feedback-page', views.submit_feedback, name='feedback_page'),
+    path('feedback-page-hr', views.submit_feedback_hr, name='feedback_hr_page'),
+    path('feedback-page-candidate', views.submit_feedback_candidate, name='feedback_candidate_page'),
     path('edit-profile-hr', views.edit_profile_hr, name='edit_profile_hr'),
     path("hr-dashboard", views.hr_dashboard, name="hr_dashboard"),
     path("candidate-dashboard", views.candidate_dashboard, name="candidate_dashboard"),

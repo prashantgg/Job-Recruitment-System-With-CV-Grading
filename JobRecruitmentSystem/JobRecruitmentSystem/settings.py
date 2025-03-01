@@ -41,6 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+# Use a different session key for your custom login system
+SESSION_COOKIE_NAME = "custom_user_session"
+
+# Optional: You can also set a different session engine for admin users
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -88,6 +95,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 
 # settings.py

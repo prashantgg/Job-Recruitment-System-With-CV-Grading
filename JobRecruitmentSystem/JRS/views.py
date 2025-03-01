@@ -14,6 +14,8 @@ from JRS.decorators import hr_or_candidate_required, hr_required, candidate_requ
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from django.views.generic import DetailView
+from django.contrib.sessions.backends.db import SessionStore
+
 
 
 
@@ -52,7 +54,7 @@ def hr_registration(request):
             messages.success(request, "HR Account Created Successfully!")
 
             # Redirect to HR register page or login page
-            return redirect("JRS:hr_register_page")
+            return redirect("JRS:hr_login_page")
 
         except IntegrityError:
             messages.error(request, "Username or email already exists for an HR profile.")
@@ -66,14 +68,17 @@ def hr_login(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-        # Authenticate user using username
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            # Check if the user exists in the HR model and email matches
             try:
                 hr_user = HR.objects.get(user=user)
-                if hr_user.user.email == email:  # Validate email
+                if hr_user.user.email == email:
+                    
+                    # Ensure superuser session is not overridden
+                    if not user.is_superuser:
+                        request.session = SessionStore()
+
                     login(request, user)
                     messages.success(request, "HR Logged In Successfully")
                     return redirect("JRS:hr_dashboard")
@@ -89,20 +94,25 @@ def hr_login(request):
 
     return render(request, "JRS/hr_login_page.html")
 
+
+
 def candidate_login(request):
     if request.method == "POST":
         username = request.POST.get("username")
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-        # Authenticate user using username
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            # Check if the user exists in the Candidate model and email matches
             try:
                 candidate_user = Candidate.objects.get(user=user)
-                if candidate_user.user.email == email:  # Validate email
+                if candidate_user.user.email == email:
+                    
+                    # Ensure superuser session is not overridden
+                    if not user.is_superuser:
+                        request.session = SessionStore()
+
                     login(request, user)
                     messages.success(request, "Candidate Logged In Successfully")
                     return redirect("JRS:candidate_dashboard")
@@ -117,6 +127,7 @@ def candidate_login(request):
             return redirect("JRS:candidate_login_page")
 
     return render(request, "JRS/candidate_login_page.html")
+
 
 
 def candidate_registration(request):
@@ -168,7 +179,7 @@ def candidate_registration(request):
             candidate.skills.set(skill_objects)  
 
             messages.success(request, "Candidate Account Created Successfully!")
-            return redirect("JRS:candidate_register_page")
+            return redirect("JRS:candidate_login_page")
 
         except IntegrityError:
             messages.error(request, "Username already exists.")
@@ -180,18 +191,20 @@ def candidate_registration(request):
 
 @login_required
 def logout_user(request):
-    logout(request)
+    if not request.user.is_superuser:  # Do not log out superuser
+        logout(request)
     messages.error(request, "Logged Out Successfully")
     return redirect("JRS:hr_login_page", permanent=True)
 
 @login_required
 def logout_users(request):
-    logout(request)
+    if not request.user.is_superuser:  # Do not log out superuser
+        logout(request)
     messages.error(request, "Logged Out Successfully")
     return redirect("JRS:candidate_login_page", permanent=True)
 
 @login_required
-def submit_feedback(request):
+def submit_feedback_hr(request):
     if request.method == 'POST':
         name = request.POST['name']
         email = request.POST['email']
@@ -203,8 +216,24 @@ def submit_feedback(request):
         
         # Show a success message
         messages.success(request, "Your feedback has been submitted successfully!")
-        return redirect('JRS:feedback_page')  # Redirect back to the feedback page
+        return redirect('JRS:feedback_hr_page')  # Redirect back to the feedback page
     return render(request, 'JRS/feedback.html')
+
+@login_required
+def submit_feedback_candidate(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        contact = request.POST['contact']
+        feedback = request.POST['feedback']
+        
+        # Save feedback to database
+        models.Feedback.objects.create(name=name, email=email, contact=contact, feedback=feedback)
+        
+        # Show a success message
+        messages.success(request, "Your feedback has been submitted successfully!")
+        return redirect('JRS:feedback_candidate_page')  # Redirect back to the feedback page
+    return render(request, 'JRS/feedback_candidate.html')
 
 
 def startpage(request):
@@ -231,6 +260,9 @@ def featurepage(request):
 @login_required
 def feedback(request):
     return render(request, "JRS/feedback.html")
+@login_required
+def feedback_candidate(request):
+    return render(request, "JRS/feedback_candidate.html")
 
 def contactpage(request):
     return render(request, "JRS/contactpage.html")

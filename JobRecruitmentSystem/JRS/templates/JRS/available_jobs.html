@@ -18,9 +18,9 @@
         {% for job in jobs %}
             <div class="job-card">
                 <h3 class="job-title">{{ job.title }}</h3>
-                <p class="company-name"><i class="fa-solid fa-building"></i> {{ job.company }}</p>
-                <p class="job-location"><i class="fa-solid fa-map-marker-alt"></i> {{ job.location }}</p>
-                <p class="job-type"><i class="fa-solid fa-briefcase"></i> {{ job.job_type }}</p>
+                <p class="company-name"><i class="fa-solid fa-building"></i> Company Name:  {{ job.company }}</p>
+                <p class="job-location"><i class="fa-solid fa-map-marker-alt"></i> Location: {{ job.location }}</p>
+                <p class="job-type"><i class="fa-solid fa-briefcase"></i> Job type: {{ job.job_type | capfirst}}</p>
                 <p class="salary"><i class="fa-solid fa-dollar-sign"></i> Salary: {{ job.salary }}</p>
                 <p class="experience"><i class="fa-solid fa-user-tie"></i> Experience: {{ job.experience }}</p>
                 <p class="education"><i class="fa-solid fa-graduation-cap"></i> Education: {{ job.education }}</p>

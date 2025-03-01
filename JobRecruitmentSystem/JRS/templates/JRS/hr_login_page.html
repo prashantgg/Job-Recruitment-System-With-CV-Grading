@@ -10,7 +10,6 @@
 
 {% block main %}
     <!-- Background Image -->
-    <img src="{% static 'JRS/Images/form.jpg' %}" alt="" style="position: absolute; top: 0; left: 0; width: 100%; height: 100vh; object-fit: cover; z-index: -1;">
 
     <form class="container" method="post" action="{% url 'JRS:hr_login' %}">
         {% csrf_token %}

@@ -11,16 +11,13 @@
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #948e8e;  /* Optional: Add border to the form container */
   padding: 30px; /* Space inside the card */
-  height: auto; /* Allow dynamic height based on content */
+  height: 80%; /* Allow dynamic height based on content */
   width: 100%; /* Full width */
   transition: all 0.3s ease; /* Smooth transition for hover effect */
-  top: 7%;
+  top: 8%;
 }
 
-.card:hover {
-  transform: translateY(-5px); /* Subtle lift effect on hover */
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-}
+
 
 /* Remove Scrollbar */
 body, html {
@@ -36,8 +33,8 @@ h3 {
 
 .message-container {
     position: fixed;
-    top: 100px;
-    right: 20px;
+    top: 85px;
+    right: 30px;
     z-index: 1000;
 }
 

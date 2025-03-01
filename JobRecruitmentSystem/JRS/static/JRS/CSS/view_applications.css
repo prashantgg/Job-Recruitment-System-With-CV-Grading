@@ -109,7 +109,7 @@ body, html {
     }
 
     /* Button Styling */
-    .btn-update, .btn-delete {
+    .btn-update {
         padding: 8px 15px;
         text-decoration: none;
         border-radius: 5px;
@@ -135,6 +135,17 @@ body, html {
 
     .btn-delete:hover {
         background-color: #c82333;
+    }
+    .btn-delete {
+        padding: 7px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+        border: white;
+        font-size: 14px;
+        width: 35%;
+        font-weight: bold;
+        text-align: center;
+        transition: 0.3s;
     }
 
     /* Responsive Design */

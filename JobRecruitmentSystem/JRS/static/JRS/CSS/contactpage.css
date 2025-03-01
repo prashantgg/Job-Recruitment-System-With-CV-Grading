@@ -123,7 +123,6 @@ html {
   display: inline-block;
 }
 
-
 .nav-links .dropdown-content {
   display: none;
   position: absolute;
@@ -132,23 +131,11 @@ html {
   border-radius: 8px; /* Rounded corners */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
   padding: 10px 0;
-  transform: translateY(5px); /* Slightly offset dropdown below button */
+  transform: translateY(0px); /* Move the dropdown slightly upwards */
   z-index: 10; /* Ensures it appears above other elements */
   opacity: 1; /* Fully opaque */
   visibility: hidden; /* Initially hidden */
   transition: visibility 0.3s ease, transform 0.3s ease;
-}
-
-.nav-links .dropdown-content::before {
-  content: "         ";
-  position: absolute;
-  top: -10px; /* Position spike above dropdown */
-  left: 20px; /* Adjust to align with button */
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid rgb(34, 33, 33); /* Same color as dropdown background */
 }
 
 .nav-links .dropdown-content a {
@@ -161,13 +148,13 @@ html {
 
 .nav-links .dropdown-content a:hover {
   background-color: #555; /* Slightly lighter gray on hover */
-  border-radius: 6px;
+  border-radius: 20px;
 }
 
 .nav-links .dropdown:hover .dropdown-content {
   display: block;
   visibility: visible; /* Make visible on hover */
-  transform: translateY(10px); /* Smooth downward motion */
+  transform: translateY(1px); /* Move the dropdown up slightly more */
 }
   
   .nav-links.nav-active {
@@ -347,7 +334,6 @@ h2 {
   align-items: center;
   justify-content: center;
   margin-top: 5%; /* Increase the margin to create more gap */
-  border-radius: 20%
 }
 
 
@@ -368,6 +354,8 @@ h2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   margin-right: 37%;
+  border: 2px solid black; /* Added black line border */
+
 }
 
 
