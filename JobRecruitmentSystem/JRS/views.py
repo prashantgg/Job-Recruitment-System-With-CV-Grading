@@ -330,6 +330,11 @@ def hr_register_page(request):
 def candidate_register_page(request):
     return render(request, "JRS/candidate_register_page.html")
 
+def job_listing(request):
+     jobs = Job.objects.all  # Filter jobs posted by this HR
+     return render(request, 'JRS/job_listing.html', {'jobs': jobs})
+
+
 def hr_login_page(request):
     return render(request, "JRS/hr_login_page.html")
 

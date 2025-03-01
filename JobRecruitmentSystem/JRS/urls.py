@@ -18,6 +18,7 @@ urlpatterns = [
     path("contact", views.contactpage, name="contactpage"),
     path('contact/', views.contact_form, name='contact_form'),
     path('jobs/<int:job_id>/', views.job_details, name='job_details'),
+    path('job-listing', views.job_listing, name='job_listing'),
 
     path("faq", views.faqpage, name="faqpage"),
     path("job-update-page", views.job_update_page, name="job_update_page"),

@@ -354,7 +354,6 @@ h2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   margin-right: 37%;
-  border: 2px solid black; /* Added black line border */
 
 }
 
