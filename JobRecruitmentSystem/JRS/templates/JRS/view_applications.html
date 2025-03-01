@@ -1,0 +1,80 @@
+{% extends "JRS/base3.html" %}
+{% load static %}
+
+{% block title %}
+View Applications
+{% endblock title %}
+
+{% block inlinecss %}
+<link href="{% static 'JRS/css/base3.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/view_applications.css' %}" rel="stylesheet">
+{% endblock inlinecss %}
+
+{% block main %}
+<div class="job-container">
+    <h1 class="text-center fw-bold mb-3" style="color: #343a40;">View Applications</h1>
+    <b><p class="text-center text-muted" style="margin-bottom: 40px;">Here you can manage and view the applications you’ve applied.</p></b>
+    
+    {% if applications %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Posted By</th> <!-- New Column for Posted By -->
+                    <th>Your Resume</th>
+                    <th>Applied On</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                <tr>
+                    <td>{{ application.job.title }}</td>
+                    <td>{{ application.job.company }}</td>
+                    <td>{{ application.job.posted_by.username }}</td> <!-- Ensure username is displayed -->
+                    <td>
+                        <a href="{{ application.resume.url }}" target="_blank" style="color: black;">View Resume</a>
+                    </td>
+                    <td>{{ application.applied_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <a href="{% url 'JRS:update_application' application.id %}" class="btn-update">Update</a>
+                        <form action="{% url 'JRS:delete_application' application.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this application?');">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-center text-muted">No applications found at the moment.</p>
+    {% endif %}
+
+    {% if messages %}
+        <div class="message-container">
+            {% for message in messages %}
+                <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}" id="message-{{ forloop.counter }}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <script>
+        window.onload = function() {
+            let messages = document.querySelectorAll('.message');
+            messages.forEach((msg) => {
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                }, 4000);  // Hide messages after 4 seconds
+            });
+        }
+    </script>
+</div>
+{% endblock main %}

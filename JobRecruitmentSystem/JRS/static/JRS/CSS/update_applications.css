@@ -1,5 +1,5 @@
 .container {
-    max-width: 750px;  /* Slightly increased width */
+    max-width: 650px;  /* Slightly increased width */
     margin: auto;
     padding: 15px;
     margin-top: 5%;
@@ -19,9 +19,35 @@
     max-height: 623px;  /* Set a maximum height for the container */
     overflow-y: auto;  /* Add vertical scrolling */
     border: 1px solid #948e8e;  /* Optional: Add border to the form container */
+    position: relative;
 }
 
 
+.back-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 22px;
+    color: #343a40;
+    text-decoration: none;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 50%;
+    transition: 0.3s ease-in-out;
+}
+
+
+
+
+/* Styling for the scrollbar */
+.post-job-container::-webkit-scrollbar {
+    width: 12px;  /* Width of the scrollbar */
+}
+
+.post-job-container::-webkit-scrollbar-track {
+    background-color: #f1f1f1;  /* Light background for the scrollbar track */
+    border-radius: 10px;
+}
 
 .message-container {
     position: fixed;
@@ -42,15 +68,6 @@
     color: rgb(150, 56, 56);
     font-weight: bold;
     font-size: 16px;
-}
-/* Styling for the scrollbar */
-.post-job-container::-webkit-scrollbar {
-    width: 12px;  /* Width of the scrollbar */
-}
-
-.post-job-container::-webkit-scrollbar-track {
-    background-color: #f1f1f1;  /* Light background for the scrollbar track */
-    border-radius: 10px;
 }
 
 .post-job-container::-webkit-scrollbar-thumb {
@@ -96,12 +113,11 @@ h2 {
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 14px;  /* Increased padding for larger inputs */
+    padding: 16px;  /* Increased padding for larger inputs */
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 16px;  /* Larger font for inputs */
     background-color: #f9f9f9;  /* Light background for input fields */
-    transition: border 0.3s ease;  /* Smooth border transition on focus */
 }
 
 .form-group input:focus,
@@ -123,7 +139,7 @@ h2 {
     padding: 16px;  /* Slightly larger padding for buttons */
     border: none;
     border-radius: 6px;
-    font-size: 18px;  /* Increased font size */
+    font-size: 15px;  /* Increased font size */
     font-weight: bold;
     cursor: pointer;
     margin-top: 18px;

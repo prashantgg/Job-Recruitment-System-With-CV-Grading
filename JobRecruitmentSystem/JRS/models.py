@@ -79,15 +79,20 @@ class Job(models.Model):
     def __str__(self):
         return self.title
     
+    def skill_list(self):
+        """ Convert the comma-separated skills into a list """
+        return [skill.strip() for skill in self.skills.split(',')] if self.skills else []
+    
 class JobApplication(models.Model):
     candidate = models.ForeignKey('Candidate', on_delete=models.CASCADE)
     job = models.ForeignKey('Job', on_delete=models.CASCADE)
     cover_letter = models.TextField()
-    resume = models.FileField(upload_to='resumes/')  # Resume upload feature
+    resume = models.FileField(upload_to='resumes/')
+    cover_letter_file = models.FileField(upload_to='cover_letters/', blank=True, null=True)  # Store cover letter as a file
     applied_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('candidate', 'job')  # Prevent duplicate applications
+        unique_together = ('candidate', 'job')
 
     def __str__(self):
         return f"{self.candidate.first_name} applied for {self.job.title}"

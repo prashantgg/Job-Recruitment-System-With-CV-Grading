@@ -7,8 +7,9 @@ def hr_required(view_func):
         print(f"User: {request.user}, Authenticated: {request.user.is_authenticated}, Groups: {request.user.groups.all()}")
         if not request.user.is_authenticated or not request.user.groups.filter(name='HR').exists():
             return HttpResponseForbidden("Access Denied: HRs only")
-        return view_func(request, *args, **kwargs)
+        return view_func(request, *args, **kwargs)  # Pass *args and **kwargs
     return wrapper
+
 
 def candidate_required(view_func):
     """Allow only Candidate users to access the view."""
@@ -18,3 +19,16 @@ def candidate_required(view_func):
             return HttpResponseForbidden("Access Denied: Candidates only")
         return view_func(request, *args, **kwargs)
     return wrapper
+
+def hr_or_candidate_required(view_func):
+    """Allow both HR and Candidate users to access the view."""
+    def wrapper(request, *args, **kwargs):
+        print(f"User: {request.user}, Authenticated: {request.user.is_authenticated}, Groups: {request.user.groups.all()}")
+        if not request.user.is_authenticated or not (
+            request.user.groups.filter(name='HR').exists() or 
+            request.user.groups.filter(name='Candidate').exists()
+        ):
+            return HttpResponseForbidden("Access Denied: HRs and Candidates only")
+        return view_func(request, *args, **kwargs)
+    return wrapper
+

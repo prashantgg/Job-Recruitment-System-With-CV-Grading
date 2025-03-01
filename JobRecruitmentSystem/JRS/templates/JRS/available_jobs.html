@@ -40,7 +40,7 @@
                 
                 
 
-                <a href="#" class="apply-btn me-3">View Details</a> <!-- Adds right margin -->
+                <a href="{% url 'JRS:job_details' job.id %}" class="apply-btn me-3">View Details</a>
                 <a href="{% url 'JRS:apply_job' job.id %}" class="apply-btn">Apply Jobs</a>
                 
 

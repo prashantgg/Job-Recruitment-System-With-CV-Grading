@@ -6,24 +6,24 @@ body {
 }
 
 .message-container {
-  position: fixed;
-  top: 120px;
-  right: 70px;
-  z-index: 1000;
+    position: fixed;
+    top: 120px;
+    right: 70px;
+    z-index: 1000;
 }
 
 /* Green color for success messages */
 .success-message {
-  color: green;
-  font-weight: bold;
-  font-size: 16px;
+    color: green;
+    font-weight: bold;
+    font-size: 16px;
 }
 
 /* Red color for error messages */
 .error-message {
-  color: rgb(150, 56, 56);
-  font-weight: bold;
-  font-size: 16px;
+    color: rgb(150, 56, 56);
+    font-weight: bold;
+    font-size: 16px;
 }
 
 /* Job Listings Container */

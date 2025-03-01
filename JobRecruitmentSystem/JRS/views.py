@@ -10,9 +10,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User, Group
-from JRS.decorators import hr_required, candidate_required
+from JRS.decorators import hr_or_candidate_required, hr_required, candidate_required
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from django.views.generic import DetailView
+
 
 
 # HR Registration View
@@ -221,6 +223,8 @@ def edit_profile_hr(request):
 def aboutpage(request):
     return render(request, "JRS/aboutpage.html")
 
+
+
 def featurepage(request):
     return render(request, "JRS/featurepage.html")
 
@@ -286,6 +290,8 @@ def faqpage(request):
 def blogpage(request):
     return render(request, "JRS/blogpage.html")
 
+
+
 def hr_register_page(request):
     return render(request, "JRS/hr_register_page.html")
 
@@ -329,6 +335,14 @@ def view_jobs(request):
         return render(request, 'JRS/view_job.html', {'jobs': jobs})
     else:
         return render(request, 'error.html')  # Show an error or redirect if the user is not HR
+    
+@login_required
+@candidate_required
+def view_applications(request):
+    # Get the candidate's applications
+    applications = JobApplication.objects.filter(candidate=request.user.candidate)
+    return render(request, 'JRS/view_applications.html', {'applications': applications})
+
 
 @login_required
 @hr_required
@@ -386,6 +400,23 @@ def delete_job(request, job_id):
     
     return redirect('JRS:view_jobs')  # Redirect to the list of jobs the HR posted
 
+@login_required
+@candidate_required
+def delete_application(request, application_id):
+    candidate = Candidate.objects.get(user=request.user)  # Ensure user is treated as Candidate
+
+    application = get_object_or_404(JobApplication, id=application_id, candidate=candidate)
+
+    if request.method == "POST":
+        application.delete()
+        messages.success(request, "Application deleted successfully.")
+        return redirect("JRS:view_applications")  # Ensure this URL is correct
+
+    messages.error(request, "Invalid request.")
+    return redirect("JRS:view_applications")
+
+
+
 
 @login_required
 @hr_required
@@ -410,6 +441,27 @@ def update_job(request, job_id):
         return redirect('JRS:view_jobs')  # Redirect to job list after update
 
     return render(request, 'JRS/update_job.html', {'job': job})
+
+
+@login_required
+@candidate_required
+def update_application(request, application_id):
+    application = get_object_or_404(JobApplication, id=application_id, candidate__user=request.user)
+
+    if request.method == 'POST':
+        # Update resume if a new file is uploaded
+        if 'resume' in request.FILES:
+            application.resume = request.FILES['resume']
+
+        # Update cover letter if provided
+        application.cover_letter = request.POST.get('cover_letter', application.cover_letter)
+        
+        application.save()
+
+        messages.success(request, 'Application updated successfully!')
+        return redirect('JRS:view_applications')  # Redirect to application list after update
+
+    return render(request, 'JRS/update_applications.html', {'application': application})
 
 @login_required
 def apply_job(request, job_id):
@@ -444,10 +496,21 @@ def apply_job(request, job_id):
         )
         job_application.save()
 
-        messages.success(request, f"You have successfully applied for the job '{job.title}'!")
+        messages.success(request, f"You have applied for {job.title} job")
         return redirect('JRS:available_jobs')
 
     return render(request, 'JRS/apply_job.html', {'job': job})
+
+
+@candidate_required
+def job_details(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    skills = job.skill_list()  # Call the method to process skills
+    return render(request, 'JRS/view_job_detail.html', {'job': job, 'skills': skills})
+
+
+
+
 
 
 

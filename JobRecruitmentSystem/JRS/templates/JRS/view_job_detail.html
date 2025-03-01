@@ -1,0 +1,78 @@
+{% extends "JRS/base3.html" %}
+{% load static %}
+{% block title %}Job Details{% endblock title %}
+
+{% block inlinecss %}
+<link href="{% static 'JRS/css/view_job_detail.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/base3.css' %}" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock inlinecss %}
+
+{% block main %}
+<a href="javascript:history.back()" class="back-arrow" title="Go Back">
+    <i class="fas fa-arrow-left"></i>
+</a>
+<div class="job-details-container">
+    <h1 class="text-center fw-bold mb-3" style="color: #343a40;">Job Details</h1>
+    <b><p class="text-center text-muted">Explore the details and elevate your career journey!</p></b>
+
+
+    <div class="job-details">
+        <h2 class="job-title">{{ job.title }}</h2>
+        <p class="company-name"><i class="fa-solid fa-building"></i> {{ job.company }}</p>
+        <p class="job-location"><i class="fa-solid fa-map-marker-alt"></i> {{ job.location }}</p>
+        <p class="job-type"><i class="fa-solid fa-briefcase"></i> Job Type: {{ job.job_type }}</p>
+        <p class="salary"><i class="fa-solid fa-dollar-sign"></i> Salary: {{ job.salary }}</p>
+        <p class="experience"><i class="fa-solid fa-user-tie"></i> Experience: {{ job.experience }}</p>
+        <p class="education"><i class="fa-solid fa-graduation-cap"></i> Education: {{ job.education }}</p>
+        <p class="deadline"><i class="fa-solid fa-clock"></i> Apply Before: {{ job.deadline }}</p>
+        
+<!-- Skills Section -->
+<div class="skills">
+    <i class="fa-solid fa-code"></i> Required Skills:
+    <ul class="skill-list">
+        {% for skill in skills %}
+            <li>{{ skill }}</li>
+        {% empty %}
+            <li>No skills listed</li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+        <div class="job-description">
+            <h4 class="fw-bold mt-4">Job Description</h4>
+            <p>{{ job.description }}</p>
+        </div>
+
+    
+    </div>
+
+    <!-- Messages Display -->
+    {% if messages %}
+        <div class="message-container mt-4">
+            {% for message in messages %}
+                <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    window.onload = function() {
+        {% if messages %}
+            {% for message in messages %}
+                setTimeout(function() {
+                    var messageElements = document.querySelectorAll('.message');
+                    messageElements.forEach(function(el) {
+                        el.style.display = 'none';
+                    });
+                }, 4000);
+            {% endfor %}
+        {% endif %}
+    }
+</script>
+{% endblock main %}

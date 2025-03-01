@@ -11,18 +11,23 @@ urlpatterns = [
     path("home", views.startpage, name="startpage"),  # No space in the name
     path("about", views.aboutpage, name="aboutpage"),
     path('view-jobs/', views.view_jobs, name='view_jobs'),
+    path('view-applications/', views.view_applications, name='view_applications'),
     path('job/<int:job_id>/', views.view_jobs, name='job_detail'),  # New path for job detail
-    path('job/update/<int:job_id>/', views.update_job, name='update_job'),
+    path('application/update/<int:application_id>/', views.update_application, name='update_application'),
     path("feedback", views.feedback, name="feedback"),
     path("feature", views.featurepage, name="featurepage"),
     path("contact", views.contactpage, name="contactpage"),
     path('contact/', views.contact_form, name='contact_form'),
+    path('jobs/<int:job_id>/', views.job_details, name='job_details'),
+
     path("faq", views.faqpage, name="faqpage"),
     path("job-update-page", views.job_update_page, name="job_update_page"),
     path('delete_job/<int:job_id>/', views.delete_job, name='delete_job'),
+    path('delete-application/<int:application_id>/', views.delete_application, name='delete_application'),
     path('job/update/<int:job_id>/', views.update_job, name='update_job'),
     path("post-job", views.post_job, name="post_job"),
     path("post-jobs", views.post_jobs, name="post_jobs"),
+
     path("blog", views.blogpage, name="blogpage"),
     path("blog", views.blogpage, name="blogpage"),
     path('feedback-page', views.submit_feedback, name='feedback_page'),
