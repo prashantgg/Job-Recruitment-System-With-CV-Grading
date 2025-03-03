@@ -546,7 +546,36 @@ def job_details(request, job_id):
     return render(request, 'JRS/view_job_detail.html', {'job': job, 'skills': skills})
 
 
+def job_listing(request):
+    search_query = request.GET.get('search', '')
+    
+    if search_query:
+        # Filtering jobs by title or skills
+        jobs = Job.objects.filter(
+            title__icontains=search_query
+        ) | Job.objects.filter(
+            skills__icontains=search_query
+        )
+    else:
+        jobs = Job.objects.all()
+    
+    return render(request, 'JRS/job_listing.html', {'jobs': jobs})
 
+@candidate_required
+def list_job(request):
+    search_query = request.GET.get('search', '')
+    
+    if search_query:
+        # Filtering jobs by title or skills
+        jobs = Job.objects.filter(
+            title__icontains=search_query
+        ) | Job.objects.filter(
+            skills__icontains=search_query
+        )
+    else:
+        jobs = Job.objects.all()
+    
+    return render(request, 'JRS/available_jobs.html', {'jobs': jobs})
 
 
 

@@ -103,18 +103,6 @@ Post Job
     }
 
     window.onload = function() {
-        {% if messages %}
-            {% for message in messages %}
-                var messageElement = document.getElementById('message-{{ forloop.counter }}');
-                if (messageElement) {
-                    setTimeout(function() {
-                        messageElement.style.display = 'none';
-                    }, 4000);  // 4000ms = 4 seconds
-                }
-            {% endfor %}
-        {% endif %}
-    }
-    window.onload = function() {
         // Get the current date
         var today = new Date();
         // Format the date as YYYY-MM-DD (ISO format)
@@ -122,9 +110,20 @@ Post Job
 
         // Set the min attribute of the deadline input to the current date
         document.getElementById('deadline').setAttribute('min', currentDate);
+
+        {% if messages %}
+            {% for message in messages %}
+                var messageElement = document.getElementById('message-{{ forloop.counter }}');
+                if (messageElement) {
+                    setTimeout(function() {
+                        messageElement.style.display = 'none';
+                    }, 3000);  // 2000ms = 2 seconds
+                }
+            {% endfor %}
+        {% endif %}
     }
-    
 </script>
+
 {% endblock main %}
 
 

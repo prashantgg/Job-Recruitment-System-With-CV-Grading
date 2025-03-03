@@ -426,20 +426,23 @@ font-weight: bold;
 font-size: 16px;
 }
 
-.button-nex{
-  padding:8px 20px;
+.button-nex {
+  padding: 8px 25px;
   border-radius: 20px;
-  color:white;
+  color: white;
   font-weight: 800;
-  outline:none;
-  border:none;
-  margin:auto;
-  margin-right:10px;
-  font-family:Exo;
+  outline: none;
+  border: none;
+  width: 96%;
+  font-family: Exo;
   font-size: 1em;
-  cursor:pointer;
-  background-color: #0a0a0a;
+  cursor: pointer;
+  background-color: #3a3a3a;
+  display: block;  /* Make the button a block element */
+  margin-left: auto;  /* Move it to the right */
+  margin-right: 2%;  /* Optional, for fine-tuning */
 }
+
 .button-nex:hover{
   background-color: #1c1d1c;
 }

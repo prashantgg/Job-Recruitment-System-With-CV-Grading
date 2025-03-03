@@ -48,6 +48,9 @@ urlpatterns = [
     path("accounts/logout/", views.logout_user, name = "logout_user"),
     path("accounts/logouts/", views.logout_users, name = "logout_users"),
     path('apply-job/<int:job_id>/', views.apply_job, name='apply_job'),
+    path('jobs/', views.job_listing, name='job_listing'),
+    path('jobs/search', views.list_job, name='list_job'),
+
 
 
 

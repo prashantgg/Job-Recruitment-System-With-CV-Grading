@@ -12,6 +12,13 @@
 {% block main %}
 <div class="job-list-container">
     <h1 class="text-center fw-bold mb-3" style="color: #343a40;">Available Jobs</h1>
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <form method="GET" action="{% url 'JRS:list_job' %}">
+                <input type="text" name="search" placeholder="Search by job title or skills..." value="{{ request.GET.search }}">
+                <button type="submit"><i class="fa-solid fa-search"></i> Search</button>
+            </form>
+        </div>
 
     {% if jobs %}
     <div class="job-list">
@@ -40,7 +47,7 @@
                 
                 
 
-                <a href="{% url 'JRS:job_details' job.id %}" class="apply-btn me-3">View Details</a>
+                <a href="{% url 'JRS:job_details' job.id %}" class="view-btn me-3">View Details</a>
                 <a href="{% url 'JRS:apply_job' job.id %}" class="apply-btn">Apply Jobs</a>
                 
 

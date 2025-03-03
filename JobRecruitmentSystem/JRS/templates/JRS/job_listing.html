@@ -9,27 +9,35 @@
 {% block main %}
 <div class="job-list-container">
     <h1 class="text-center">Available Jobs</h1>
-    <p style="text-align: center; font-size: 20px; color: #333333; font-weight: 600; ">
-        You must login as candidate to apply these jobs.
+    <p style="text-align: center; font-size: 20px; color: #333333; font-weight: 600;">
+        You must login as candidate to apply for these jobs.
     </p>
     <br>
-    
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <form method="GET" action="{% url 'JRS:job_listing' %}">
+            <input type="text" name="search" placeholder="Search by job title or skills..." value="{{ request.GET.search }}">
+            <button type="submit"><i class="fa-solid fa-search"></i> Search</button>
+        </form>
+    </div>
+
+    <br>
+
     {% if jobs %}
     <div class="job-list">
         {% for job in jobs %}
             <div class="job-card">
                 <h3 class="job-title">{{ job.title }}</h3>
-                <p class="company-name"><i class="fa-solid fa-building"></i> Company Name:  {{ job.company }}</p>
+                <p class="company-name"><i class="fa-solid fa-building"></i> Company Name: {{ job.company }}</p>
                 <p class="job-location"><i class="fa-solid fa-map-marker-alt"></i> Location: {{ job.location }}</p>
-                <p class="job-type"><i class="fa-solid fa-briefcase"></i> Job type: {{ job.job_type | capfirst}}</p>
+                <p class="job-type"><i class="fa-solid fa-briefcase"></i> Job type: {{ job.job_type | capfirst }}</p>
                 <p class="salary"><i class="fa-solid fa-dollar-sign"></i> Salary: {{ job.salary }}</p>
                 <p class="experience"><i class="fa-solid fa-user-tie"></i> Experience: {{ job.experience }}</p>
                 <p class="education"><i class="fa-solid fa-graduation-cap"></i> Education: {{ job.education }}</p>
                 <p class="deadline"><i class="fa-solid fa-clock"></i> Apply Before: {{ job.deadline }}</p>
                 <p class="posted-by"><i class="fa-solid fa-user"></i> Posted By: {{ job.posted_by }}</p>
 
-
-                
                 <!-- Skills Section -->
                 <div class="skills">
                     <i class="fa-solid fa-code"></i> Required Skills:
