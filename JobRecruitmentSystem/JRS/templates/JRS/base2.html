@@ -16,7 +16,7 @@
 </head>
 <body>
 
-    {% block navbar %}
+{% block navbar %}
     <header>
       <nav>
         <div class="logo">Future<span>Fits</span></div>
@@ -26,27 +26,33 @@
     
         <ul class="nav-links" id="nav-links">
             <div class="user-name">
-                {% if request.user.first_name and request.user.last_name %}
-                    {{ request.user.first_name }} {{ request.user.last_name }}
+                {% if hr %}
+                    {% if hr.first_name and hr.last_name %}
+                        {{ hr.first_name }} {{ hr.last_name }}
+                    {% else %}
+                        Guest
+                    {% endif %}
                 {% else %}
                     Guest
-                {% endif %}      
+                {% endif %}
             </div>
-
+            
             <ul class="login-register">
                 <li class="dropdown">
                     <div class="user-profile-wrapper">
                         <div class="profile-circle">
-                            <i class="fas fa-user"></i>
+                            <!-- Display uploaded image or default profile picture -->
+                            <img src="{% if hr.profile_picture %}{{ hr.profile_picture.url }}{% else %}{% static 'JRS/Images/profile.jpg' %} {% endif %}" alt="Profile Picture" class="rounded-circle" width="40" height="40">
                         </div>
                     </div>
-                    
                 </li>
             </ul>
+            
         </ul>
+            
       </nav>
     </header>
-    {% endblock navbar %}
+{% endblock navbar %}
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -54,10 +60,12 @@
             <li><a href="{% url "JRS:hr_dashboard" %}"><i class="fas fa-tachometer-alt"></i>HR Dashboard</a></li>
             <li><a href="{% url "JRS:post_job" %}"><i class="fas fa-plus-circle"></i> Post Job</a></li>
             <li><a href="{% url "JRS:view_jobs" %}"><i class="fas fa-tasks"></i> Manage Job Posts</a></li>
-            <li><a href="#"><i class="fas fa-users"></i> View Applicants</a></li>
+            <li><a href="{% url 'JRS:posted_jobs' %}"><i class="fas fa-users"></i> View Applicants</a></li>
             <li><a href="#"><i class="fas fa-calendar-alt"></i> Schedule Interview</a></li>
             <li><a href="{% url "JRS:feedback_hr_page" %}"><i class="fas fa-comment"></i> Give Feedback</a></li>
             <li><a href="{% url "JRS:edit_profile_hr" %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+            <li><a href="{% url "JRS:change_password_hr" %}"><i class="fas fa-key"></i> Change Password</a></li>
+
             <li><a href="{% url "JRS:logout_user" %}" onclick="return confirm('Are you sure you want to log out?');"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>
@@ -69,6 +77,17 @@
 
     {% block script %}
     <script>
+
+            // JavaScript function to preview the selected image
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.getElementById('profile-image');
+            output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
         document.addEventListener("DOMContentLoaded", function () {
             const profile = document.querySelector(".profile-circle");
             const dropdown = document.querySelector(".dropdown");
@@ -91,6 +110,8 @@
             });
         });
     </script>
+
+    
 
     
     {% endblock script %}

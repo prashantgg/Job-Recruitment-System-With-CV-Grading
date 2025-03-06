@@ -1,20 +1,22 @@
+from io import BytesIO
 import re
+import pdfkit # type: ignore
 from django.contrib.auth import authenticate, login,logout
 from django.db import IntegrityError
 from .import models 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login
-from django.contrib.auth.hashers import make_password
 from .models import Job, JobApplication, User, HR, Candidate, Skill
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User, Group
 from JRS.decorators import hr_or_candidate_required, hr_required, candidate_required
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from django.views.generic import DetailView
 from django.contrib.sessions.backends.db import SessionStore
+from django.http import FileResponse, HttpResponse
+from django.core.files.storage import default_storage
+
 
 
 
@@ -204,6 +206,7 @@ def logout_users(request):
     return redirect("JRS:candidate_login_page", permanent=True)
 
 @login_required
+@hr_required
 def submit_feedback_hr(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -220,6 +223,7 @@ def submit_feedback_hr(request):
     return render(request, 'JRS/feedback.html')
 
 @login_required
+@candidate_required
 def submit_feedback_candidate(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -244,10 +248,8 @@ def startpage(request):
 def post_job(request):
     return render(request, "JRS/post_job.html")
 
-@login_required
-@hr_required
-def edit_profile_hr(request):
-    return render(request, "JRS/edit_profile_hr.html")
+
+
 
 def aboutpage(request):
     return render(request, "JRS/aboutpage.html")
@@ -258,9 +260,11 @@ def featurepage(request):
     return render(request, "JRS/featurepage.html")
 
 @login_required
+@hr_required
 def feedback(request):
     return render(request, "JRS/feedback.html")
 @login_required
+@candidate_required
 def feedback_candidate(request):
     return render(request, "JRS/feedback_candidate.html")
 
@@ -273,10 +277,12 @@ def hr_dashboard(request):
     return render(request, "JRS/hr_dashboard.html")
 
 @login_required
+@candidate_required
 def candidate_dashboard(request):
     return render(request, "JRS/candidate_dashboard.html")
 
 @login_required
+@candidate_required
 def available_jobs(request):
     user = request.user
     try:
@@ -501,6 +507,7 @@ def update_application(request, application_id):
     return render(request, 'JRS/update_applications.html', {'application': application})
 
 @login_required
+@candidate_required
 def apply_job(request, job_id):
     job = get_object_or_404(Job, id=job_id)
 
@@ -538,12 +545,20 @@ def apply_job(request, job_id):
 
     return render(request, 'JRS/apply_job.html', {'job': job})
 
-
+@login_required
 @candidate_required
 def job_details(request, job_id):
     job = get_object_or_404(Job, id=job_id)
     skills = job.skill_list()  # Call the method to process skills
     return render(request, 'JRS/view_job_detail.html', {'job': job, 'skills': skills})
+
+@login_required
+@hr_required
+def job_detail(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    skills = job.skill_list()  # Call the method to process skills
+    return render(request, 'JRS/view_detail.html', {'job': job, 'skills': skills})
+
 
 
 def job_listing(request):
@@ -562,6 +577,7 @@ def job_listing(request):
     return render(request, 'JRS/job_listing.html', {'jobs': jobs})
 
 @candidate_required
+@login_required
 def list_job(request):
     search_query = request.GET.get('search', '')
     
@@ -576,6 +592,209 @@ def list_job(request):
         jobs = Job.objects.all()
     
     return render(request, 'JRS/available_jobs.html', {'jobs': jobs})
+
+
+@login_required(login_url="JRS:candidate_login")  # Redirects to HR login page if not logged in
+@candidate_required
+def change_password_candidate(request):
+    if request.method == "POST":
+        o_pass = request.POST.get("o_pass")
+        n_pass = request.POST.get("n_pass")
+        c_pass = request.POST.get("c_pass")
+
+
+        # Check if any of the password fields are missing
+        if not o_pass or not n_pass or not c_pass:
+            messages.error(request, "All fields are required.")
+            return redirect("JRS:change_password_candidate")
+        
+        # Validate the new password format using regex
+        if not re.search(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$', n_pass):
+            messages.error(request, "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character (@$!%*?&).")
+            return redirect("JRS:change_password_candidate", permanent=True)
+        
+        if n_pass == c_pass:
+            user = request.user
+            if user.check_password(o_pass):
+                user.set_password(n_pass)
+                user.save()
+                messages.success(request, "Password has been changed successfully. Please log in again.")
+                return redirect("JRS:candidate_login_page")  # Redirect HR to log in again
+            else:
+                messages.error(request, "Your old password is incorrect. Please enter the correct one.")
+        else:
+            messages.error(request, "New password and confirm password do not match.")
+    
+    return render(request, "JRS/change_password_candidate.html")
+
+
+@login_required(login_url="JRS:hr_login")  # Redirects to HR login page if not logged in
+@hr_required
+def change_password_hr(request):
+    if request.method == "POST":
+        o_pass = request.POST.get("o_pass")
+        n_pass = request.POST.get("n_pass")
+        c_pass = request.POST.get("c_pass")
+
+        # Check if any of the password fields are missing
+        if not o_pass or not n_pass or not c_pass:
+            messages.error(request, "All fields are required.")
+            return redirect("JRS:change_password_hr")
+
+        # Validate the new password format using regex
+        if not re.search(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$', n_pass):
+            messages.error(request, "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character (@$!%*?&).")
+            return redirect("JRS:change_password_hr")
+
+        if n_pass == c_pass:
+            user = request.user
+            if user.check_password(o_pass):
+                user.set_password(n_pass)
+                user.save()
+                messages.success(request, "Password has been changed successfully. Please log in again.")
+                return redirect("JRS:hr_login_page")  # Redirect HR to log in again
+            else:
+                messages.error(request, "Your old password is incorrect.")
+        else:
+            messages.error(request, "New password and confirm password do not match.")
+
+    return render(request, "JRS/change_password_hr.html")
+
+
+from django.core.files.storage import FileSystemStorage
+
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+
+@login_required
+@hr_required
+def edit_hr_profile(request):
+    hr = HR.objects.get(user=request.user)
+
+    if request.method == "POST":
+        first_name = request.POST.get("first_name", "").strip()
+        last_name = request.POST.get("last_name", "").strip()
+        username = request.POST.get("username", "").strip()
+        profile_picture = request.FILES.get("profile_picture")
+
+        # Update only if fields are provided
+        if first_name:
+            hr.first_name = first_name
+        if last_name:
+            hr.last_name = last_name
+        if username:
+            hr.username = username
+
+        # Handle profile picture upload
+        if profile_picture:
+            file_path = f"profile_pictures/{profile_picture.name}"
+
+            # Delete old picture (except default)
+            if hr.profile_picture and hr.profile_picture.name != "profile_pictures/default.png":
+                if default_storage.exists(hr.profile_picture.name):
+                    default_storage.delete(hr.profile_picture.name)
+
+            # Save new profile picture
+            hr.profile_picture.save(file_path, ContentFile(profile_picture.read()))
+
+        hr.save()
+        messages.success(request, "Profile updated successfully!")
+        return redirect("JRS:edit_profile_hr")
+
+    return render(request, "JRS/edit_profile_hr.html", {"hr": hr})
+
+@login_required
+@candidate_required
+def edit_candidate_profile(request):
+    candidate = Candidate.objects.get(user=request.user)
+
+    if request.method == "POST":
+        first_name = request.POST.get("first_name", "").strip()
+        last_name = request.POST.get("last_name", "").strip()
+        username = request.POST.get("username", "").strip()
+        profile_picture = request.FILES.get("profile_picture")
+
+        # Update only if fields are provided
+        if first_name:
+            candidate.first_name = first_name
+        if last_name:
+            candidate.last_name = last_name
+        if username:
+            candidate.username = username
+
+        # Handle profile picture upload
+        if profile_picture:
+            file_path = f"profile_pictures/{profile_picture.name}"
+
+            # Delete old picture (except default)
+            if candidate.profile_picture and candidate.profile_picture.name != "profile_pictures/default.png":
+                if default_storage.exists(candidate.profile_picture.name):
+                    default_storage.delete(candidate.profile_picture.name)
+
+            # Save new profile picture
+            candidate.profile_picture.save(file_path, ContentFile(profile_picture.read()))
+
+        candidate.save()
+        messages.success(request, "Profile updated successfully!")
+        return redirect("JRS:edit_profile_candidate")
+
+    return render(request, "JRS/edit_profile_candidate.html", {"candidate": candidate})
+
+
+
+
+
+
+@login_required
+@hr_required
+def posted_jobs(request):
+    """ Display jobs posted by the logged-in HR """
+    if hasattr(request.user, 'hr'):
+        jobs = Job.objects.filter(posted_by=request.user.hr)
+    else:
+        jobs = None
+
+    return render(request, 'JRS/posted_jobs.html', {'jobs': jobs})
+
+
+@login_required
+@hr_required
+def view_applicants(request, job_id):
+    job = get_object_or_404(Job, pk=job_id)
+    applications = JobApplication.objects.filter(job=job)
+
+    return render(request, 'JRS/view_applicants.html', {
+        'job': job,
+        'applications': applications
+    })
+
+
+
+from django.template.loader import render_to_string
+
+def generate_cover_letter_pdf(request, application_id):
+    application = get_object_or_404(JobApplication, pk=application_id)
+    
+    # Generate HTML content from the template
+    html_content = render_to_string('JRS/your_template_name.html', {'application': application})
+    
+    # Create a PDF from the generated HTML string
+    config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
+    pdf = pdfkit.from_string(html_content, False, configuration=config)
+    
+    # Return the PDF as a response
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="cover_letter.pdf"'
+    
+    return response
+
+
+
+
+
+
+
+
 
 
 

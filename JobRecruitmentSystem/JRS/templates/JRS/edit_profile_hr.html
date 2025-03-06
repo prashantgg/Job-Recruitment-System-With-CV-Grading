@@ -22,66 +22,55 @@ Edit HR Profile
 
 {% block main %}
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="w-full max-w-5xl bg-white p-8 rounded-xl min-h-[500px] shadow-lg mt-20"
+    <div class="w-full max-w-8xl bg-white p-8 rounded-xl shadow-lg mt-20"
          style="border-radius: 8px; box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1); border: 1px solid #948e8e;">
         <h1 class="text-center fw-bold mb-3" style="color: #343a40;">Edit Profile</h1>
-        <b><p class="text-center text-muted">Take a moment to update your profile information.</p></b>
+        <p class="text-center text-muted font-semibold">Take a moment to update your profile information.</p>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Profile & Form Container -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
             <!-- Profile Picture Upload -->
-            <div class="text-center bg-gray-50 p-6 rounded-lg shadow-sm border">
-                <img src="{% static 'JRS/Images/profile.jpg' %}" class="w-32 h-36.1 rounded-full mx-auto border-4 border-gray-300 shadow-lg">
-                <form method="POST" enctype="multipart/form-data" class="mt-4">
+            <div class="flex flex-col items-center bg-gray-50 p-6 rounded-lg shadow-sm border">
+                <!-- Display uploaded image or default image -->
+                <img id="profile-image" src="{% if hr.profile_picture %}{{ hr.profile_picture.url }}{% else %}{% static 'JRS/Images/profile.jpg' %}{% endif %}" class="w-36 h-36 rounded-full border-4 border-gray-300 shadow-lg">
+                <form method="POST" enctype="multipart/form-data" class="mt-4 w-full">
                     {% csrf_token %}
-                    <input type="file" name="profile_picture" class="w-full border p-2 rounded-lg text-gray-700 text-sm">
-                    <br>
-                    <div class="user-namea">
-                        {% if request.user.first_name and request.user.last_name %}
-                            {{ request.user.first_name }} {{ request.user.last_name }}
+                    <input type="file" name="profile_picture" class="w-full border p-2 rounded-lg text-gray-700 text-sm" onchange="previewImage(event)" required >
+                    <p class="text-center font-semibold mt-2">
+                        {% if hr.first_name and hr.last_name %}
+                            {{ hr.first_name }} {{ hr.last_name }}
                         {% else %}
                             Guest
-                        {% endif %}      
-                    </div>
-                    <br>
-                    <button type="submit" class="w-full py-2 text-center border-2 border-transparent bg-black text-white hover:border-black mt-4">Upload</button>
+                        {% endif %}
+                    </p>
+                    <button type="submit" class="w-full py-2 text-center border-2 border-transparent bg-black text-white hover:border-black mt-2.5" required>
+                        Upload
+                    </button>
                 </form>
             </div>
 
             <!-- Edit Personal Info -->
             <div class="bg-gray-50 p-6 rounded-lg shadow-sm border">
-                <form method="POST">
+                <form method="POST" class="w-full">
                     {% csrf_token %}
-                    <label class="block text-gray-700 font-medium mb-1">First Name</label>
-                    <input type="text" name="first_name" value="{{ hr.first_name }}" class="input-box">
-
-                    <label class="block text-gray-700 font-medium mb-1">Last Name</label>
-                    <input type="text" name="last_name" value="{{ hr.last_name }}" class="input-box">
-
-                    <label class="block text-gray-700 font-medium mb-1">Username</label>
-                    <input type="text" name="username" value="{{ hr.username }}" class="input-box">
-
-                    <div class="flex justify-between mt-4">
-                        <button type="submit" class="w-full py-2 text-center border-2 border-transparent bg-black text-white hover:border-black mt-8">Update Profile</button>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium">First Name</label>
+                        <input type="text" name="first_name" value="{{ hr.first_name }}" class="input-box w-full">
                     </div>
-                </form>
-            </div>
 
-            <!-- Change Password -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border">
-                <form method="POST">
-                    {% csrf_token %}
-                    <label class="block text-gray-700 font-medium mb-1">Old Password</label>
-                    <input type="password" name="old_password" class="input-box">
-
-                    <label class="block text-gray-700 font-medium mb-1">New Password</label>
-                    <input type="password" name="new_password" class="input-box">
-
-                    <label class="block text-gray-700 font-medium mb-1">Confirm New Password</label>
-                    <input type="password" name="confirm_password" class="input-box">
-
-                    <div class="flex justify-between mt-4">
-                        <button type="submit" class="w-full py-2 text-center border-2 border-transparent bg-black text-white hover:border-black mt-8">Change Password</button>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium">Last Name</label>
+                        <input type="text" name="last_name" value="{{ hr.last_name }}" class="input-box w-full">
                     </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium">Username</label>
+                        <input type="text" name="username" value="{{ hr.username }}" class="input-box w-full">
+                    </div>
+
+                    <button type="submit" class="w-full py-2 text-center border-2 border-transparent bg-black text-white hover:border-black" required>
+                        Update Profile
+                    </button>
                 </form>
             </div>
         </div>
@@ -110,6 +99,15 @@ Edit HR Profile
                 }
             {% endfor %}
         {% endif %}
+    }
+
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const output = document.getElementById('profile-image');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
     }
 </script>
 {% endblock main %}

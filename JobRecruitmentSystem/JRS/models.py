@@ -16,14 +16,14 @@ class ContactForm(models.Model):
 
 class HR(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    username = models.CharField(max_length=100, default='Default User Name')
-    first_name = models.CharField(max_length=100, default='Default HR First Name')
-    last_name = models.CharField(max_length=100, default='Default HR Last Name')
-    email = models.EmailField(unique=True, default='default@email.com')
-    profile_picture = models.ImageField(upload_to='profile_pics/', default='default_profile.png')
+    first_name = models.CharField(max_length=255, null=False, blank=False, default="HR")
+    last_name = models.CharField(max_length=255, null=False, blank=False, default="User")
+    username = models.CharField(max_length=255, unique=True)
+    profile_picture = models.ImageField(upload_to="profile_pictures/", default="profile_pictures/default.png")
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return self.username
+
 
 
 class Skill(models.Model):
@@ -35,10 +35,12 @@ class Skill(models.Model):
 class Candidate(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=100, default='Default User Name')
-    first_name = models.CharField(max_length=100, default='Default Candidate First Name')
-    last_name = models.CharField(max_length=100, default='Default Candidate Last Name')
+    first_name = models.CharField(max_length=100, default='Default Candidate First Name',null=False, blank=False,)
+    last_name = models.CharField(max_length=100, default='Default Candidate Last Name',null=False, blank=False,)
     email = models.EmailField(unique=True, default='default@email.com')
     skills = models.ManyToManyField(Skill, related_name="candidates")  # Change from TextField
+    profile_picture = models.ImageField(upload_to="profile_pictures/", default="profile_pictures/default.png")
+
 
     def __str__(self):
         return self.first_name + " " + self.last_name

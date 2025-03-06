@@ -40,6 +40,39 @@
     font-size: 16px;
 }
 
+.back-arrow {
+    position: absolute; /* Position it in the top left corner */
+    top: 130px; /* Adjust the distance from the top */
+    left: 320px; /* Adjust the distance from the left */
+    color: #000000; /* Black color for the arrow */
+    font-size: 30px; /* Size of the arrow */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.back-arrow:hover {
+    color: #333333; /* Change color on hover */
+}
+
+.submit-btn {
+    display: block;
+    width: 20%;
+    background: rgb(42, 166, 17);
+    color: rgb(9, 9, 9);
+    padding: 16px;  /* Slightly larger padding for buttons */
+    border: 2px solid black;  /* Black border added */
+    border-radius: 6px;
+    font-size: 15px;  /* Increased font size */
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 18px;
+    text-align: center;
+    margin-left: auto;  /* Centers the button horizontally */
+    margin-right: auto; /* Centers the button horizontally */
+}
+
+  
+
 
 
 body, html {

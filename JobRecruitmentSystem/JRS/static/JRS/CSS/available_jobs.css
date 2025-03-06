@@ -19,6 +19,8 @@ body {
     font-size: 16px;
 }
 
+
+
 /* Red color for error messages */
 .error-message {
     color: rgb(150, 56, 56);

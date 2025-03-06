@@ -26,23 +26,28 @@
     
         <ul class="nav-links" id="nav-links">
             <div class="user-name">
-                {% if request.user.first_name and request.user.last_name %}
-                    {{ request.user.first_name }} {{ request.user.last_name }}
+                {% if candidate %}
+                    {% if candidate.first_name and candidate.last_name %}
+                        {{ candidate.first_name }} {{ candidate.last_name }}
+                    {% else %}
+                        Guest
+                    {% endif %}
                 {% else %}
                     Guest
-                {% endif %}      
+                {% endif %}
             </div>
-
+            
             <ul class="login-register">
                 <li class="dropdown">
                     <div class="user-profile-wrapper">
                         <div class="profile-circle">
-                            <i class="fas fa-user"></i>
+                            <!-- Display uploaded image or default profile picture -->
+                            <img src="{% if candidate.profile_picture %}{{ candidate.profile_picture.url }}{% else %}{% static 'JRS/Images/profile.jpg' %} {% endif %}" alt="Profile Picture" class="rounded-circle" width="40" height="40">
                         </div>
                     </div>
-                    
                 </li>
             </ul>
+            
         </ul>
       </nav>
     </header>
@@ -57,7 +62,9 @@
             <li><a href="#"><i class="fas fa-users"></i> View Applicants</a></li>
             <li><a href="#"><i class="fas fa-edit"></i> Create CV</a></li>
             <li><a href="{% url "JRS:feedback_candidate_page" %}"><i class="fas fa-comment"></i> Give Feedback</a></li>
-            <li><a href="{% url "JRS:edit_profile_hr" %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+            <li><a href="{% url "JRS:edit_profile_candidate" %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+            <li><a href="{% url "JRS:change_password_candidate" %}"><i class="fas fa-key"></i> Change Password</a></li>
+
             <li><a href="{% url "JRS:logout_users" %}" onclick="return confirm('Are you sure you want to log out?');"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>

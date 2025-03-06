@@ -24,6 +24,7 @@ View Applications
                     <th>Company</th>
                     <th>Posted By</th> <!-- New Column for Posted By -->
                     <th>Your Resume</th>
+                    <th>Your Cover Letter</th>
                     <th>Applied On</th>
                     <th>Actions</th>
                 </tr>
@@ -37,8 +38,11 @@ View Applications
                     <td>
                         <a href="{{ application.resume.url }}" target="_blank" style="color: black;">View Resume</a>
                     </td>
-                    <td>{{ application.applied_at|date:"Y-m-d H:i" }}</td>
+                    <td><a href="{% url 'JRS:generate_cover_letter_pdf' application.id %}" style="color: black;" class="cover-letter-link" target="_blank">View Cover Letter</a></td>
+
+                    <td>{{ application.applied_at|date:"Y-m-d" }}</td>
                     <td>
+
                         <a href="{% url 'JRS:update_application' application.id %}" class="btn-update">Update</a>
                         <form action="{% url 'JRS:delete_application' application.id %}" method="post" style="display:inline;">
                             {% csrf_token %}

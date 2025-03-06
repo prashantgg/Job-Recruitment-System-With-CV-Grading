@@ -18,8 +18,10 @@ urlpatterns = [
     path("contact", views.contactpage, name="contactpage"),
     path('contact/', views.contact_form, name='contact_form'),
     path('jobs/<int:job_id>/', views.job_details, name='job_details'),
+    path('job/detail/<int:job_id>/', views.job_detail, name='job_detail'),
     path('job-listing', views.job_listing, name='job_listing'),
-
+    path('change_password_candidate/', views.change_password_candidate, name='change_password_candidate'),
+    path('change_password_hr/', views.change_password_hr, name='change_password_hr'),
     path("faq", views.faqpage, name="faqpage"),
     path("job-update-page", views.job_update_page, name="job_update_page"),
     path('delete_job/<int:job_id>/', views.delete_job, name='delete_job'),
@@ -27,12 +29,12 @@ urlpatterns = [
     path('job/update/<int:job_id>/', views.update_job, name='update_job'),
     path("post-job", views.post_job, name="post_job"),
     path("post-jobs", views.post_jobs, name="post_jobs"),
-
     path("blog", views.blogpage, name="blogpage"),
     path("blog", views.blogpage, name="blogpage"),
     path('feedback-page-hr', views.submit_feedback_hr, name='feedback_hr_page'),
     path('feedback-page-candidate', views.submit_feedback_candidate, name='feedback_candidate_page'),
-    path('edit-profile-hr', views.edit_profile_hr, name='edit_profile_hr'),
+    path('edit-profile-hr/', views.edit_hr_profile, name='edit_profile_hr'),
+    path('edit-profile-candidate/', views.edit_candidate_profile, name='edit_profile_candidate'),
     path("hr-dashboard", views.hr_dashboard, name="hr_dashboard"),
     path("candidate-dashboard", views.candidate_dashboard, name="candidate_dashboard"),
     path("available-jobs", views.available_jobs, name="available_jobs"),
@@ -50,8 +52,13 @@ urlpatterns = [
     path('apply-job/<int:job_id>/', views.apply_job, name='apply_job'),
     path('jobs/', views.job_listing, name='job_listing'),
     path('jobs/search', views.list_job, name='list_job'),
+    path('posted-jobs/', views.posted_jobs, name='posted_jobs'),
+    path('job/<int:job_id>/view_applicants/', views.view_applicants, name='view_applicants'),
+    path('application/<int:application_id>/cover_letter/', views.generate_cover_letter_pdf, name='generate_cover_letter_pdf'),
 
 
 
-
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]# This will allow Django to serve media files during development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    

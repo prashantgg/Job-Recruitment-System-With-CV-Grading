@@ -1,0 +1,113 @@
+{% extends "JRS/base3.html" %}
+{% load static %}
+
+{% block title %}
+Edit Candidate Profile
+{% endblock title %}
+
+{% block inlinecss %}
+<link href="{% static 'JRS/css/base3.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/edit_profile_hr.css' %}" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        corePlugins: {
+            preflight: false  // Ensures Bootstrap styles are not overridden
+        }
+    };
+</script>
+{% endblock inlinecss %}
+
+{% block main %}
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-8xl bg-white p-8 rounded-xl shadow-lg mt-20"
+         style="border-radius: 8px; box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1); border: 1px solid #948e8e;">
+        <h1 class="text-center fw-bold mb-3" style="color: #343a40;">Edit Profile</h1>
+        <p class="text-center text-muted font-semibold">Take a moment to update your profile information.</p>
+
+        <!-- Profile & Form Container -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+            <!-- Profile Picture Upload -->
+            <div class="flex flex-col items-center bg-gray-50 p-6 rounded-lg shadow-sm border">
+                <!-- Display uploaded image or default image -->
+                <img id="profile-image" src="{% if candidate.profile_picture %}{{ candidate.profile_picture.url }}{% else %}{% static 'JRS/Images/profile.jpg' %}{% endif %}" class="w-36 h-36 rounded-full border-4 border-gray-300 shadow-lg">
+                <form method="POST" enctype="multipart/form-data" class="mt-4 w-full">
+                    {% csrf_token %}
+                    <input type="file" name="profile_picture" class="w-full border p-2 rounded-lg text-gray-700 text-sm" onchange="previewImage(event)" required >
+                    <p class="text-center font-semibold mt-2">
+                        {% if candidate.first_name and candidate.last_name %}
+                            {{ candidate.first_name }} {{ candidate.last_name }}
+                        {% else %}
+                            Guest
+                        {% endif %}
+                    </p>
+                    <button type="submit" class="w-full py-2 text-center border-2 border-transparent bg-black text-white hover:border-black mt-2.5" required>
+                        Upload
+                    </button>
+                </form>
+            </div>
+
+            <!-- Edit Personal Info -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border">
+                <form method="POST" class="w-full">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium">First Name</label>
+                        <input type="text" name="first_name" value="{{ candidate.first_name }}" class="input-box w-full">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium">Last Name</label>
+                        <input type="text" name="last_name" value="{{ candidate.last_name }}" class="input-box w-full">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium">Username</label>
+                        <input type="text" name="username" value="{{ candidate.username }}" class="input-box w-full">
+                    </div>
+
+                    <button type="submit" class="w-full py-2 text-center border-2 border-transparent bg-black text-white hover:border-black" required>
+                        Update Profile
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+{% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}" id="message-{{ forloop.counter }}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<script>
+    window.onload = function() {
+        {% if messages %}
+            {% for message in messages %}
+                var messageElement = document.getElementById('message-{{ forloop.counter }}');
+                if (messageElement) {
+                    setTimeout(function() {
+                        messageElement.style.display = 'none';
+                    }, 4000);  // 4000ms = 4 seconds
+                }
+            {% endfor %}
+        {% endif %}
+    }
+
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const output = document.getElementById('profile-image');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+{% endblock main %}

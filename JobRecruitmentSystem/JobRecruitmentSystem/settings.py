@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,9 +46,10 @@ INSTALLED_APPS = [
 
 # Use a different session key for your custom login system
 SESSION_COOKIE_NAME = "custom_user_session"
-
 # Optional: You can also set a different session engine for admin users
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
+
+
 
 
 MIDDLEWARE = [
@@ -78,10 +82,14 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # Add your custom context processor here
+                'JRS.context_processors.hr_profile',
+                'JRS.context_processors.candidate_profile',
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'JobRecruitmentSystem.wsgi.application'
 
@@ -98,10 +106,14 @@ DATABASES = {
 
 
 
-# settings.py
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+
+
 
 
 

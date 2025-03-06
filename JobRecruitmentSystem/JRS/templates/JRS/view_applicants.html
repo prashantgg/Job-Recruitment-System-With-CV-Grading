@@ -1,0 +1,118 @@
+{% extends "JRS/base2.html" %}
+{% load static %}
+
+{% block title %}
+View Applicants
+{% endblock title %}
+
+{% block inlinecss %}
+<link href="{% static 'JRS/css/base2.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/view_job.css' %}" rel="stylesheet">
+
+<style>
+    /* Set the hyperlink color to black by default */
+    a, a:visited {
+        color: black !important;
+        text-decoration: none; /* Optional: Removes the underline from links */
+    }
+
+    /* Optional: Add hover effect for the link */
+    a:hover {
+        color: black !important; /* Ensures the link remains black on hover */
+    }
+
+    /* Style for the Grade All CVs button */
+    .grade-all-btn {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #28a745;
+        color: white;
+        border: 2px solid black;  /* Black border */
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 16px;
+        margin-bottom: -10px;  /* Add margin at the bottom */
+    }
+    
+    /* Adjusted hover effect */
+    .grade-all-btn:hover {
+        background-color: #218838;
+    }
+    
+    /* Optional: If you want to fine-tune positioning using relative positioning */
+    .grade-all-btn {
+        position: relative;
+        top: -20px;  /* Move the button up */
+    }
+    
+</style>
+{% endblock inlinecss %}
+
+{% block main %}
+<a href="javascript:history.back()" class="back-arrow" title="Go Back">
+    <i class="fas fa-arrow-left"></i>
+</a>
+<div class="job-container">
+    <h1 class="text-center fw-bold mb-3" style="color: #343a40;">Applicants for {{ job.title }}</h1>
+    <b><p class="text-center text-muted" style="margin-bottom: 40px;">Here you can manage and view the applicants for the job you’ve posted.</p></b>
+    
+    {% if applications %}
+    
+    <!-- Button to Grade All CVs -->
+    <div class="text-center">
+        <button class="grade-all-btn" onclick="window.location.href=''">Grade All CVs</button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Candidate Name</th>
+                    <th>Email</th>
+                    <th>CV</th>
+                    <th>Cover Letter</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                <tr>
+                    <td>{{ application.candidate.first_name }} {{ application.candidate.last_name }}</td>
+                    <td>{{ application.candidate.email }}</td>
+                    <td><a href="{{ application.resume.url }}" target="_blank">View CV</a></td>
+                    <td><a href="{% url 'JRS:generate_cover_letter_pdf' application.id %}" class="cover-letter-link" target="_blank">View Cover Letter</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-center text-muted">No applicants for this job yet.</p>
+    {% endif %}
+</div>
+
+{% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}" id="message-{{ forloop.counter }}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<script>
+    window.onload = function() {
+        {% if messages %}
+            {% for message in messages %}
+                var messageElement = document.getElementById('message-{{ forloop.counter }}');
+                if (messageElement) {
+                    setTimeout(function() {
+                        messageElement.style.display = 'none';
+                    }, 4000);  // 4000ms = 4 seconds
+                }
+            {% endfor %}
+        {% endif %}
+    }
+</script>
+{% endblock main %}
