@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import path
 from . import views
+from . import cv_grading
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -55,6 +56,12 @@ urlpatterns = [
     path('posted-jobs/', views.posted_jobs, name='posted_jobs'),
     path('job/<int:job_id>/view_applicants/', views.view_applicants, name='view_applicants'),
     path('application/<int:application_id>/cover_letter/', views.generate_cover_letter_pdf, name='generate_cover_letter_pdf'),
+    path('grade-all-cvs/<int:job_id>/', cv_grading.grade_all_cvs, name='grade_all_cvs'),
+    path('list/jobs/', views.job_list, name='list_job_hr'),
+    path('job/<int:job_id>/graded-scores/', views.view_graded_scores, name='view_graded_scores'),
+
+
+
 
 
 

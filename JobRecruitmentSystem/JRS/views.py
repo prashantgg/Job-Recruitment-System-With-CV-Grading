@@ -1,12 +1,13 @@
 from io import BytesIO
 import re
+from JRS.cv_grading import compute_similarity
 import pdfkit # type: ignore
 from django.contrib.auth import authenticate, login,logout
 from django.db import IntegrityError
 from .import models 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login
-from .models import Job, JobApplication, User, HR, Candidate, Skill
+from .models import CvGrading, Job, JobApplication, User, HR, Candidate, Skill
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
@@ -14,7 +15,7 @@ from JRS.decorators import hr_or_candidate_required, hr_required, candidate_requ
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from django.contrib.sessions.backends.db import SessionStore
-from django.http import FileResponse, HttpResponse
+from django.http import FileResponse, HttpResponse, JsonResponse
 from django.core.files.storage import default_storage
 
 
@@ -787,6 +788,24 @@ def generate_cover_letter_pdf(request, application_id):
     response['Content-Disposition'] = 'attachment; filename="cover_letter.pdf"'
     
     return response
+
+
+@hr_required
+def job_list(request):
+    jobs = Job.objects.prefetch_related('applications').all()
+    return render(request, 'JRS/list_job.html', {'jobs': jobs})
+
+
+def view_graded_scores(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    graded_applications = CvGrading.objects.filter(application__job=job)
+
+    return render(request, "JRS/view_graded_score.html", {
+        "job": job,
+        "graded_applications": graded_applications
+    })
+
+
 
 
 

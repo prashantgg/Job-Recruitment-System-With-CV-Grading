@@ -1,0 +1,72 @@
+{% extends "JRS/base2.html" %}
+{% load static %}
+
+{% block title %} Graded Score {% endblock title %}
+
+{% block inlinecss %}
+<link href="{% static 'JRS/css/base2.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/view_job.css' %}" rel="stylesheet">
+
+<style>
+    .centered { text-align: center; }
+    
+    /* Text color based on recommendation */
+    .highly-recommended { color: green; font-weight: bold; }
+    .moderately-recommended { color: orange; font-weight: bold; }
+    .not-recommended { color: red; font-weight: bold; }
+
+
+</style>
+{% endblock inlinecss %}
+
+{% block main %}
+<a href="javascript:history.back()" class="back-arrow" title="Go Back">
+    <i class="fas fa-arrow-left"></i>
+</a>
+
+<div class="job-container">
+    <h1 class="text-center fw-bold mb-3" style="color: #343a40;">Graded Applicants</h1>
+    <b><p class="text-center text-muted">Manage and review the graded scores of applicants for the job.</p></b>
+
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Score (%)</th>
+                    <th>Recommendation</th>
+                    <th class="centered">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grading in graded_applications %}
+                <tr>
+                    <td>{{ grading.application.candidate.first_name }} {{ grading.application.candidate.last_name }}</td>
+                    <td>{{ grading.application.candidate.email }}</td>
+                    <td class="centered">{{ grading.score }}%</td>
+                    <td class="centered">
+                        <span class="{% if grading.recommendation == 'Highly Recommended' %} highly-recommended
+                                     {% elif grading.recommendation == 'Moderately Recommended' %} moderately-recommended
+                                     {% else %} not-recommended
+                                     {% endif %}">
+                            {{ grading.recommendation }}
+                        </span>
+                    </td>
+                    <td class="centered">
+                        <a href="" class="btn-update">Accept</a>
+                        <a href="" class="btn-delete">Reject</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No graded applicants yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock main %}

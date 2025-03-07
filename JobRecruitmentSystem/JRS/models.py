@@ -19,6 +19,7 @@ class HR(models.Model):
     first_name = models.CharField(max_length=255, null=False, blank=False, default="HR")
     last_name = models.CharField(max_length=255, null=False, blank=False, default="User")
     username = models.CharField(max_length=255, unique=True)
+    email = models.EmailField(unique=True, default='default@email.com')
     profile_picture = models.ImageField(upload_to="profile_pictures/", default="profile_pictures/default.png")
 
     def __str__(self):
@@ -87,7 +88,7 @@ class Job(models.Model):
     
 class JobApplication(models.Model):
     candidate = models.ForeignKey('Candidate', on_delete=models.CASCADE)
-    job = models.ForeignKey('Job', on_delete=models.CASCADE)
+    job = models.ForeignKey('Job', on_delete=models.CASCADE, related_name='applications')
     cover_letter = models.TextField()
     resume = models.FileField(upload_to='resumes/')
     cover_letter_file = models.FileField(upload_to='cover_letters/', blank=True, null=True)  # Store cover letter as a file
@@ -98,3 +99,12 @@ class JobApplication(models.Model):
 
     def __str__(self):
         return f"{self.candidate.first_name} applied for {self.job.title}"
+    
+class CvGrading(models.Model):
+    application = models.OneToOneField(JobApplication, on_delete=models.CASCADE, related_name='grading')
+    score = models.FloatField()  # Percentage (0-100)
+    recommendation = models.CharField(max_length=50)  # "Highly Recommended", "Moderately Recommended", "Not Recommended"
+    graded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.application.candidate.first_name} - {self.application.job.title}: {self.score}%"

@@ -70,6 +70,27 @@
     margin-left: auto;  /* Centers the button horizontally */
     margin-right: auto; /* Centers the button horizontally */
 }
+/* Make the table container scrollable */
+.table-container {
+    max-height: 360px;  /* Set a fixed height for the container */
+    overflow-y: auto;   /* Allow vertical scrolling */
+    scrollbar-width: thin;  /* For Firefox */
+}
+
+/* For Webkit browsers (Chrome, Safari, etc.) */
+.table-container::-webkit-scrollbar {
+    width: 6px;  /* Width of the scrollbar */
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);  /* Color of the scrollbar thumb */
+    border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: transparent;  /* Invisible track */
+}
+
 
   
 
@@ -86,7 +107,7 @@ body, html {
         width: 100%;
         max-width: 1200px;
         margin: 6% auto;
-        margin-top: 8%;
+        margin-top: 7.5%;
         background: repeating-linear-gradient(
             45deg,
             rgba(223, 6, 6, 0.02),
@@ -100,6 +121,89 @@ body, html {
         border: 1px solid #948e8e;  /* Optional: Add border to the form container */
 
     }
+
+        /* Green button */
+        .btn-green {
+            background-color: #48d121 !important; /* Green background */
+            border: 2px solid black !important; /* Black border */
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            color: rgb(14, 14, 14) !important; /* White text */
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .btn-green:hover {
+            background-color: #218838 !important; /* Darker green on hover */
+            color: rgb(6, 6, 6) !important; /* Ensure text remains white */
+            border: 2px solid black !important; /* Keep black border on hover */
+        }
+        /* Green button */
+        .btn-red {
+            background-color: #db1b28 !important; /* Green background */
+            border: 2px solid black !important; /* Black border */
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            color: rgb(14, 14, 14) !important; /* White text */
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .btn-red:hover {
+            background-color: #5c0c0d !important; /* Darker green on hover */
+            color: rgb(6, 6, 6) !important; /* Ensure text remains white */
+            border: 2px solid black !important; /* Keep black border on hover */
+        }
+        
+    
+        /* Disabled button */
+        .btn-disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+/* Delete Button Styling */
+.btn-delete {
+    background-color: #dc3545;
+    color: black !important;  /* Ensure text color is black */
+    border: 2px solid black;  /* Black border */
+    padding: 7px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 13px;
+    width: 45%;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+    color: white !important;  /* Change text color to white on hover */
+    border-color: black;  /* Maintain black border on hover */
+}
+
+/* Update Button Styling */
+.btn-update {
+    background-color: #28a745;
+    color: black !important;  /* Ensure text color is black */
+    border: 2px solid black;  /* Black border */
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 13px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.btn-update:hover {
+    background-color: #218838;
+    color: white !important;  /* Change text color to white on hover */
+    border-color: black;  /* Maintain black border on hover */
+}
+
+
 
     h2 {
         color: #343a40;

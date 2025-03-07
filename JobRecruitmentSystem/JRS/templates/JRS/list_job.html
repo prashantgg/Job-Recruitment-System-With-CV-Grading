@@ -1,0 +1,71 @@
+{% extends "JRS/base2.html" %}
+{% load static %}
+{% block title %}
+    Job List with Grading Status
+{% endblock title %}
+
+{% block inlinecss %}
+<link href="{% static 'JRS/css/base2.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/view_job.css' %}" rel="stylesheet">
+
+<style>
+    a, a:visited { color: black !important; text-decoration: none; }
+    a:hover { color: black !important; }
+
+    /* Remove gap between title and table */
+    .job-container h1 {
+        margin-bottom: 0;
+    }
+
+    /* Center the 'Number of Applied Candidates' column */
+    .centered {
+        text-align: center;
+    }
+</style>
+{% endblock inlinecss %}
+
+{% block main %}
+
+<div class="job-container">
+    <h1 class="text-center fw-bold mb-3" style="color: #343a40;">List of Jobs</h1>
+    <b><p class="text-center text-muted">Manage and review job listings to find the right candidates.</p></b>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Deadline</th>
+                    <th class="centered">Applied Candidates</th>
+                    <th >Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td>{{ job.title }}</td>
+                    <td>{{ job.deadline }}</td>
+
+
+
+                    <td class="centered">{{ job.applications.count }}</td>
+
+                    <td>
+                        {% if job.applications.exists %}
+                            {% if job.applications.first.grading %}
+                                <a href="{% url 'JRS:view_graded_scores' job.id %}" class="btn btn-green">View Graded Score</a>
+                            {% else %}
+                                <button class="btn btn-disabled" disabled>View Graded Score</button>
+                            {% endif %}
+                        {% else %}
+                            <button class="btn btn-disabled" disabled>No Applicants</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock main %}

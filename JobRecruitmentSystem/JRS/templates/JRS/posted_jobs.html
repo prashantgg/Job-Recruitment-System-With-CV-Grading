@@ -41,7 +41,7 @@
                 </div>
 
                 <!-- Number of Applicants -->
-                <p class="applicants"><i class="fa-solid fa-users"></i> Applicants: {{ job.jobapplication_set.count }}</p>
+                <p class="applicants"><i class="fa-solid fa-users"></i> Applicants: {{ job.applications.count }}</p>
 
                 <a href="{% url 'JRS:job_detail' job.id %}" class="view-btn me-3">View Details</a>
                 <a href="{% url 'JRS:view_applicants' job.id %}" class="apply-btn">View Applicants</a>
