@@ -17,11 +17,14 @@ from sklearn.metrics.pairwise import cosine_similarity
 from django.contrib.sessions.backends.db import SessionStore
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.core.files.storage import default_storage
+from django.views.decorators.cache import never_cache
 
 
 
 
 
+
+@never_cache
 # HR Registration View
 def hr_registration(request):
     if request.method == "POST":
@@ -64,7 +67,7 @@ def hr_registration(request):
             return redirect("JRS:hr_register_page")
 
     return render(request, "JRS/hr_register_page.html")
-
+@never_cache
 def hr_login(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -98,7 +101,7 @@ def hr_login(request):
     return render(request, "JRS/hr_login_page.html")
 
 
-
+@never_cache
 def candidate_login(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -132,7 +135,7 @@ def candidate_login(request):
     return render(request, "JRS/candidate_login_page.html")
 
 
-
+@never_cache
 def candidate_registration(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -191,21 +194,21 @@ def candidate_registration(request):
     return render(request, "JRS/candidate_register_page.html")
 
 
-
+@never_cache
 @login_required
 def logout_user(request):
     if not request.user.is_superuser:  # Do not log out superuser
         logout(request)
     messages.error(request, "Logged Out Successfully")
     return redirect("JRS:hr_login_page", permanent=True)
-
+@never_cache
 @login_required
 def logout_users(request):
     if not request.user.is_superuser:  # Do not log out superuser
         logout(request)
     messages.error(request, "Logged Out Successfully")
     return redirect("JRS:candidate_login_page", permanent=True)
-
+@never_cache
 @login_required
 @hr_required
 def submit_feedback_hr(request):
@@ -222,7 +225,7 @@ def submit_feedback_hr(request):
         messages.success(request, "Your feedback has been submitted successfully!")
         return redirect('JRS:feedback_hr_page')  # Redirect back to the feedback page
     return render(request, 'JRS/feedback.html')
-
+@never_cache
 @login_required
 @candidate_required
 def submit_feedback_candidate(request):
@@ -240,7 +243,7 @@ def submit_feedback_candidate(request):
         return redirect('JRS:feedback_candidate_page')  # Redirect back to the feedback page
     return render(request, 'JRS/feedback_candidate.html')
 
-
+@never_cache
 def startpage(request):
     return render(request, "JRS/startpage.html")
 
@@ -248,37 +251,38 @@ def startpage(request):
 
 
 
-
+@never_cache
 def aboutpage(request):
     return render(request, "JRS/aboutpage.html")
 
 
-
+@never_cache
 def featurepage(request):
     return render(request, "JRS/featurepage.html")
-
+@never_cache
 @login_required
 @hr_required
 def feedback(request):
     return render(request, "JRS/feedback.html")
+@never_cache
 @login_required
 @candidate_required
 def feedback_candidate(request):
     return render(request, "JRS/feedback_candidate.html")
-
+@never_cache
 def contactpage(request):
     return render(request, "JRS/contactpage.html")
-
+@never_cache
 @login_required
 @hr_required
 def hr_dashboard(request):
     return render(request, "JRS/hr_dashboard.html")
-
+@never_cache
 @login_required
 @candidate_required
 def candidate_dashboard(request):
     return render(request, "JRS/candidate_dashboard.html")
-
+@never_cache
 @login_required
 @candidate_required
 def available_jobs(request):
@@ -317,41 +321,41 @@ def available_jobs(request):
     return render(request, "JRS/available_jobs.html", {"jobs": sorted_jobs})
 
 
-
+@never_cache
 def faqpage(request):
     return render(request, "JRS/faqpage.html")
 
 
-
+@never_cache
 def blogpage(request):
     return render(request, "JRS/blogpage.html")
 
 
-
+@never_cache
 def hr_register_page(request):
     return render(request, "JRS/hr_register_page.html")
-
+@never_cache
 def candidate_register_page(request):
     return render(request, "JRS/candidate_register_page.html")
-
+@never_cache
 def job_listing(request):
      jobs = Job.objects.all  # Filter jobs posted by this HR
      return render(request, 'JRS/job_listing.html', {'jobs': jobs})
 
-
+@never_cache
 def hr_login_page(request):
     return render(request, "JRS/hr_login_page.html")
-
+@never_cache
 def candidate_login_page(request):
     return render(request, "JRS/candidate_login_page.html")
 
 
-
+@never_cache
 @login_required
 @hr_required
 def job_update_page(request):
     return render(request, "JRS/update_job.html")
-
+@never_cache
 def contact_form(request):
     if request.method == "POST":
         # Get form data from POST request
@@ -366,7 +370,7 @@ def contact_form(request):
         return render(request, 'JRS/contactpage.html')
     
 
-# This view is for HR to see only the jobs they posted
+@never_cache# This view is for HR to see only the jobs they posted
 @login_required
 @hr_required
 def view_jobs(request):
@@ -376,7 +380,7 @@ def view_jobs(request):
         return render(request, 'JRS/view_job.html', {'jobs': jobs})
     else:
         return render(request, 'error.html')  # Show an error or redirect if the user is not HR
-    
+@never_cache   
 @login_required
 @candidate_required
 def view_applications(request):
@@ -384,7 +388,7 @@ def view_applications(request):
     applications = JobApplication.objects.filter(candidate=request.user.candidate)
     return render(request, 'JRS/view_applications.html', {'applications': applications})
 
-
+@never_cache
 @login_required
 @hr_required
 def post_jobs(request):
@@ -404,7 +408,7 @@ def post_jobs(request):
         # Validation checks
         if not title or not company or not location or not job_type or not salary or not experience or not skills or not education or not description or not deadline:
             messages.error(request, "All fields are required.")
-            return redirect('JRS:post_job')
+            return redirect('JRS:post_jobs')
 
         # Save the job posting to the database
         job = models.Job(
@@ -423,10 +427,10 @@ def post_jobs(request):
         job.save()
 
         messages.success(request, "Job posted successfully!")
-        return redirect('JRS:post_job')  # Redirect to HR dashboard after posting the job
+        return redirect('JRS:post_jobs')  # Redirect to HR dashboard after posting the job
 
     return render(request, 'JRS/post_job.html')  # Render the post job page
-
+@never_cache
 @login_required
 @hr_required
 def delete_job(request, job_id):
@@ -440,7 +444,7 @@ def delete_job(request, job_id):
         messages.error(request, "You are not authorized to delete this job post.")
     
     return redirect('JRS:view_jobs')  # Redirect to the list of jobs the HR posted
-
+@never_cache
 @login_required
 @candidate_required
 def delete_application(request, application_id):
@@ -458,7 +462,7 @@ def delete_application(request, application_id):
 
 
 
-
+@never_cache
 @login_required
 @hr_required
 def update_job(request, job_id):
@@ -483,7 +487,7 @@ def update_job(request, job_id):
 
     return render(request, 'JRS/update_job.html', {'job': job})
 
-
+@never_cache
 @login_required
 @candidate_required
 def update_application(request, application_id):
@@ -503,7 +507,7 @@ def update_application(request, application_id):
         return redirect('JRS:view_applications')  # Redirect to application list after update
 
     return render(request, 'JRS/update_applications.html', {'application': application})
-
+@never_cache
 @login_required
 @candidate_required
 def apply_job(request, job_id):
@@ -542,14 +546,14 @@ def apply_job(request, job_id):
         return redirect('JRS:available_jobs')
 
     return render(request, 'JRS/apply_job.html', {'job': job})
-
+@never_cache
 @login_required
 @candidate_required
 def job_details(request, job_id):
     job = get_object_or_404(Job, id=job_id)
     skills = job.skill_list()  # Call the method to process skills
     return render(request, 'JRS/view_job_detail.html', {'job': job, 'skills': skills})
-
+@never_cache
 @login_required
 @hr_required
 def job_detail(request, job_id):
@@ -557,8 +561,7 @@ def job_detail(request, job_id):
     skills = job.skill_list()  # Call the method to process skills
     return render(request, 'JRS/view_detail.html', {'job': job, 'skills': skills})
 
-
-
+@never_cache
 def job_listing(request):
     search_query = request.GET.get('search', '')
     
@@ -573,7 +576,7 @@ def job_listing(request):
         jobs = Job.objects.all()
     
     return render(request, 'JRS/job_listing.html', {'jobs': jobs})
-
+@never_cache
 @candidate_required
 @login_required
 def list_job(request):
@@ -591,7 +594,7 @@ def list_job(request):
     
     return render(request, 'JRS/available_jobs.html', {'jobs': jobs})
 
-
+@never_cache
 @login_required(login_url="JRS:candidate_login")  # Redirects to HR login page if not logged in
 @candidate_required
 def change_password_candidate(request):
@@ -625,7 +628,7 @@ def change_password_candidate(request):
     
     return render(request, "JRS/change_password_candidate.html")
 
-
+@never_cache
 @login_required(login_url="JRS:hr_login")  # Redirects to HR login page if not logged in
 @hr_required
 def change_password_hr(request):
@@ -663,7 +666,7 @@ from django.core.files.storage import FileSystemStorage
 
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
-
+@never_cache
 @login_required
 @hr_required
 def edit_hr_profile(request):
@@ -700,7 +703,7 @@ def edit_hr_profile(request):
         return redirect("JRS:edit_profile_hr")
 
     return render(request, "JRS/edit_profile_hr.html", {"hr": hr})
-
+@never_cache
 @login_required
 @candidate_required
 def edit_candidate_profile(request):
@@ -742,7 +745,7 @@ def edit_candidate_profile(request):
 
 
 
-
+@never_cache
 @login_required
 @hr_required
 def posted_jobs(request):
@@ -754,12 +757,12 @@ def posted_jobs(request):
 
     return render(request, 'JRS/posted_jobs.html', {'jobs': jobs})
 
-
+@never_cache
 @login_required
 @hr_required
 def view_applicants(request, job_id):
     job = get_object_or_404(Job, pk=job_id)
-    applications = JobApplication.objects.filter(job=job)
+    applications = JobApplication.objects.filter(job=job).select_related('candidate')
 
     return render(request, 'JRS/view_applicants.html', {
         'job': job,
@@ -768,8 +771,9 @@ def view_applicants(request, job_id):
 
 
 
-from django.template.loader import render_to_string
 
+from django.template.loader import render_to_string
+@never_cache
 def generate_cover_letter_pdf(request, application_id):
     application = get_object_or_404(JobApplication, pk=application_id)
     
@@ -786,13 +790,21 @@ def generate_cover_letter_pdf(request, application_id):
     
     return response
 
-
 @hr_required
+@login_required
+@never_cache
+@login_required
 def job_list(request):
-    jobs = Job.objects.prefetch_related('applications').all()
+    # Get the logged-in HR user
+    hr = request.user.hr  # Assuming the HR model is related to the User model (OneToOneField)
+    # Get the jobs posted by the logged-in HR
+    jobs = Job.objects.filter(posted_by=hr)
     return render(request, 'JRS/list_job.html', {'jobs': jobs})
 
 
+@hr_required
+@login_required
+@never_cache
 def view_graded_scores(request, job_id):
     job = get_object_or_404(Job, id=job_id)
     graded_applications = CvGrading.objects.filter(application__job=job)

@@ -105,14 +105,16 @@ class JobApplication(models.Model):
     job = models.ForeignKey('Job', on_delete=models.CASCADE, related_name='applications')
     cover_letter = models.TextField()
     resume = models.FileField(upload_to='resumes/')
-    cover_letter_file = models.FileField(upload_to='cover_letters/', blank=True, null=True)  # Store cover letter as a file
+    cover_letter_file = models.FileField(upload_to='cover_letters/', blank=True, null=True)  
     applied_at = models.DateTimeField(auto_now_add=True)
+    is_graded = models.BooleanField(default=False)  # New field to track CV grading
 
     class Meta:
         unique_together = ('candidate', 'job')
 
     def __str__(self):
         return f"{self.candidate.first_name} applied for {self.job.title}"
+
     
 class CvGrading(models.Model):
     application = models.OneToOneField(JobApplication, on_delete=models.CASCADE, related_name='grading')

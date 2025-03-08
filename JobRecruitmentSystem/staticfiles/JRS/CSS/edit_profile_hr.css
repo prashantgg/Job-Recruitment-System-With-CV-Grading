@@ -1,0 +1,144 @@
+/* CSS Variables for easy theming */
+:root {
+    --primary-color: #ff5733;
+    --secondary-color: #8e44ad;
+    --accent-color: #f1c40f;
+    --text-color: #333;
+    --background-color: rgba(255, 255, 255, 0.85);
+    --scrollbar-bg: rgba(0, 0, 0, 0.1);
+    --font-family: "Poppins", sans-serif;
+  }
+
+
+
+.input-box {
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 6px;
+    outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.input-box:focus {
+    border-color: #4A90E2;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+  
+  /* Reset and base styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    overflow-x: hidden;
+  }
+  
+  body {
+    font-family: var(--font-family);
+    background: #fff;
+    color: var(--text-color);
+  }
+
+
+
+  /* Page Background with Pattern */
+body {
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.02),
+      rgba(0, 0, 0, 0.02) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background-color: rgba(255, 255, 255, 0.85); /* Adjust for transparency if needed */
+}
+
+
+
+
+
+.message-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 1000;
+  }
+  
+  /* Green color for success messages */
+  .success-message {
+    color: green;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  /* Red color for error messages */
+  .error-message {
+    color: rgb(150, 56, 56);
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+
+
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card {
+      padding: 20px;
+  }
+
+  h2 {
+      font-size: 1.8rem;
+  }
+
+  .form-control {
+      font-size: 0.95rem;
+  }
+
+  .rating label {
+      font-size: 1.3rem;
+  }
+}
+
+@media screen and (min-width: 1101px) {
+  
+  .nav-links {
+    display: flex;
+    position: relative;
+    height: auto;
+    width: auto;
+    flex-direction: row;
+    background: transparent;
+    justify-content: flex-end;
+    align-items: center;
+    top: 0;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  .menu-icon {
+    display: none;
+  }
+
+  /* Adjust spacing to prevent squishing */
+  .nav-links li {
+    margin-left: 15px;
+  }
+
+  .nav-links a {
+    padding: 8px 12px;
+    font-size: 0.9em;
+  }
+}

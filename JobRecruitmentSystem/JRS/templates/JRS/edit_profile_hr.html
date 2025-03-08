@@ -32,7 +32,7 @@ Edit HR Profile
             <!-- Profile Picture Upload -->
             <div class="flex flex-col items-center bg-gray-50 p-6 rounded-lg shadow-sm border">
                 <!-- Display uploaded image or default image -->
-                <img id="profile-image" src="{% if hr.profile_picture %}{{ hr.profile_picture.url }}{% else %}{% static 'JRS/Images/profile.jpg' %}{% endif %}" class="w-36 h-36 rounded-full border-4 border-gray-300 shadow-lg">
+                <img id="profile-image" src="{% if hr.profile_picture %}{{ hr.profile_picture.url }}{% else %}{% static 'JRS/Images/bg.jpg' %}{% endif %}" class="w-36 h-36 rounded-full border-4 border-gray-300 shadow-lg">
                 <form method="POST" enctype="multipart/form-data" class="mt-4 w-full">
                     {% csrf_token %}
                     <input type="file" name="profile_picture" class="w-full border p-2 rounded-lg text-gray-700 text-sm" onchange="previewImage(event)" required >

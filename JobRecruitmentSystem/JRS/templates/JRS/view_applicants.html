@@ -51,7 +51,7 @@ View Applicants
                     <th>Email</th>
                     <th>CV</th>
                     <th>Cover Letter</th>
-
+                    <th>Status</th>  <!-- New Status Column -->
                 </tr>
             </thead>
             <tbody>
@@ -61,6 +61,13 @@ View Applicants
                     <td>{{ application.candidate.email }}</td>
                     <td><a href="{{ application.resume.url }}" target="_blank">View CV</a></td>
                     <td><a href="{% url 'JRS:generate_cover_letter_pdf' application.id %}" target="_blank">View Cover Letter</a></td>
+                    <td>
+                        {% if application.is_graded %}
+                            <span style="color: green; font-weight: bold;">Graded</span>
+                        {% else %}
+                            <span style="color: red; font-weight: bold;">Not Graded</span>
+                        {% endif %}
+                    </td>
 
                     
          
@@ -76,28 +83,33 @@ View Applicants
 </div>
 
 <script>
-document.getElementById("grade-all-btn").addEventListener("click", function() {
-    let jobId = this.getAttribute("data-job-id");
-
-    fetch(`/grade-all-cvs/${jobId}/`, {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/json"
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert("CVs graded successfully! You can check Graded CV section to see the score");
-            for (const [applicationId, result] of Object.entries(data.results)) {
-                document.getElementById(`grading-result-${applicationId}`).innerHTML = `<strong>${result}</strong>`;
+    document.getElementById("grade-all-btn").addEventListener("click", function() {
+        let jobId = this.getAttribute("data-job-id");
+    
+        fetch(`/grade-all-cvs/${jobId}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
             }
-        } else {
-            alert("Error grading CVs.");
-        }
-    })
-});
-</script>
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("CVs graded successfully!");
+                // Reload the page after successful grading
+                location.reload();  // This will refresh the page
+            } else {
+                alert("Error grading CVs.");
+            }
+        })
+        .catch(error => {
+            console.error("Error grading CVs:", error);
+            alert("An error occurred while grading CVs.");
+        });
+    });
+    
+    </script>
+    
 
 {% endblock main %}

@@ -106,6 +106,7 @@ def grade_all_cvs(request, job_id):
 
     for application in applications:
         if application.resume:
+            # Compute cosine similarity score for the CV
             similarity_score = compute_similarity(application)
 
             # Determine recommendation based on similarity score
@@ -116,12 +117,17 @@ def grade_all_cvs(request, job_id):
             else:
                 recommendation = "Not Recommended"
 
-            # Store results in CvGrading model
+            # Store results in CvGrading model (to track scores and recommendations)
             grading, created = CvGrading.objects.update_or_create(
                 application=application,
                 defaults={"score": similarity_score, "recommendation": recommendation}
             )
 
+            # Update the grading status for the JobApplication model
+            application.is_graded = True  # Mark the application as graded
+            application.save()
+
+            # Add grading result for this application to the results dictionary
             grading_results[application.id] = f"{recommendation} ({similarity_score}%)"
 
     return JsonResponse({"success": True, "results": grading_results})

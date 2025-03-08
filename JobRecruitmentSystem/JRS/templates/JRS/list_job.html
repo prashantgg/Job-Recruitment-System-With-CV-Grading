@@ -36,7 +36,7 @@
                 <tr>
                     <th>Job Title</th>
                     <th>Deadline</th>
-                    <th class="centered">Applied Candidates</th>
+                    <th>Applied Candidates</th>
                     <th >Actions</th>
                 </tr>
             </thead>
@@ -48,7 +48,8 @@
 
 
 
-                    <td class="centered">{{ job.applications.count }}</td>
+                    <td>{{ job.applications.count }}</td>
+                    
 
                     <td>
                         {% if job.applications.exists %}
@@ -61,6 +62,7 @@
                             <button class="btn btn-disabled" disabled>No Applicants</button>
                         {% endif %}
                     </td>
+                    
                 </tr>
                 {% endfor %}
             </tbody>
