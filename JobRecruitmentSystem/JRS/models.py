@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.contrib.auth.models import User  # Importing the built-in User model
 
@@ -56,6 +57,8 @@ class Feedback(models.Model):
         return f"Feedback from {self.name}"
     
 
+from django.utils.timezone import now
+
 class Job(models.Model):
     JOB_TYPES = (
         ('Full-time', 'Full-time'),
@@ -81,10 +84,21 @@ class Job(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def skill_list(self):
         """ Convert the comma-separated skills into a list """
         return [skill.strip() for skill in self.skills.split(',')] if self.skills else []
+
+def save(self, *args, **kwargs):
+    """ Convert deadline to date and delete job if the deadline has passed """
+    if isinstance(self.deadline, str):  # Convert string to date
+        self.deadline = datetime.strptime(self.deadline, "%Y-%m-%d").date()
+
+    if self.deadline < now().date():
+        self.delete()
+    else:
+        super().save(*args, **kwargs)
+
     
 class JobApplication(models.Model):
     candidate = models.ForeignKey('Candidate', on_delete=models.CASCADE)

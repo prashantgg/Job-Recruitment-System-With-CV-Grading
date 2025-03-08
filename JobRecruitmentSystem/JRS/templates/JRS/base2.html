@@ -58,11 +58,13 @@
     <div class="sidebar">
         <ul>
             <li><a href="{% url "JRS:hr_dashboard" %}"><i class="fas fa-tachometer-alt"></i>HR Dashboard</a></li>
-            <li><a href="{% url "JRS:post_job" %}"><i class="fas fa-plus-circle"></i> Post Job</a></li>
+            <li><a href="{% url "JRS:post_jobs" %}"><i class="fas fa-plus-circle"></i> Post Job</a></li>
             <li><a href="{% url "JRS:view_jobs" %}"><i class="fas fa-tasks"></i> Manage Job Posts</a></li>
             <li><a href="{% url 'JRS:posted_jobs' %}"><i class="fas fa-users"></i> View Applicants</a></li>
             <li><a href="{% url 'JRS:list_job_hr' %}"><i class="fas fa-chart-bar"></i> Graded CVs</a></li>
             <li><a href="#"><i class="fas fa-calendar-alt"></i> Schedule Interview</a></li>
+            <li><a href="#"><i class="fas fa-file-alt"></i> Interview Feedback</a></li>
+
             <li><a href="{% url "JRS:feedback_hr_page" %}"><i class="fas fa-comment"></i> Give Feedback</a></li>
             <li><a href="{% url "JRS:edit_profile_hr" %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
             <li><a href="{% url "JRS:change_password_hr" %}"><i class="fas fa-key"></i> Change Password</a></li>

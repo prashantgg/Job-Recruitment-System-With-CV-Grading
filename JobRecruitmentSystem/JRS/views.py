@@ -244,10 +244,7 @@ def submit_feedback_candidate(request):
 def startpage(request):
     return render(request, "JRS/startpage.html")
 
-@login_required
-@hr_required
-def post_job(request):
-    return render(request, "JRS/post_job.html")
+
 
 
 
