@@ -1,4 +1,5 @@
 from io import BytesIO
+import json
 import re
 from JRS.cv_grading import compute_similarity
 import pdfkit # type: ignore
@@ -272,11 +273,7 @@ def feedback_candidate(request):
 @never_cache
 def contactpage(request):
     return render(request, "JRS/contactpage.html")
-@never_cache
-@login_required
-@hr_required
-def hr_dashboard(request):
-    return render(request, "JRS/hr_dashboard.html")
+
 @never_cache
 @login_required
 @candidate_required
@@ -914,7 +911,70 @@ def schedule_interview(request, job_id):
         {"candidates_with_details": candidates_with_details, "job_id": job_id}
     )
 
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
+from django.db.models.functions import ExtractMonth
 
+
+import calendar
+from django.db.models.functions import ExtractMonth
+from django.db.models import Count
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import HR, Job, JobApplication
+from .decorators import hr_required
+
+@login_required
+@hr_required
+def hr_dashboard(request):
+    try:
+        hr_user = HR.objects.get(user=request.user)
+    except HR.DoesNotExist:
+        return render(request, 'JRS/error.html', {'message': 'HR Profile not found.'})
+
+    # Total job posts by HR
+    total_jobs = Job.objects.filter(posted_by=hr_user).count()
+
+    # Total applicants
+    total_applicants = JobApplication.objects.filter(job__posted_by=hr_user).count()
+
+    # Application status counts
+    total_accepted = JobApplication.objects.filter(job__posted_by=hr_user, status="Accepted").count() or 0
+    total_rejected = JobApplication.objects.filter(job__posted_by=hr_user, status="Rejected").count() or 0
+    total_pending = JobApplication.objects.filter(job__posted_by=hr_user, status="Pending").count() or 0
+
+    # Fetch job post and applicant data by month
+    job_post_data = Job.objects.filter(posted_by=hr_user).annotate(
+        month=ExtractMonth('created_at')
+    ).values('month').annotate(count=Count('id'))
+
+    applicants_data = JobApplication.objects.filter(job__posted_by=hr_user).annotate(
+        month=ExtractMonth('applied_at')
+    ).values('month').annotate(count=Count('id'))
+
+    # Convert month numbers (1-12) to short month names (Jan, Feb, ...)
+    months = [calendar.month_abbr[i] for i in range(1, 13)]
+
+    # Convert query results into dictionaries
+    job_posts = {calendar.month_abbr[data["month"]]: data["count"] for data in job_post_data}
+    applicants = {calendar.month_abbr[data["month"]]: data["count"] for data in applicants_data}
+
+    # Prepare data lists for charts
+    job_posts_list = [job_posts.get(month, 0) for month in months]
+    applicants_list = [applicants.get(month, 0) for month in months]
+
+    context = {
+        "total_jobs": total_jobs,
+        "total_applicants": total_applicants,
+        "total_accepted": total_accepted,
+        "total_rejected": total_rejected,
+        "total_pending": total_pending,
+        "months": months,
+        "job_posts_list": job_posts_list,
+        "applicants_list": applicants_list,
+    }
+
+    return render(request, "JRS/hr_dashboard.html", context)
 
 
 
