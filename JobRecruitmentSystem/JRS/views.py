@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from .import models 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login
-from .models import CvGrading, Job, JobApplication, User, HR, Candidate, Skill
+from .models import CvGrading, InterviewSchedule, Job, JobApplication, User, HR, Candidate, Skill
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
@@ -813,6 +813,109 @@ def view_graded_scores(request, job_id):
         "job": job,
         "graded_applications": graded_applications
     })
+
+@login_required
+@hr_required
+# Accept an application
+def accept_application(request, application_id):
+    application = get_object_or_404(JobApplication, id=application_id)
+    application.status = 'Accepted'
+    application.save()
+    
+    # Optional: Send feedback or a notification to the candidate (can be added here)
+    messages.success(request, f"Application for {application.candidate.first_name} has been accepted.")
+    
+    return redirect('JRS:view_graded_scores', job_id=application.job.id)  # Redirect to the graded applicants page for the job
+
+
+@login_required
+@hr_required
+def reject_application(request, application_id):
+    application = get_object_or_404(JobApplication, id=application_id)
+    application.status = 'Rejected'
+    application.save()
+
+    # Optional: Send feedback or a notification to the candidate (can be added here)
+    messages.error(request, f"Application for {application.candidate.first_name} has been rejected.")
+    
+    return redirect('JRS:view_graded_scores', job_id=application.job.id)  # Redirect to the graded applicants page for the job
+
+
+@login_required
+@hr_required
+def candidate_jobs(request):
+    # Ensure request.user is an HR instance
+    hr_instance = HR.objects.filter(user=request.user).first()
+    if not hr_instance:
+        return HttpResponse("You are not authorized to view this page.", status=403)
+
+    # Get jobs posted by this HR
+    my_jobs = Job.objects.filter(posted_by=hr_instance)
+
+    # Add applied and accepted candidate counts
+    for job in my_jobs:
+        job.total_applied = JobApplication.objects.filter(job=job).count()
+        job.accepted_count = JobApplication.objects.filter(job=job, status="Accepted").count()
+
+    return render(request, "JRS/accepted_job.html", {"my_jobs": my_jobs})
+
+
+@login_required
+@hr_required
+def schedule_interview(request, job_id):
+    if request.method == "POST":
+        candidate_id = request.POST.get("candidate_id")
+        interview_date = request.POST.get("interview_date")
+
+        # Fetch the candidate application and update the interview date in InterviewSchedule model
+        candidate_application = get_object_or_404(JobApplication, id=candidate_id, job_id=job_id)
+        
+        # Create or update the InterviewSchedule model
+        interview_schedule, created = InterviewSchedule.objects.get_or_create(
+            candidate=candidate_application.candidate,
+            job=candidate_application.job,
+            defaults={'scheduled_date': interview_date, 'status': 'Scheduled'}
+        )
+
+        if not created:
+            # If an interview schedule already exists, update it
+            interview_schedule.scheduled_date = interview_date
+            interview_schedule.status = 'Scheduled'
+            interview_schedule.save()
+
+        # Display a success message
+        messages.success(
+            request,
+            f"Interview scheduled for {candidate_application.candidate.user.first_name} on {interview_date}!"
+        )
+        return redirect("JRS:schedule_interview", job_id=job_id)
+
+    # Fetch accepted candidates for the given job_id
+    accepted_candidates = JobApplication.objects.filter(job_id=job_id, status="Accepted").select_related('candidate')
+
+    # Collect CV grading and interview status for each accepted candidate
+    candidates_with_details = []
+    for application in accepted_candidates:
+        grading = CvGrading.objects.filter(application=application).first()
+        interview_schedule = InterviewSchedule.objects.filter(candidate=application.candidate, job=application.job).first()
+
+        candidates_with_details.append({
+            "application": application,
+            "cv_score": grading.score if grading else "Not Graded",
+            "cv_recommendation": grading.recommendation if grading else "Not Graded",
+            "interview_status": interview_schedule.status if interview_schedule else "Not Scheduled",  # Interview status
+            "scheduled_date": interview_schedule.scheduled_date if interview_schedule else "Not Scheduled",  # Scheduled date
+        })
+
+    # Render the template with the necessary context
+    return render(
+        request,
+        "JRS/schedule_interview.html",
+        {"candidates_with_details": candidates_with_details, "job_id": job_id}
+    )
+
+
+
 
 
 

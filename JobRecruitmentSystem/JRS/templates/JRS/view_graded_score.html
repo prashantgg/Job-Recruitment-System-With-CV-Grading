@@ -34,17 +34,16 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Score (%)</th>
-                    <th>Recommendation</th>
+                    <th class="centered">Score (%)</th>
+                    <th class="centered">Recommendation</th>
                     <th class="centered">Actions</th>
+                    <th class="centered">Status</th>
                 </tr>
             </thead>
             <tbody>
                 {% for grading in graded_applications %}
                 <tr>
                     <td>{{ grading.application.candidate.first_name }} {{ grading.application.candidate.last_name }}</td>
-                    <td>{{ grading.application.candidate.email }}</td>
                     <td class="centered">{{ grading.score }}%</td>
                     <td class="centered">
                         <span class="{% if grading.recommendation == 'Highly Recommended' %} highly-recommended
@@ -55,8 +54,16 @@
                         </span>
                     </td>
                     <td class="centered">
-                        <a href="" class="btn-update">Accept</a>
-                        <a href="" class="btn-delete">Reject</a>
+                        <a href="{% url 'JRS:accept_application' application_id=grading.application.id %}" class="btn-update">Accept</a>
+                        <a href="{% url 'JRS:reject_application' application_id=grading.application.id %}" class="btn-delete">Reject</a>
+                    </td>
+                    <td class="centered">
+                        <span class="{% if grading.application.status == 'Accepted' %} text-success fw-bold
+                                     {% elif grading.application.status == 'Rejected' %} text-danger fw-bold
+                                     {% else %} text-warning fw-bold
+                                     {% endif %}">
+                            {{ grading.application.status }}
+                        </span>
                     </td>
                 </tr>
                 {% empty %}
@@ -68,5 +75,28 @@
         </table>
     </div>
 </div>
+{% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}" id="message-{{ forloop.counter }}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<script>
+
+        {% if messages %}
+            {% for message in messages %}
+                var messageElement = document.getElementById('message-{{ forloop.counter }}');
+                if (messageElement) {
+                    setTimeout(function() {
+                        messageElement.style.display = 'none';
+                    }, 3000);  // 2000ms = 2 seconds
+                }
+            {% endfor %}
+        {% endif %}
+</script>
 
 {% endblock main %}

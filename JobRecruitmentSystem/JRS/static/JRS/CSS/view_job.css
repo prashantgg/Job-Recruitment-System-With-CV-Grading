@@ -184,6 +184,8 @@ body, html {
     border-color: black;  /* Maintain black border on hover */
 }
 
+
+
 /* Update Button Styling */
 .btn-update {
     background-color: #28a745;
@@ -198,6 +200,25 @@ body, html {
 }
 
 .btn-update:hover {
+    background-color: #218838;
+    color: white !important;  /* Change text color to white on hover */
+    border-color: black;  /* Maintain black border on hover */
+}
+/* Update Button Styling */
+.btn-updated {
+    background-color: #682626;
+    color: rgb(246, 241, 241) !important;  /* Ensure text color is black */
+    border: 2px solid black;  /* Black border */
+    padding: 2px 13px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    transition: 0.3s;
+    height: 20%;
+}
+
+.btn-updated:hover {
     background-color: #218838;
     color: white !important;  /* Change text color to white on hover */
     border-color: black;  /* Maintain black border on hover */

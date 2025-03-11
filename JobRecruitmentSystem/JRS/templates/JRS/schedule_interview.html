@@ -1,0 +1,95 @@
+{% extends "JRS/base2.html" %}
+{% load static %}
+
+{% block title %} Schedule Interview {% endblock %}
+
+{% block inlinecss %}
+<link href="{% static 'JRS/css/base2.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/view_job.css' %}" rel="stylesheet">
+{% endblock inlinecss %}
+
+{% block main %}
+<a href="javascript:history.back()" class="back-arrow" title="Go Back">
+    <i class="fas fa-arrow-left"></i>
+</a>
+<div class="job-container">
+    <h1 class="text-center fw-bold mb-3" style="color: #343a40;">Schedule Interview</h1>
+    <b><p class="text-center text-muted">Assign an interview date for the accepted candidate.</p></b>
+
+    {% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="centered">CV Score (%)</th>
+                    <th class="centered">Scheduled Date</th>
+                    <th class="centered">CV</th>
+                    <th class="centered">Schedule Interview</th>
+                    <th class="centered">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidate in candidates_with_details %}
+                    <tr>
+                        <td>{{ candidate.application.candidate.user.first_name }} {{ candidate.application.candidate.user.last_name }}</td>
+                        <td class="centered">
+                            <span style="color: 
+                                {% if candidate.cv_score > 80 %} green 
+                                {% elif candidate.cv_score >= 60 %} orange 
+                                {% else %} red {% endif %}; font-weight: bold;">
+                                {{ candidate.cv_score }}%
+                            </span>
+                        </td>
+                        <td class="centered">{{ candidate.scheduled_date }}</td>   
+                        <td class="centered">
+                            <a href="{{ candidate.application.resume.url }}" target="_blank" style="color: black;">View CV</a>
+                        </td>
+                        <td class="centered">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="candidate_id" value="{{ candidate.application.id }}">
+                                <input type="datetime-local" name="interview_date" required>
+                                <button type="submit" class="btn-updated">Schedule</button>
+                            </form>
+                        </td>
+                        <td class="centered">
+                            <span style="color: 
+                                {% if candidate.interview_status == 'Scheduled' %} green 
+                                {% else %} orange {% endif %}; font-weight: bold;">
+                                {{ candidate.interview_status }}
+                            </span>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center">No accepted candidates yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+{% if messages %}
+{% for message in messages %}
+    var messageElement = document.getElementById('message-{{ forloop.counter }}');
+    if (messageElement) {
+        setTimeout(function() {
+            messageElement.style.display = 'none';
+        }, 3000);
+    }
+{% endfor %}
+{% endif %}
+</script>
+{% endblock %}

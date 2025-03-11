@@ -20,6 +20,20 @@
     overflow-x: hidden;
   }
 
+/* Highlight Active Sidebar Item */
+.sidebar ul li.active {
+  background: rgba(105, 103, 103, 0.5); /* Slightly darker highlight */
+  border-left: 4px solid #0f0f0f; /* Blue highlight */
+}
+
+/* Hover Effect for Sidebar Items */
+.sidebar ul li:hover {
+  background: rgba(105, 103, 103, 0.3); /* Lighter hover effect */
+  transform: translateX(2px); /* Slight movement for 3D feel */
+}
+
+
+
   
   body {
     font-family: var(--font-family);

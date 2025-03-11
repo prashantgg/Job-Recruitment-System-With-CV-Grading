@@ -1,0 +1,46 @@
+{% extends "JRS/base2.html" %}
+{% load static %}
+
+{% block title %} My Job Posts {% endblock title %}
+
+{% block inlinecss %}
+<link href="{% static 'JRS/css/base2.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/view_job.css' %}" rel="stylesheet">
+
+{% endblock inlinecss %}
+
+{% block main %}
+<div class="job-container">
+    <h1 class="text-center fw-bold mb-3" style="color: #343a40;">My Job Posts</h1>
+    <b><p class="text-center text-muted">Review job posts you have created.</p></b>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Name</th>
+                    <th class="centered">Total Applied Candidates</th>
+                    <th class="centered">Accepted Candidates</th>
+                    <th class="centered">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in my_jobs %}
+                <tr>
+                    <td>{{ job.title }}</td>
+                    <td class="centered">{{ job.total_applied }}</td>
+                    <td class="centered">{{ job.accepted_count }}</td>
+                    <td class="centered">
+                        <a href="{% url 'JRS:schedule_interview' job_id=job.id %}" class="btn-update">Schedule Interview</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">You haven't posted any jobs yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock main %}

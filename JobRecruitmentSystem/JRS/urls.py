@@ -58,6 +58,11 @@ urlpatterns = [
     path('grade-all-cvs/<int:job_id>/', cv_grading.grade_all_cvs, name='grade_all_cvs'),
     path('list/jobs/', views.job_list, name='list_job_hr'),
     path('job/<int:job_id>/graded-scores/', views.view_graded_scores, name='view_graded_scores'),
+    path('job/application/<int:application_id>/accept/', views.accept_application, name='accept_application'),
+    path('job/application/<int:application_id>/reject/', views.reject_application, name='reject_application'),
+    path("my-jobs/", views.candidate_jobs, name="candidate_jobs"),
+    path('schedule-interview/<int:job_id>/', views.schedule_interview, name='schedule_interview'),
+
 
 
 

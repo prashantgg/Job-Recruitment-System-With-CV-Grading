@@ -55,23 +55,46 @@
 {% endblock navbar %}
 
     <!-- Sidebar -->
-    <div class="sidebar">
-        <ul>
-            <li><a href="{% url "JRS:hr_dashboard" %}"><i class="fas fa-tachometer-alt"></i>HR Dashboard</a></li>
-            <li><a href="{% url "JRS:post_jobs" %}"><i class="fas fa-plus-circle"></i> Post Job</a></li>
-            <li><a href="{% url "JRS:view_jobs" %}"><i class="fas fa-tasks"></i> Manage Job Posts</a></li>
-            <li><a href="{% url 'JRS:posted_jobs' %}"><i class="fas fa-users"></i> View Applicants</a></li>
-            <li><a href="{% url 'JRS:list_job_hr' %}"><i class="fas fa-chart-bar"></i> Graded CVs</a></li>
-            <li><a href="#"><i class="fas fa-calendar-alt"></i> Schedule Interview</a></li>
-            <li><a href="#"><i class="fas fa-file-alt"></i> Interview Feedback</a></li>
-
-            <li><a href="{% url "JRS:feedback_hr_page" %}"><i class="fas fa-comment"></i> Give Feedback</a></li>
-            <li><a href="{% url "JRS:edit_profile_hr" %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
-            <li><a href="{% url "JRS:change_password_hr" %}"><i class="fas fa-key"></i> Change Password</a></li>
-
-            <li><a href="{% url "JRS:logout_user" %}" onclick="return confirm('Are you sure you want to log out?');"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
-    </div>
+<!-- Sidebar -->
+<div class="sidebar">
+    <ul>
+        <li class="{% if request.resolver_match.url_name == 'hr_dashboard' %}active{% endif %}">
+            <a href="{% url "JRS:hr_dashboard" %}"><i class="fas fa-tachometer-alt"></i> HR Dashboard</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'post_jobs' %}active{% endif %}">
+            <a href="{% url "JRS:post_jobs" %}"><i class="fas fa-plus-circle"></i> Post Job</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'view_jobs' %}active{% endif %}">
+            <a href="{% url "JRS:view_jobs" %}"><i class="fas fa-tasks"></i> Manage Job Posts</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'posted_jobs' %}active{% endif %}">
+            <a href="{% url 'JRS:posted_jobs' %}"><i class="fas fa-users"></i> View Applicants</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'list_job_hr' %}active{% endif %}">
+            <a href="{% url 'JRS:list_job_hr' %}"><i class="fas fa-chart-bar"></i> Graded CVs</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'candidate_jobs' %}active{% endif %}">
+            <a href="{% url "JRS:candidate_jobs" %}"><i class="fas fa-calendar-alt"></i> Schedule Interview</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'interview_feedback' %}active{% endif %}">
+            <a href="#"><i class="fas fa-file-alt"></i> Interview Feedback</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'feedback_hr_page' %}active{% endif %}">
+            <a href="{% url "JRS:feedback_hr_page" %}"><i class="fas fa-comment"></i> Give Feedback</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'edit_profile_hr' %}active{% endif %}">
+            <a href="{% url "JRS:edit_profile_hr" %}"><i class="fas fa-user-edit"></i> Edit Profile</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'change_password_hr' %}active{% endif %}">
+            <a href="{% url "JRS:change_password_hr" %}"><i class="fas fa-key"></i> Change Password</a>
+        </li>
+        <li>
+            <a href="{% url "JRS:logout_user" %}" onclick="return confirm('Are you sure you want to log out?');">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </li>
+    </ul>
+</div>
 
     <div class="main-content">
         {% block main %}

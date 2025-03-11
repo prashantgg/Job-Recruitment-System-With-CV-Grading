@@ -89,15 +89,6 @@ class Job(models.Model):
         """ Convert the comma-separated skills into a list """
         return [skill.strip() for skill in self.skills.split(',')] if self.skills else []
 
-def save(self, *args, **kwargs):
-    """ Convert deadline to date and delete job if the deadline has passed """
-    if isinstance(self.deadline, str):  # Convert string to date
-        self.deadline = datetime.strptime(self.deadline, "%Y-%m-%d").date()
-
-    if self.deadline < now().date():
-        self.delete()
-    else:
-        super().save(*args, **kwargs)
 
     
 class JobApplication(models.Model):
@@ -108,6 +99,8 @@ class JobApplication(models.Model):
     cover_letter_file = models.FileField(upload_to='cover_letters/', blank=True, null=True)  
     applied_at = models.DateTimeField(auto_now_add=True)
     is_graded = models.BooleanField(default=False)  # New field to track CV grading
+    status = models.CharField(max_length=20, choices=[('Accepted', 'Accepted'), ('Rejected', 'Rejected'), ('Pending', 'Pending')], default='Pending')  # New field for status
+
 
     class Meta:
         unique_together = ('candidate', 'job')
@@ -124,3 +117,13 @@ class CvGrading(models.Model):
 
     def __str__(self):
         return f"{self.application.candidate.first_name} - {self.application.job.title}: {self.score}%"
+    
+
+class InterviewSchedule(models.Model):
+    candidate = models.ForeignKey('Candidate', on_delete=models.CASCADE)
+    job = models.ForeignKey('Job', on_delete=models.CASCADE)
+    scheduled_date = models.DateTimeField()
+    status = models.CharField(max_length=20, choices=[('Scheduled', 'Scheduled'), ('Completed', 'Completed')], default='Scheduled')
+
+    def __str__(self):
+        return f"Interview for {self.candidate.user.first_name} - {self.job.title} on {self.scheduled_date}"
