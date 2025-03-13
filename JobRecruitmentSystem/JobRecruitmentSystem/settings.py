@@ -25,11 +25,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+# settings.py
 
-# Use a different session key for your custom login system
-SESSION_COOKIE_NAME = "custom_user_session"
-# Optional: You can also set a different session engine for admin users
-SESSION_ENGINE = "django.contrib.sessions.backends.db"
+# Session engine (database-backed sessions)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use database-backed sessions
+
+# Session expiry settings
+SESSION_COOKIE_AGE = 3600  # 1 hour session expiry (default)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Don't expire session when browser is closed
+
+# Make sure the session cookie is set correctly
+SESSION_COOKIE_NAME = 'user_session'  # Default session cookie for regular users
+ADMIN_SESSION_COOKIE_NAME = 'admin_session'  # Separate session cookie for admin users
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -37,9 +47,10 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'JRS.middleware.SuperUserSessionMiddleware',
+
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'JRS.middleware.SuperUserSessionMiddleware',
 ]
 
 ROOT_URLCONF = 'JobRecruitmentSystem.urls'

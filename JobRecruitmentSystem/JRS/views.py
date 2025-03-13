@@ -84,7 +84,7 @@ def hr_login(request):
                     
                     # Ensure superuser session is not overridden
                     if not user.is_superuser:
-                        request.session = SessionStore()
+                        request.session.set_expiry(0)  # Keep admin session alive indefinitely
 
                     login(request, user)
                     messages.success(request, "HR Logged In Successfully")
@@ -118,7 +118,7 @@ def candidate_login(request):
                     
                     # Ensure superuser session is not overridden
                     if not user.is_superuser:
-                        request.session = SessionStore()
+                        request.session.set_expiry(0)  # Keep admin session alive indefinitely
 
                     login(request, user)
                     messages.success(request, "Candidate Logged In Successfully")

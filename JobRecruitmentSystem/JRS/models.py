@@ -127,4 +127,4 @@ class InterviewSchedule(models.Model):
     status = models.CharField(max_length=20, choices=[('Scheduled', 'Scheduled'), ('Completed', 'Completed')], default='Scheduled')
 
     def __str__(self):
-        return f"Interview for {self.candidate.user.first_name} - {self.job.title} on {self.scheduled_date}"
+        return f"Interview for {self.candidate.user.username} - {self.job.title} on {self.scheduled_date}"
