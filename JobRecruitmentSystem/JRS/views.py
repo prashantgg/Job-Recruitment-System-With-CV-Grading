@@ -274,11 +274,48 @@ def feedback_candidate(request):
 def contactpage(request):
     return render(request, "JRS/contactpage.html")
 
+from django.utils import timezone
+
+
 @never_cache
 @login_required
-@candidate_required
+@never_cache
+@login_required
 def candidate_dashboard(request):
-    return render(request, "JRS/candidate_dashboard.html")
+    # Get the total number of available jobs
+    total_jobs = Job.objects.count()  # This will give the total number of jobs posted in the database
+
+    # Get the total number of applications for the candidate
+    total_applications = JobApplication.objects.filter(candidate=request.user.candidate).count()
+
+    # Get the total number of accepted, rejected, and pending applications
+    total_accepted = JobApplication.objects.filter(candidate=request.user.candidate, status='Accepted').count()
+    total_rejected = JobApplication.objects.filter(candidate=request.user.candidate, status='Rejected').count()
+    total_pending = JobApplication.objects.filter(candidate=request.user.candidate, status='Pending').count()
+
+    # Get data for the monthly applications chart (use abbreviated month names)
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    applications_list = [0] * 12  # Initialize with zeros
+    for i in range(12):
+        applications_list[i] = JobApplication.objects.filter(candidate=request.user.candidate, applied_at__month=i+1).count()
+
+    # Get data for the job application status chart (Accepted, Rejected, Pending)
+    pie_data = [total_accepted, total_rejected, total_pending]
+
+    context = {
+        'total_applications': total_applications,
+        'total_accepted': total_accepted,
+        'total_rejected': total_rejected,
+        'total_pending': total_pending,
+        'total_jobs': total_jobs,  # Pass the total available jobs to the template
+        'months': months,  # Shortened month names
+        'applications_list': applications_list,
+        'pie_data': pie_data,
+    }
+
+    return render(request, 'JRS/candidate_dashboard.html', context)
+
+
 @never_cache
 @login_required
 @candidate_required
@@ -700,7 +737,7 @@ def edit_hr_profile(request):
         return redirect("JRS:edit_profile_hr")
 
     return render(request, "JRS/edit_profile_hr.html", {"hr": hr})
-@never_cache
+
 @login_required
 @candidate_required
 def edit_candidate_profile(request):
@@ -711,6 +748,16 @@ def edit_candidate_profile(request):
         last_name = request.POST.get("last_name", "").strip()
         username = request.POST.get("username", "").strip()
         profile_picture = request.FILES.get("profile_picture")
+        skills_input = request.POST.get("skills", "").strip()  # Get skills from input as comma-separated string
+
+        # Split the skills string into a list and clean up any leading/trailing spaces
+        skills_list = [skill.strip() for skill in skills_input.split(',') if skill.strip()]
+
+        # Get Skill objects for each skill in the list
+        skills = []
+        for skill_name in skills_list:
+            skill, created = Skill.objects.get_or_create(name=skill_name)
+            skills.append(skill)
 
         # Update only if fields are provided
         if first_name:
@@ -732,11 +779,17 @@ def edit_candidate_profile(request):
             # Save new profile picture
             candidate.profile_picture.save(file_path, ContentFile(profile_picture.read()))
 
+        # Handle skills update
+        if skills:
+            candidate.skills.set(skills)  # Set the skills for the candidate
+
         candidate.save()
         messages.success(request, "Profile updated successfully!")
         return redirect("JRS:edit_profile_candidate")
 
     return render(request, "JRS/edit_profile_candidate.html", {"candidate": candidate})
+
+
 
 
 
@@ -975,6 +1028,37 @@ def hr_dashboard(request):
     }
 
     return render(request, "JRS/hr_dashboard.html", context)
+
+
+@login_required
+@candidate_required
+def application_tracking(request):
+    # Retrieve all job applications for the logged-in candidate
+    applications = JobApplication.objects.filter(candidate=request.user.candidate)
+
+    for application in applications:
+        # Get the grading for each application
+        grading = CvGrading.objects.filter(application=application).first()  # Fetch grading information
+        if grading:
+            application.grading_score = grading.score  # Attach grading score to the application
+            application.grading_status = 'Graded'
+            application.recommendation = grading.recommendation
+        else:
+            application.grading_score = 'N/A'
+            application.grading_status = 'Not Graded'
+            application.recommendation = 'N/A'
+
+        # Get the interview schedule for each job application
+        interview = InterviewSchedule.objects.filter(job=application.job, candidate=application.candidate).first()
+        if interview:
+            application.interview_status = interview.status
+            application.scheduled_date = interview.scheduled_date
+        else:
+            application.interview_status = 'Not Scheduled'
+            application.scheduled_date = 'N/A'
+
+    return render(request, 'JRS/applications_tracking.html', {'applications': applications})
+
 
 
 

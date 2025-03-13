@@ -1,10 +1,10 @@
 
 .message-container {
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    z-index: 1000;
-  }
+  position: fixed;
+  top: 120px;
+  right: 35px;
+  z-index: 1000;
+}
   
   /* Green color for success messages */
   .success-message {

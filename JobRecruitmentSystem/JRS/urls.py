@@ -62,6 +62,8 @@ urlpatterns = [
     path('job/application/<int:application_id>/reject/', views.reject_application, name='reject_application'),
     path("my-jobs/", views.candidate_jobs, name="candidate_jobs"),
     path('schedule-interview/<int:job_id>/', views.schedule_interview, name='schedule_interview'),
+    path('application-tracking/', views.application_tracking, name='application_tracking'),
+
 
 
 

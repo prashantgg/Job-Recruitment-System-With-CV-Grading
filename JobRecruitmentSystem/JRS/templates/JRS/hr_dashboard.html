@@ -146,6 +146,16 @@
     </div>
 </div>
 
+{% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}" id="message-{{ forloop.counter }}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    </div>
+{% endif %}
+
 <script>
     var months = {{ months|safe }};
     var applicants = {{ applicants_list|safe }};
@@ -165,6 +175,7 @@
 </script>
 
 <script>
+    
     var ctx2 = document.getElementById('statusChart').getContext('2d');
     new Chart(ctx2, {
         type: 'doughnut',
@@ -180,6 +191,17 @@
             maintainAspectRatio: false
         }
     });
+    {% if messages %}
+    {% for message in messages %}
+        var messageElement = document.getElementById('message-{{ forloop.counter }}');
+        if (messageElement) {
+            setTimeout(function() {
+                messageElement.style.display = 'none';
+            }, 3000);  // 2000ms = 2 seconds
+        }
+    {% endfor %}
+{% endif %}
+    
 </script>
 
 {% endblock main %}

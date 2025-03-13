@@ -110,6 +110,7 @@ class JobApplication(models.Model):
 
     
 class CvGrading(models.Model):
+    
     application = models.OneToOneField(JobApplication, on_delete=models.CASCADE, related_name='grading')
     score = models.FloatField()  # Percentage (0-100)
     recommendation = models.CharField(max_length=50)  # "Highly Recommended", "Moderately Recommended", "Not Recommended"

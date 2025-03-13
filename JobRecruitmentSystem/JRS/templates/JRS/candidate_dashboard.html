@@ -1,17 +1,179 @@
 {% extends "JRS/base3.html" %}
 {% load static %}
-{% block title %}
-Candidate Dashboard Page
-{% endblock title %}
+
+{% block title %}Candidate Dashboard{% endblock title %}
+
 {% block inlinecss %}
-<link href="{% static 'JRS/css/candidate_dashboard.css' %}" rel="stylesheet">
 <link href="{% static 'JRS/css/base3.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/candidate_dashboard.css' %}" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-{% endblock inlinecss %}
-{% block main %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Messages Display -->
+<style>
+    body {
+        background-color: #f4f7fc;
+        color: #333;
+    }
+
+    .dashboard-container {
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #000;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 80px;
+        height: 610px;
+    }
+
+    .dashboard-header h2 {
+        font-weight: bold;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .stats-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out;
+        width: 150px;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-card i {
+        font-size: 30px;
+        color: rgb(17, 17, 17);
+        margin-bottom: 5px;
+    }
+
+    .stat-card h4 {
+        font-size: 14px;
+    }
+
+    .stat-card p {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .stat-card:nth-child(1) i { color: #007bff; } /* Blue */
+    .stat-card:nth-child(2) i { color: #28a745; } /* Green */
+    .stat-card:nth-child(4) i { color: #ffc107; } /* Yellow */
+    .stat-card:nth-child(3) i { color: #dc3545; } /* Red */
+
+    .chart-card {
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        height: 330px;
+    }
+
+    .chart-container {
+        height: 280px;
+        width: 100%;
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    html, body {
+        overflow: hidden; /* Prevents scrolling */
+        height: 100%; /* Ensures full-page coverage */
+    }
+
+    /* Ensuring the donut chart is round */
+    .chart-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 90%;
+    }
+
+    #statusDonutChart {
+        max-width: 100%;
+        max-height: 100%;
+        width: 100%;
+        height: 90%;
+        aspect-ratio: 1; /* Ensure the chart is round */
+    }
+
+</style>
+
+{% endblock inlinecss %}
+
+{% block main %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h2 class="text-center fw-bold mb-3">Candidate Dashboard</h2>
+        <p class="text-center text-muted">Monitor your job applications and track your status.</p>
+    </div>
+
+    <div class="stats-container">
+        <div class="stat-card">
+            <i class="fa fa-briefcase"></i>
+            <h4>Total Applications</h4>
+            <p>{{ total_applications }}</p>
+        </div>
+        <div class="stat-card">
+            <i class="fa fa-check-circle"></i>
+            <h4>Accepted</h4>
+            <p>{{ total_accepted }}</p>
+        </div>
+        <div class="stat-card">
+            <i class="fa fa-times-circle"></i>
+            <h4>Rejected</h4>
+            <p>{{ total_rejected }}</p>
+        </div>
+        <div class="stat-card">
+            <i class="fa fa-clock"></i>
+            <h4>Pending Applications</h4>
+            <p>{{ total_pending }}</p>
+        </div>
+        <div class="stat-card">
+            <i class="fa fa-briefcase"></i>
+            <h4>Total Jobs Available</h4>
+            <p>{{ total_jobs }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Monthly Applications Bar Chart -->
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h5>Applications per Month</h5>
+                <div class="chart-container">
+                    <canvas id="applicationsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Application Status Donut Chart -->
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h5>Job Application Status</h5>
+                <div class="chart-container">
+                    <canvas id="statusDonutChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% if messages %}
     <div class="message-container">
         {% for message in messages %}
@@ -24,21 +186,71 @@ Candidate Dashboard Page
 
 <script>
 
-    window.onload = function() {
-        {% if messages %}
-            {% for message in messages %}
-                var messageElement = document.getElementById('message-{{ forloop.counter }}');
-                if (messageElement) {
-                    setTimeout(function() {
-                        messageElement.style.display = 'none';
-                    }, 4000);  // 4000ms = 4 seconds
+    {% if messages %}
+    {% for message in messages %}
+        var messageElement = document.getElementById('message-{{ forloop.counter }}');
+        if (messageElement) {
+            setTimeout(function() {
+                messageElement.style.display = 'none';
+            }, 3000);  // 2000ms = 2 seconds
+        }
+    {% endfor %}
+{% endif %}
+
+    // Monthly Applications Bar Chart
+    var months = {{ months|safe }};
+    var applications = {{ applications_list|safe }};
+    new Chart(document.getElementById('applicationsChart'), {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Applications',
+                data: applications,
+                backgroundColor: 'purple'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
-            {% endfor %}
-        {% endif %}
-    }
-    
-    </script>
+            }
+        }
+    });
+
+// Job Application Status Donut Chart (Ensuring Round Shape)
+    var statusData = {{ pie_data|safe }};
+    new Chart(document.getElementById('statusDonutChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Accepted', 'Rejected', 'Pending'],
+            datasets: [{
+                data: statusData,
+                backgroundColor: ['#28a745', '#dc3545', '#ffc107'],
+                borderWidth: 4 // Border thickness for clarity
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: '80%', // Increased cutout to make the ring thinner
+            aspectRatio: 1, // Ensures the chart is perfectly round (aspect ratio 1:1)
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.raw + " applications";
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+</script>
 
 {% endblock main %}
-
-

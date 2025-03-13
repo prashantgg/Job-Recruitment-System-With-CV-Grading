@@ -1,0 +1,123 @@
+{% extends "JRS/base3.html" %}
+{% load static %}
+
+{% block title %}
+Application Tracking
+{% endblock title %}
+
+{% block inlinecss %}
+<link href="{% static 'JRS/css/base3.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/view_job.css' %}" rel="stylesheet">
+{% endblock inlinecss %}
+
+{% block main %}
+<div class="job-container">
+    <h1 class="text-center fw-bold mb-3" style="color: #343a40;">Application Tracking</h1>
+    <b><p class="text-center text-muted" style="margin-bottom: 40px;">Track applications, grading status, and interview schedules here.</p></b>
+
+    {% if applications %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Name</th>
+                    <th>Applied On</th>
+                    <th>Grading Score</th>
+                    <th>Grading Status</th>
+                    <th>Schedule Status</th>
+                    <th>Scheduled Date</th>
+                    <th>Status</th>  <!-- New column for Status -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                <tr>
+                    <td>{{ application.job.title }}</td>
+                    <td>{{ application.applied_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        {% if application.grading_score != 'N/A' %}
+                            <span style="color:
+                                {% if application.grading_score > 80 %}green
+                                {% elif application.grading_score >= 60 %}orange
+                                {% else %}red
+                                {% endif %};">
+                                {{ application.grading_score }}%
+                            </span>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span style="color:
+                            {% if application.grading_status == 'Graded' %}green
+                            {% else %}red
+                            {% endif %};">
+                            {{ application.grading_status }}
+                        </span>
+                    </td>
+                    <td>
+                        <span style="color:
+                            {% if application.interview_status == 'Scheduled' %}green
+                            {% elif application.interview_status == 'Completed' %}red
+                            {% else %}red
+                            {% endif %};">
+                            {{ application.interview_status }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if application.scheduled_date != 'N/A' %}
+                            <span style="color:
+                                {% if application.scheduled_date %}black
+                                {% else %}red
+                                {% endif %};">
+                                {{ application.scheduled_date|date:"Y-m-d H:i" }}
+                            </span>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span style="color:
+                            {% if application.status == 'Accepted' %}green
+                            {% elif application.status == 'Rejected' %}red
+                            {% else %}yellow
+                            {% endif %};">
+                            {{ application.status }}
+                        </span>
+                    </td>  <!-- Display the status here -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-center text-muted">No applications available at the moment.</p>
+    {% endif %}
+</div>
+
+{% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}" id="message-{{ forloop.counter }}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<script>
+    window.onload = function() {
+        {% if messages %}
+            {% for message in messages %}
+                var messageElement = document.getElementById('message-{{ forloop.counter }}');
+                if (messageElement) {
+                    setTimeout(function() {
+                        messageElement.style.display = 'none';
+                    }, 4000);  // 4000ms = 4 seconds
+                }
+            {% endfor %}
+        {% endif %}
+    }
+</script>
+
+{% endblock main %}
