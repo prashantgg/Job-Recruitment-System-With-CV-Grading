@@ -1,6 +1,8 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import User  # Importing the built-in User model
+from django.core.exceptions import ValidationError
+
 
 
 class ContactForm(models.Model):
@@ -94,19 +96,23 @@ class Job(models.Model):
 class JobApplication(models.Model):
     candidate = models.ForeignKey('Candidate', on_delete=models.CASCADE)
     job = models.ForeignKey('Job', on_delete=models.CASCADE, related_name='applications')
+
     cover_letter = models.TextField()
     resume = models.FileField(upload_to='resumes/')
     cover_letter_file = models.FileField(upload_to='cover_letters/', blank=True, null=True)  
     applied_at = models.DateTimeField(auto_now_add=True)
     is_graded = models.BooleanField(default=False)  # New field to track CV grading
     status = models.CharField(max_length=20, choices=[('Accepted', 'Accepted'), ('Rejected', 'Rejected'), ('Pending', 'Pending')], default='Pending')  # New field for status
-
-
+    
+    # Add Interview Schedule link here
+    interview = models.OneToOneField('InterviewSchedule', on_delete=models.CASCADE, null=True, blank=True)  # link to InterviewSchedule
+    
     class Meta:
         unique_together = ('candidate', 'job')
 
     def __str__(self):
-        return f"{self.candidate.first_name} applied for {self.job.title}"
+        return f"{self.candidate.username} applied for {self.job.title}"
+
 
     
 class CvGrading(models.Model):
@@ -117,7 +123,7 @@ class CvGrading(models.Model):
     graded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.application.candidate.first_name} - {self.application.job.title}: {self.score}%"
+        return f"{self.application.candidate.username} - {self.application.job.title}: {self.score}%"
     
 
 class InterviewSchedule(models.Model):
@@ -128,3 +134,18 @@ class InterviewSchedule(models.Model):
 
     def __str__(self):
         return f"Interview for {self.candidate.user.username} - {self.job.title} on {self.scheduled_date}"
+    
+
+class InterviewFeedback(models.Model):
+    job_application = models.ForeignKey('JobApplication', on_delete=models.CASCADE, related_name="feedback", null=True)  # Allow null temporarily
+    feedback = models.TextField(default="No feedback provided yet")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Feedback for {self.job_application.candidate.username} on {self.job_application.job.title}"
+
+
+
+    
+
+

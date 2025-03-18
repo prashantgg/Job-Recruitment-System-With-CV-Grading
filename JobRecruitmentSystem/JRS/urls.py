@@ -63,10 +63,8 @@ urlpatterns = [
     path("my-jobs/", views.candidate_jobs, name="candidate_jobs"),
     path('schedule-interview/<int:job_id>/', views.schedule_interview, name='schedule_interview'),
     path('application-tracking/', views.application_tracking, name='application_tracking'),
-
-
-
-
+    path("interview-feedback/", views.interview_feedback_list, name="interview_feedback_list"),
+    path('give_feedback/<int:application_id>/', views.give_feedback, name='give_feedback'),
 
 
 

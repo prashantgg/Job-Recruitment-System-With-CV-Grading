@@ -31,7 +31,7 @@
                     <td class="centered">{{ job.total_applied }}</td>
                     <td class="centered">{{ job.accepted_count }}</td>
                     <td class="centered">
-                        <a href="{% url 'JRS:schedule_interview' job_id=job.id %}" class="btn-update">Schedule Interview</a>
+                        <a href="{% url 'JRS:schedule_interview' job_id=job.id %}" class="btn btn-green">Schedule Interview</a>
                     </td>
                 </tr>
                 {% empty %}

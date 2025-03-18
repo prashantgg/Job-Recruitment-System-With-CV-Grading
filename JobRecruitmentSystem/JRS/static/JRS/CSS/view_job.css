@@ -218,6 +218,16 @@ body, html {
     height: 20%;
 }
 
+.black-link {
+    color: black !important;
+    text-decoration: none;
+}
+
+.black-link:hover {
+    color: black; /* Ensures color remains black on hover */
+    text-decoration: underline; /* Optional: Adds an underline on hover */
+}
+
 .btn-updated:hover {
     background-color: #218838;
     color: white !important;  /* Change text color to white on hover */

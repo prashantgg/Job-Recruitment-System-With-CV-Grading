@@ -8,7 +8,7 @@ from django.db import IntegrityError
 from .import models 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login
-from .models import CvGrading, InterviewSchedule, Job, JobApplication, User, HR, Candidate, Skill
+from .models import CvGrading, InterviewFeedback, InterviewSchedule, Job, JobApplication, User, HR, Candidate, Skill
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
@@ -84,7 +84,7 @@ def hr_login(request):
                     
                     # Ensure superuser session is not overridden
                     if not user.is_superuser:
-                        request.session.set_expiry(0)  # Keep admin session alive indefinitely
+                        request.session = SessionStore()
 
                     login(request, user)
                     messages.success(request, "HR Logged In Successfully")
@@ -118,7 +118,7 @@ def candidate_login(request):
                     
                     # Ensure superuser session is not overridden
                     if not user.is_superuser:
-                        request.session.set_expiry(0)  # Keep admin session alive indefinitely
+                        request.session = SessionStore()
 
                     login(request, user)
                     messages.success(request, "Candidate Logged In Successfully")
@@ -906,6 +906,7 @@ def candidate_jobs(request):
     for job in my_jobs:
         job.total_applied = JobApplication.objects.filter(job=job).count()
         job.accepted_count = JobApplication.objects.filter(job=job, status="Accepted").count()
+        job.rejected_count = JobApplication.objects.filter(job=job, status="Rejected").count()
 
     return render(request, "JRS/accepted_job.html", {"my_jobs": my_jobs})
 
@@ -1058,6 +1059,77 @@ def application_tracking(request):
             application.scheduled_date = 'N/A'
 
     return render(request, 'JRS/applications_tracking.html', {'applications': applications})
+
+
+@login_required
+@hr_required
+def interview_feedback_list(request):
+    """ View to display all candidates who have applied and need feedback """
+    # Ensure request.user is an instance of the HR model
+    try:
+        hr_user = HR.objects.get(user=request.user)  # Fetch HR instance using the logged-in user
+    except HR.DoesNotExist:
+        # Handle error if the HR instance does not exist
+        messages.error(request, "HR profile not found.")
+        return redirect('JRS:home')  # Redirect to a default page or appropriate page
+
+    # Filter the interview applications by the HR who is logged in
+    interview_applications = JobApplication.objects.filter(
+        status="Accepted",
+        job__posted_by=hr_user  # Use the HR instance to filter the jobs
+    ).select_related("candidate", "job")
+
+    # Attach interview schedule date if it exists
+    for application in interview_applications:
+        interview = InterviewSchedule.objects.filter(candidate=application.candidate, job=application.job).first()
+        application.scheduled_date = interview.scheduled_date if interview else None  # Assign value dynamically
+
+    context = {
+        "interview_applications": interview_applications
+    }
+    return render(request, "JRS/interview_feedback.html", context)
+
+
+
+
+@login_required
+@hr_required
+def give_feedback(request, application_id):
+    # Get the job application object using the ID
+    job_application = get_object_or_404(JobApplication, id=application_id)
+
+    # Check if feedback has already been given for this application
+    if job_application.feedback.exists():  # If feedback already exists
+        # Add an error message if feedback has already been provided
+        messages.error(request, "Feedback has already been submitted for this candidate.")
+        return redirect('JRS:interview_feedback_list')  # Redirect to HR dashboard or another appropriate page
+
+    if request.method == "POST":
+        # Get the feedback text from the request
+        feedback_text = request.POST.get('feedback')
+
+        if feedback_text:
+            # Save the feedback to the database
+            feedback = InterviewFeedback(job_application=job_application, feedback=feedback_text)
+            feedback.save()
+
+            # Add a success message
+            messages.success(request, "Feedback submitted successfully.")
+            return redirect('JRS:interview_feedback_list')  # Redirect to the page where feedback is listed or another page
+
+        else:
+            # Add an error message if feedback is empty
+            messages.error(request, "Feedback cannot be empty.")
+    
+    return render(request, 'JRS/interview_feedback.html', {'job_application': job_application})
+
+
+
+
+
+
+
+
 
 
 

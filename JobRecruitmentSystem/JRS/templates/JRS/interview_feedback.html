@@ -1,0 +1,142 @@
+{% extends "JRS/base2.html" %}
+{% load static %}
+
+{% block title %}
+Interview Feedback
+{% endblock title %}
+
+{% block inlinecss %}
+<link href="{% static 'JRS/css/base2.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/view_job.css' %}" rel="stylesheet">
+<style>
+    .message-container {
+        position: fixed;
+        top: 120px;
+        right: 70px;
+        z-index: 1000;
+    }
+</style>
+
+
+{% endblock inlinecss %}
+
+{% block main %}
+
+<div class="job-container">
+    <h1 class="text-center fw-bold mb-3" style="color: #343a40;">Interview Feedback</h1>
+    <b><p class="text-center text-muted">Provide feedback for candidates.</p></b>
+
+    {% if interview_applications %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Candidate Name</th>
+                    <th>Job Title</th>
+                    <th>Grading Score</th>
+                    <th>Interview Date</th>
+                    <th>View CV</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in interview_applications %}
+                <tr>
+                    <td>{{ application.candidate.first_name }} {{ application.candidate.last_name }}</td>
+                    <td>{{ application.job.title }}</td>
+                    <td>
+                        {% if application.is_graded %}
+                            <span class="{% if application.grading.score > 80 %}text-success
+                                         {% elif application.grading.score >= 60 %}text-warning
+                                         {% else %}text-danger{% endif %}">
+                                <strong>{{ application.grading.score }}%</strong>
+                            </span>
+                        {% else %}
+                            Not Graded
+                        {% endif %}
+                    </td>
+                    
+                    <td>
+                        {% if application.scheduled_date %}
+                            {{ application.scheduled_date }}
+                        {% else %}
+                            <span class="text-muted">Not Scheduled</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if application.resume %}
+                            <a href="{{ application.resume.url }}" class="btn-view" target="_blank" style="color: red; text-decoration: none;">View CV</a>
+                        {% else %}
+                            <span class="text-muted">No CV</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="#feedbackFormModal{{ application.id }}" class="btn btn-green" data-toggle="modal" data-target="#feedbackFormModal{{ application.id }}">Give Feedback</a>
+                    </td>
+                    
+                    <div class="modal fade" id="feedbackFormModal{{ application.id }}" tabindex="-1" role="dialog" aria-labelledby="feedbackFormModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color:rgb(220, 22, 22); color: white;">
+                                    <h5 class="modal-title" id="feedbackFormModalLabel">Give Feedback for {{ application.candidate.first_name }} {{ application.candidate.last_name }}</h5>
+                                </div>
+                                <div class="modal-body" style="background-color:rgb(250, 248, 248); padding: 30px;">
+                                    <form method="POST" action="{% url 'JRS:give_feedback' application.id %}" id="feedbackForm{{ application.id }}">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="feedback" style="font-size: 1.5rem; color: #343a40;">Feedback:</label>
+                                            <br><br>
+                                            <textarea class="form-control" id="feedback" name="feedback" rows="6" placeholder="Enter feedback" style="border-radius: 8px; font-size: 1rem; padding: 12px;" required></textarea>
+                                        </div>
+                                        <br>
+                                        <div class="form-group text-center">
+                                            <button type="submit" class="btn btn-lg btn-success" style="font-size: 1.2rem; padding: 10px 20px; border-radius: 8px; width: 100%; background-color:rgb(5, 5, 5); border-color: #28a745;">Submit Feedback</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-center text-muted">No interview applications available at the moment.</p>
+    {% endif %}
+</div>
+
+{% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}" id="message-{{ forloop.counter }}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<script>
+    window.onload = function() {
+        {% if messages %}
+            {% for message in messages %}
+                var messageElement = document.getElementById('message-{{ forloop.counter }}');
+                if (messageElement) {
+                    setTimeout(function() {
+                        messageElement.style.display = 'none';
+                    }, 4000);
+                }
+            {% endfor %}
+        {% endif %}
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+
+{% endblock main %}

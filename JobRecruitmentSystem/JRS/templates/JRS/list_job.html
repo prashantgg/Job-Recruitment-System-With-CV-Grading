@@ -35,6 +35,8 @@
             <thead>
                 <tr>
                     <th>Job Title</th>
+                    <th> Company </th>
+                    <th> Location </th>
                     <th>Deadline</th>
                     <th>Applied Candidates</th>
                     <th >Actions</th>
@@ -44,6 +46,8 @@
                 {% for job in jobs %}
                 <tr>
                     <td>{{ job.title }}</td>
+                    <td>{{ job.company }}</td>
+                    <td>{{ job.location }}</td>
                     <td>{{ job.deadline }}</td>
 
 

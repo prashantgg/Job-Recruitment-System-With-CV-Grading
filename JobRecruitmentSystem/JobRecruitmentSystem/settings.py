@@ -27,16 +27,16 @@ INSTALLED_APPS = [
 ]
 # settings.py
 
-# Session engine (database-backed sessions)
+# Session settings for the entire project
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use database-backed sessions
-
-# Session expiry settings
-SESSION_COOKIE_AGE = 3600  # 1 hour session expiry (default)
+SESSION_COOKIE_AGE = 604800  # Default session expiry (7 days)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Don't expire session when browser is closed
 
-# Make sure the session cookie is set correctly
-SESSION_COOKIE_NAME = 'user_session'  # Default session cookie for regular users
-ADMIN_SESSION_COOKIE_NAME = 'admin_session'  # Separate session cookie for admin users
+# Session cookie names (these should be unique to avoid conflicts)
+SESSION_COOKIE_NAME = 'user_session'
+ADMIN_SESSION_COOKIE_NAME = 'admin_session'
+
+
 
 
 

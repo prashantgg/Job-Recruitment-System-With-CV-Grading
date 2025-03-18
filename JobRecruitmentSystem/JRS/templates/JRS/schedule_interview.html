@@ -6,6 +6,14 @@
 {% block inlinecss %}
 <link href="{% static 'JRS/css/base2.css' %}" rel="stylesheet">
 <link href="{% static 'JRS/css/view_job.css' %}" rel="stylesheet">
+<style>
+    .message-container {
+        position: fixed;
+        top: 120px;
+        right: 70px;
+        z-index: 1000;
+    }
+</style>
 {% endblock inlinecss %}
 
 {% block main %}
@@ -19,12 +27,13 @@
     {% if messages %}
     <div class="message-container">
         {% for message in messages %}
-            <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}">
+            <p id="message-{{ forloop.counter }}" class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}">
                 {{ message }}
             </p>
         {% endfor %}
     </div>
-    {% endif %}
+{% endif %}
+
 
     <div class="table-container">
         <table>
@@ -79,17 +88,22 @@
         </table>
     </div>
 </div>
-
 <script>
-{% if messages %}
-{% for message in messages %}
-    var messageElement = document.getElementById('message-{{ forloop.counter }}');
-    if (messageElement) {
-        setTimeout(function() {
-            messageElement.style.display = 'none';
-        }, 3000);
+    // Hide messages after 4 seconds
+    window.onload = function() {
+        {% if messages %}
+            {% for message in messages %}
+                var messageId = 'message-{{ forloop.counter }}';
+                setTimeout(function() {
+                    var messageElement = document.getElementById(messageId);
+                    if (messageElement) {
+                        messageElement.style.display = 'none';
+                    }
+                }, 2000);  // 2000ms = 2 seconds
+            {% endfor %}
+        {% endif %}
     }
-{% endfor %}
-{% endif %}
 </script>
+
+
 {% endblock %}
