@@ -68,14 +68,9 @@
         <li class="{% if request.resolver_match.url_name == 'application_tracking' %}active{% endif %}">
             <a href="{% url "JRS:application_tracking" %}"><i class="fas fa-users"></i> Application Tracking</a>
         </li>
-        <li class="{% if request.resolver_match.url_name == 'create_cv' %}active{% endif %}">
-            <a href="#"><i class="fas fa-edit"></i> Create CV</a>
-        </li>
-        <li class="{% if request.resolver_match.url_name == 'manage_cv' %}active{% endif %}">
-            <a href="#"><i class="fas fa-file-alt"></i> Manage CV</a>
-        </li>
+
         <li class="{% if request.resolver_match.url_name == 'feedback_received' %}active{% endif %}">
-            <a href="#"><i class="fas fa-comment-alt"></i> Feedback Received</a>
+            <a href="{% url "JRS:feedback_received" %}"><i class="fas fa-comment-alt"></i> Feedback Received</a>
         </li>
 
         <li class="{% if request.resolver_match.url_name == 'feedback_candidate_page' %}active{% endif %}">
@@ -124,10 +119,6 @@
             });
         });
     </script>
-
-    
-
-    
     {% endblock script %}
     
 </body>

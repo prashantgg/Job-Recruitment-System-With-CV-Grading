@@ -58,7 +58,7 @@
                     <td>
                         {% if job.applications.exists %}
                             {% if job.applications.first.grading %}
-                                <a href="{% url 'JRS:view_graded_scores' job.id %}" class="btn btn-green">View Graded Score</a>
+                                <a href="{% url 'JRS:view_graded_scores' job.id %}" class="btn btn-blue">View Graded Score</a>
                             {% else %}
                                 <button class="btn btn-disabled" disabled>View Graded Score</button>
                             {% endif %}

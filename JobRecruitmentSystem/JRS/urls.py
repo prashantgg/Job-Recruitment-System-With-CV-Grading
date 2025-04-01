@@ -65,6 +65,8 @@ urlpatterns = [
     path('application-tracking/', views.application_tracking, name='application_tracking'),
     path("interview-feedback/", views.interview_feedback_list, name="interview_feedback_list"),
     path('give_feedback/<int:application_id>/', views.give_feedback, name='give_feedback'),
+    path('feedback/came', views.feedback_received, name='feedback_received'),
+    path('feedback/download/<int:feedback_id>/', views.download_feedback_pdf, name='download_feedback_pdf'),
 
 
 
@@ -72,4 +74,3 @@ urlpatterns = [
 ]# This will allow Django to serve media files during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    

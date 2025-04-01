@@ -140,6 +140,23 @@ body, html {
             border: 2px solid black !important; /* Keep black border on hover */
         }
         /* Green button */
+        .btn-blue {
+            background-color: #d5e561 !important; /* Green background */
+            border: 2px solid black !important; /* Black border */
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            color: rgb(14, 14, 14) !important; /* White text */
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .btn-blue:hover {
+            background-color: #88941d !important; /* Darker green on hover */
+            color: rgb(6, 6, 6) !important; /* Ensure text remains white */
+            border: 2px solid black !important; /* Keep black border on hover */
+        }
+        /* Green button */
         .btn-red {
             background-color: #db1b28 !important; /* Green background */
             border: 2px solid black !important; /* Black border */

@@ -1,8 +1,6 @@
 from io import BytesIO
-import json
 import re
-from JRS.cv_grading import compute_similarity
-import pdfkit # type: ignore
+import pdfkit  # type: ignore
 from django.contrib.auth import authenticate, login,logout
 from django.db import IntegrityError
 from .import models 
@@ -16,17 +14,22 @@ from JRS.decorators import hr_or_candidate_required, hr_required, candidate_requ
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from django.contrib.sessions.backends.db import SessionStore
-from django.http import FileResponse, HttpResponse, JsonResponse
 from django.core.files.storage import default_storage
 from django.views.decorators.cache import never_cache
-
-
-
-
-
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+from .models import InterviewFeedback, CvGrading, JobApplication
+from reportlab.lib.pagesizes import letter # type: ignore
+from reportlab.pdfgen import canvas # type: ignore
+from io import BytesIO
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.template.loader import render_to_string
+from django.db.models import Count
+import calendar
+from django.db.models.functions import ExtractMonth
 
 @never_cache
-# HR Registration View
 def hr_registration(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -195,6 +198,7 @@ def candidate_registration(request):
     return render(request, "JRS/candidate_register_page.html")
 
 
+
 @never_cache
 @login_required
 def logout_user(request):
@@ -209,6 +213,8 @@ def logout_users(request):
         logout(request)
     messages.error(request, "Logged Out Successfully")
     return redirect("JRS:candidate_login_page", permanent=True)
+
+
 @never_cache
 @login_required
 @hr_required
@@ -248,14 +254,9 @@ def submit_feedback_candidate(request):
 def startpage(request):
     return render(request, "JRS/startpage.html")
 
-
-
-
-
 @never_cache
 def aboutpage(request):
     return render(request, "JRS/aboutpage.html")
-
 
 @never_cache
 def featurepage(request):
@@ -273,8 +274,6 @@ def feedback_candidate(request):
 @never_cache
 def contactpage(request):
     return render(request, "JRS/contactpage.html")
-
-from django.utils import timezone
 
 
 @never_cache
@@ -315,7 +314,6 @@ def candidate_dashboard(request):
 
     return render(request, 'JRS/candidate_dashboard.html', context)
 
-
 @never_cache
 @login_required
 @candidate_required
@@ -355,22 +353,24 @@ def available_jobs(request):
     return render(request, "JRS/available_jobs.html", {"jobs": sorted_jobs})
 
 
+
+
 @never_cache
 def faqpage(request):
     return render(request, "JRS/faqpage.html")
-
 
 @never_cache
 def blogpage(request):
     return render(request, "JRS/blogpage.html")
 
-
 @never_cache
 def hr_register_page(request):
     return render(request, "JRS/hr_register_page.html")
+
 @never_cache
 def candidate_register_page(request):
     return render(request, "JRS/candidate_register_page.html")
+
 @never_cache
 def job_listing(request):
      jobs = Job.objects.all  # Filter jobs posted by this HR
@@ -382,7 +382,6 @@ def hr_login_page(request):
 @never_cache
 def candidate_login_page(request):
     return render(request, "JRS/candidate_login_page.html")
-
 
 @never_cache
 @login_required
@@ -403,7 +402,6 @@ def contact_form(request):
         contact.save()   
         return render(request, 'JRS/contactpage.html')
     
-
 @never_cache# This view is for HR to see only the jobs they posted
 @login_required
 @hr_required
@@ -478,21 +476,6 @@ def delete_job(request, job_id):
         messages.error(request, "You are not authorized to delete this job post.")
     
     return redirect('JRS:view_jobs')  # Redirect to the list of jobs the HR posted
-@never_cache
-@login_required
-@candidate_required
-def delete_application(request, application_id):
-    candidate = Candidate.objects.get(user=request.user)  # Ensure user is treated as Candidate
-
-    application = get_object_or_404(JobApplication, id=application_id, candidate=candidate)
-
-    if request.method == "POST":
-        application.delete()
-        messages.success(request, "Application deleted successfully.")
-        return redirect("JRS:view_applications")  # Ensure this URL is correct
-
-    messages.error(request, "Invalid request.")
-    return redirect("JRS:view_applications")
 
 
 
@@ -541,6 +524,24 @@ def update_application(request, application_id):
         return redirect('JRS:view_applications')  # Redirect to application list after update
 
     return render(request, 'JRS/update_applications.html', {'application': application})
+
+
+@never_cache
+@login_required
+@candidate_required
+def delete_application(request, application_id):
+    candidate = Candidate.objects.get(user=request.user)  # Ensure user is treated as Candidate
+
+    application = get_object_or_404(JobApplication, id=application_id, candidate=candidate)
+
+    if request.method == "POST":
+        application.delete()
+        messages.success(request, "Application deleted successfully.")
+        return redirect("JRS:view_applications")  # Ensure this URL is correct
+
+    messages.error(request, "Invalid request.")
+    return redirect("JRS:view_applications")
+
 @never_cache
 @login_required
 @candidate_required
@@ -696,10 +697,6 @@ def change_password_hr(request):
     return render(request, "JRS/change_password_hr.html")
 
 
-from django.core.files.storage import FileSystemStorage
-
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 @never_cache
 @login_required
 @hr_required
@@ -790,11 +787,6 @@ def edit_candidate_profile(request):
     return render(request, "JRS/edit_profile_candidate.html", {"candidate": candidate})
 
 
-
-
-
-
-
 @never_cache
 @login_required
 @hr_required
@@ -820,9 +812,6 @@ def view_applicants(request, job_id):
     })
 
 
-
-
-from django.template.loader import render_to_string
 @never_cache
 def generate_cover_letter_pdf(request, application_id):
     application = get_object_or_404(JobApplication, pk=application_id)
@@ -877,7 +866,6 @@ def accept_application(request, application_id):
     
     return redirect('JRS:view_graded_scores', job_id=application.job.id)  # Redirect to the graded applicants page for the job
 
-
 @login_required
 @hr_required
 def reject_application(request, application_id):
@@ -889,7 +877,6 @@ def reject_application(request, application_id):
     messages.error(request, f"Application for {application.candidate.first_name} has been rejected.")
     
     return redirect('JRS:view_graded_scores', job_id=application.job.id)  # Redirect to the graded applicants page for the job
-
 
 @login_required
 @hr_required
@@ -965,18 +952,6 @@ def schedule_interview(request, job_id):
         {"candidates_with_details": candidates_with_details, "job_id": job_id}
     )
 
-from django.db.models.functions import TruncMonth
-from django.db.models import Count
-from django.db.models.functions import ExtractMonth
-
-
-import calendar
-from django.db.models.functions import ExtractMonth
-from django.db.models import Count
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from .models import HR, Job, JobApplication
-from .decorators import hr_required
 
 @login_required
 @hr_required
@@ -1029,7 +1004,6 @@ def hr_dashboard(request):
     }
 
     return render(request, "JRS/hr_dashboard.html", context)
-
 
 @login_required
 @candidate_required
@@ -1090,8 +1064,6 @@ def interview_feedback_list(request):
     return render(request, "JRS/interview_feedback.html", context)
 
 
-
-
 @login_required
 @hr_required
 def give_feedback(request, application_id):
@@ -1122,6 +1094,64 @@ def give_feedback(request, application_id):
             messages.error(request, "Feedback cannot be empty.")
     
     return render(request, 'JRS/interview_feedback.html', {'job_application': job_application})
+
+
+@login_required
+@candidate_required
+def feedback_received(request):
+    # Get feedback for the logged-in candidate
+    feedbacks = InterviewFeedback.objects.filter(job_application__candidate=request.user.candidate)
+
+    # Debugging print statements
+    print(f"Total feedbacks: {feedbacks.count()}")
+    for fb in feedbacks:
+        print(f"Feedback: {fb.feedback}, Candidate: {fb.job_application.candidate.username}, Job: {fb.job_application.job.title}, Created At: {fb.created_at}")
+    
+    return render(request, 'JRS/feedback_received.html', {'feedbacks': feedbacks})
+
+
+@candidate_required
+@login_required
+def download_feedback_pdf(request, feedback_id):
+    feedback = get_object_or_404(InterviewFeedback, id=feedback_id)
+    application = feedback.job_application
+    job = application.job
+
+    # Create a PDF response
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    p.setFont("Helvetica", 12)
+
+    # PDF Content
+    y_position = 750
+    p.drawString(100, y_position, f"Job Title: {job.title}")
+    y_position -= 30
+    p.drawString(100, y_position, f"Location: {job.location}")
+    y_position -= 30
+    p.drawString(100, y_position, f"Grading Score: {application.grading.score}%")
+    y_position -= 30
+
+    y_position -= 30
+    p.drawString(100, y_position, "HR Feedback:")
+    y_position -= 20
+
+    # Handle multiline feedback
+    text = feedback.feedback
+    lines = text.split("\n")
+
+    for line in lines:
+        p.drawString(100, y_position, line)
+        y_position -= 20
+
+    p.showPage()
+    p.save()
+
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="feedback_{application.candidate.username}.pdf"'
+    return response
+
+
 
 
 

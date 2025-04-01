@@ -1,0 +1,82 @@
+{% extends "JRS/base3.html" %}
+{% load static %}
+
+{% block title %}
+Feedback Received
+{% endblock title %}
+
+{% block inlinecss %}
+<link href="{% static 'JRS/css/base3.css' %}" rel="stylesheet">
+<link href="{% static 'JRS/css/view_job.css' %}" rel="stylesheet">
+{% endblock inlinecss %}
+
+{% block main %}
+<div class="job-container">
+    <h1 class="text-center fw-bold mb-3" style="color: #343a40;">Feedback Received</h1>
+    <b><p class="text-center text-muted" style="margin-bottom: 40px;">
+        Here you can view the feedback received from HR for your job applications.
+    </p></b>
+
+    {% if feedbacks %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Location</th>
+                    <th>Feedback Date</th>
+                    <th>Posted By</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for feedback in feedbacks %}
+                <tr>
+                    <td>{{ feedback.job_application.job.title }}</td>
+                    <td>{{ feedback.job_application.job.location }}</td>
+                    <td>{{ feedback.created_at|date:"F j, Y, g:i a" }}</td> <!-- Formatting the created_at field -->
+
+                    
+                    <td>{{ feedback.job_application.job.posted_by.username }}</td>
+                    <td>
+                        <a href="{% url 'JRS:download_feedback_pdf' feedback.id %}" style="color: red;">
+                            Download PDF
+                        </a>
+                    </td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-center text-muted">No feedback received yet.</p>
+    {% endif %}
+</div>
+
+{% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <p class="message {% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% endif %}" id="message-{{ forloop.counter }}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<script>
+    window.onload = function() {
+        {% if messages %}
+            {% for message in messages %}
+                var messageElement = document.getElementById('message-{{ forloop.counter }}');
+                if (messageElement) {
+                    setTimeout(function() {
+                        messageElement.style.display = 'none';
+                    }, 4000);  // 4 seconds
+                }
+            {% endfor %}
+        {% endif %}
+    }
+</script>
+
+{% endblock main %}

@@ -77,7 +77,7 @@ class Job(models.Model):
     job_type = models.CharField(max_length=50, choices=JOB_TYPES)
     salary = models.CharField(max_length=255)
     experience = models.CharField(max_length=255)
-    skills = models.CharField(max_length=255)
+    skills = models.CharField(max_length=255, default='')  # Default to an empty string
     education = models.CharField(max_length=255)
     deadline = models.DateField()
     posted_by = models.ForeignKey('HR', on_delete=models.CASCADE)
@@ -90,6 +90,7 @@ class Job(models.Model):
     def skill_list(self):
         """ Convert the comma-separated skills into a list """
         return [skill.strip() for skill in self.skills.split(',')] if self.skills else []
+
 
 
     
@@ -147,5 +148,5 @@ class InterviewFeedback(models.Model):
 
 
     
-
+ 
 
